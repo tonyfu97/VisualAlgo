@@ -4,7 +4,7 @@ VisualAlgo is a collection of algorithms and models intersecting the domains of 
 
 **This repository is strictly intended for self-educational purposes and is not meant for distribution. Please note that it is currently a work in progress and may contain bugs.**
 
-## Categories
+## Table of Contents
 
 1. [Image Pre-processing and Enhancement](src/ImagePreprocessingAndEnhancement/)
 * Computer Vision Algorithms: Histogram Equalization, Image Filtering, Image Transformations
@@ -14,7 +14,7 @@ VisualAlgo is a collection of algorithms and models intersecting the domains of 
 * Neuroscience Models: Simple and Complex Cell Models, Gabor Filters
 3. [Segmentation and Grouping](src/SegmentationAndGrouping/)
 * Computer Vision Algorithms: Thresholding, Region Growing, Watershed, K-means Clustering, Mean Shift, GrabCut, U-Net
-* Neuroscience Models: Gestalt Laws Models, Border Ownership Models
+* Neuroscience Models: Gestalt Laws Models, Border Ownership Models, FBF model
 4. [Object Detection and Recognition](src/ObjectDetectionAndRecognition/)
 * Computer Vision Algorithms: Viola-Jones Object Detection, R-CNN, SSD, YOLO, Haar Cascades
 * Neuroscience Models: HMAX Model

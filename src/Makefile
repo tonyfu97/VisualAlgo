@@ -8,12 +8,13 @@ else
    OPTFLAGS=-O3
 endif
 
-CFLAGS=-I. -std=c++20 -Wall -Werror $(OPTFLAGS)
+CFLAGS=-I. -std=c++20 -Wall -Werror $(OPTFLAGS) $(shell pkg-config --cflags opencv4)
 
 PROJDIR := $(realpath $(CURDIR)/..)
-BUILDDIR := $(PROJDIR)/obj
+BUILDDIR := $(PROJDIR)obj/src
+CPPUNITLITE_DIR := $(PROJDIR)/CppUnitLite
 
-DIRS = $(shell find . -type d)
+DIRS = $(shell find . -type d -not -path "." -not -path "..")
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(PROJDIR)/src/, $(dir)))
 TARGETDIRS = $(foreach dir, $(DIRS), $(addprefix $(BUILDDIR)/, $(dir)))
 VPATH = $(SOURCEDIRS)
@@ -30,13 +31,17 @@ libVisualAlgo.a: $(OBJ)
 	ar rcs $(PROJDIR)/bin/libVisualAlgo.a $(OBJ)
 	ranlib $(PROJDIR)/bin/libVisualAlgo.a
 
-$(foreach targetdir, $(TARGETDIRS), $(eval $(call generateRules, $(targetdir))))
+libCppUnitLite.a:
+	$(MAKE) -j -C $(CPPUNITLITE_DIR) all
 
-directories:
-	mkdir -p $(TARGETDIRS)
-
-all: directories libVisualAlgo.a
+all: directories libVisualAlgo.a libCppUnitLite.a
 
 clean:
 	rm -rf $(TARGETDIRS)
 	rm -f $(PROJDIR)/bin/libVisualAlgo.a
+	$(MAKE) -j -C $(CPPUNITLITE_DIR) clean
+
+$(foreach targetdir, $(TARGETDIRS), $(eval $(call generateRules, $(targetdir))))
+
+directories:
+	mkdir -p $(TARGETDIRS)
