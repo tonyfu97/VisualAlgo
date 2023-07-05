@@ -1,1 +1,6 @@
 site_name: VisualAlgo
+site_url: https://tonyfu97.github.io/VisualAlgo/
+nav:
+    - Home: index.md
+    - About: pages/about.md
+theme: readthedocs
