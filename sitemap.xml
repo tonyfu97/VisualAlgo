@@ -6,12 +6,52 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://tonyfu97.github.io/VisualAlgo/pages/SegmentationAndGrouping/</loc>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/attention-and-search/</loc>
          <lastmod>2023-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://tonyfu97.github.io/VisualAlgo/pages/about/</loc>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/color-vision/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/depth-perception-and-3d-reconstruction/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/feature-extraction/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/getting-started/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/image-processing-and-enhancement/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/learning-and-memory/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/motion-analysis-and-tracking/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/object-detection-and-recognition/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/segmentation-and-grouping/</loc>
          <lastmod>2023-07-05</lastmod>
          <changefreq>daily</changefreq>
     </url>

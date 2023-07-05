@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="vision-related algorithms and models" /><meta name="author" content="Tony Fu" /><link rel="canonical" href="https://tonyfu97.github.io/VisualAlgo/" />
-      <link rel="shortcut icon" href="img/favicon.ico" />
-    <title>VisualAlgo</title>
-    <link rel="stylesheet" href="css/theme.css" />
-    <link rel="stylesheet" href="css/theme_extra.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Tony Fu" /><link rel="canonical" href="https://tonyfu97.github.io/VisualAlgo/pages/learning-and-memory/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>9. Learning and Memory - VisualAlgo</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Home";
-        var mkdocs_page_input_path = "index.md";
-        var mkdocs_page_url = "/VisualAlgo/";
+        var mkdocs_page_name = "9. Learning and Memory";
+        var mkdocs_page_input_path = "pages/learning-and-memory.md";
+        var mkdocs_page_url = "/VisualAlgo/pages/learning-and-memory/";
       </script>
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.min.js"></script>
+      <script src="../../js/html5shiv.min.js"></script>
     <![endif]-->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
@@ -41,59 +41,63 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href="." class="icon icon-home"> VisualAlgo
+          <a href="../.." class="icon icon-home"> VisualAlgo
         </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../image-processing-and-enhancement/">1. Image Processing and Enhancement</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-extraction/">2. Feature Extraction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../segmentation-and-grouping/">3. Segmentation and Grouping</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../object-detection-and-recognition/">4. Object Detection and Recognition</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../motion-analysis-and-tracking/">5. Motion Analysis and Tracking</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../depth-perception-and-3d-reconstruction/">6. Depth Perception and 3D Reconstruction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../color-vision/">7. Color Vision</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../attention-and-search/">8. Attention and Search</a>
+                </li>
+              </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">9. Learning and Memory</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#neuroscience-models">Neuroscience Models</a>
+    </li>
     </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/getting-started/">Getting Started</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/image-processing-and-enhancement/">1. Image Processing and Enhancement</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/feature-extraction/">2. Feature Extraction</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/segmentation-and-grouping/">3. Segmentation and Grouping</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/object-detection-and-recognition/">4. Object Detection and Recognition</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/motion-analysis-and-tracking/">5. Motion Analysis and Tracking</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/depth-perception-and-3d-reconstruction/">6. Depth Perception and 3D Reconstruction</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/color-vision/">7. Color Vision</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/attention-and-search/">8. Attention and Search</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="pages/learning-and-memory/">9. Learning and Memory</a>
                 </li>
               </ul>
       </div>
@@ -103,16 +107,16 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href=".">VisualAlgo</a>
+          <a href="../..">VisualAlgo</a>
         
       </nav>
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Home</li>
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>9. Learning and Memory</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/tonyfu97/VisualAlgo/blob/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/tonyfu97/VisualAlgo/blob/master/docs/pages/learning-and-memory.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -120,14 +124,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="visualalgo">VisualAlgo</h1>
-<p>VisualAlgo is a collection of algorithms and models intersecting the domains of computer vision and neuroscience. The repository is categorized based on the major tasks/stages in visual processing. Each category includes relevant algorithms from both computer vision and neuroscience. </p>
-<p><strong>This repository is strictly intended for self-educational purposes and is not meant for distribution. Please note that it is currently a work in progress and may contain bugs.</strong></p>
+                <h1 id="9-learning-and-memory">9. Learning and Memory</h1>
+<h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
+<ul>
+<li>Deep Learning Models (CNN, Autoencoders, GAN, Transformers)</li>
+</ul>
+<h2 id="neuroscience-models">Neuroscience Models</h2>
+<ul>
+<li>Hopfield Network</li>
+<li>Adaptive Resonance Theory (ART)</li>
+</ul>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="pages/getting-started/" class="btn btn-neutral float-right" title="Getting Started">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../attention-and-search/" class="btn btn-neutral float-left" title="8. Attention and Search"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -155,15 +166,15 @@
         </span>
     
     
+      <span><a href="../attention-and-search/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-      <span><a href="pages/getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
     <script defer>
         window.onload = function () {
             SphinxRtdTheme.Navigation.enable(true);
@@ -172,8 +183,3 @@
 
 </body>
 </html>
-
-<!--
-MkDocs version : 1.4.3
-Build Date UTC : 2023-07-05 05:50:25.119989+00:00
--->
