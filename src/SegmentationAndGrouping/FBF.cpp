@@ -1,4 +1,5 @@
 #include "SegmentationAndGrouping.hpp"
+#include "helpers/matrix.hpp"
 
 namespace VisualAlgo::SegmentationAndGrouping
 {

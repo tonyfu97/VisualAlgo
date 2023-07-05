@@ -1,6 +1,6 @@
 #pragma once
 
-#include <opencv2/core.hpp>
+#include "helpers/matrix.hpp"
 
 namespace VisualAlgo::SegmentationAndGrouping
 {
@@ -10,7 +10,8 @@ namespace VisualAlgo::SegmentationAndGrouping
         FBF(float A=134, float B=1, float C=7, float D=0.5, float E=3.333, float S=0.2, float ALPHA=1.3, float BETA=1.875);
         ~FBF();
 
-        cv::Mat apply(cv::Mat& image);
+        Matrix apply(Matrix input); 
+
     private:
         float A, B, C, D, E, S, ALPHA, BETA;
     };
