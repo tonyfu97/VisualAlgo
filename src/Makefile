@@ -11,7 +11,7 @@ endif
 CFLAGS=-I. -std=c++20 -Wall -Werror $(OPTFLAGS) $(shell pkg-config --cflags opencv4)
 
 PROJDIR := $(realpath $(CURDIR)/..)
-BUILDDIR := $(PROJDIR)obj/src
+BUILDDIR := $(PROJDIR)/obj/src
 CPPUNITLITE_DIR := $(PROJDIR)/CppUnitLite
 
 DIRS = $(shell find . -type d -not -path "." -not -path "..")
