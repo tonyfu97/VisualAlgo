@@ -1,1 +1,0 @@
-# 1. Image Pre-processing and Enhancement

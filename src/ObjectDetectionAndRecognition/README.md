@@ -1,1 +1,0 @@
-# 4. Object Detection and Recognition

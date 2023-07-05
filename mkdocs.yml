@@ -1,99 +1,32 @@
 site_name: VisualAlgo
 site_url: https://tonyfu97.github.io/VisualAlgo/
+site_description: vision-related algorithms and models
+site_author: Tony Fu
+
+repo_url: https://github.com/tonyfu97/VisualAlgo/
+edit_uri: blob/master/docs/
+
+theme:
+    name: readthedocs
+    locale: en
+    analytics: {gtag: 'G-274394082'}
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - django
+
 nav:
     - Home: index.md
-    - About: pages/about.md
-theme: 
-  name: material
-  palette:
-    primary: blue
-    accent: blue
-    toggle:
-      icon: menu
-    font:
-      text: '#333'
-      code: '#333'
-      headings: '#333'
-      links: '#333'
-      link: '#333'
-      pre: '#333'
-      pre_bg: '#333'
-      code_bg: '#333'
-      border: '#333'
-      sidebar: '#333'
-      sidebar_link: '#333'
-      blockquote: '#333'
-      blockquote_border: '#333'
-      blockquote_bg: '#333'
-      blockquote_cite: '#333'
-      search: '#333'
-      search_text: '#333'
-      search_bg: '#333'
-      search_placeholder: '#333'
-      search_border: '#333'
-      search_focus_border: '#333'
-      search_icon: '#333'
-      search_clear: '#333'
-      search_clear_hover: '#333'
-      search_result: '#333'
-      search_result_hover: '#333'
-      search_result_selected: '#333'
-      search_result_selected_hover: '#333'
-      search_result_meta: '#333'
-      search_result_meta_hover: '#333'
-      search_result_title: '#333'
-      search_result_title_hover: '#333'
-      search_result_action: '#333'
-      search_result_action_hover: '#333'
-      search_result_action_icon: '#333'
-      search_result_action_icon_hover: '#333'
-      search_result_action_icon_focus: '#333'
-      search_result_action_icon_pressed: '#333'
-      search_result_action_icon_disabled: '#333'
-      search_result_action_icon_selected: '#333'
-      search_result_action_icon_selected_hover: '#333'
-      search_result_action_icon_selected_focus: '#333'
-      search_result_action_icon_selected_pressed: '#333'
-      search_result_action_icon_selected_disabled: '#333'
-      search_result_action_icon_hover_focus: '#333'
-      search_result_action_icon_hover_pressed: '#333'
-      search_result_action_icon_hover_disabled: '#333'
-      search_result_action_icon_focus_pressed: '#333'
-      search_result_action_icon_focus_disabled: '#333'
-      search_result_action_icon_pressed_disabled: '#333'
-      search_result_action_icon_selected_hover_focus: '#333'
-      search_result_action_icon_selected_hover_pressed: '#333'
-      search_result_action_icon_selected_hover_disabled: '#333'
-      search_result_action_icon_selected_focus_pressed: '#333'
-      search_result_action_icon_selected_focus_disabled: '#
-  features:
-    - navigation.tabs
-    - navigation.expand
-    - navigation.sections
-    - navigation.top
-    - navigation.bottom
-    - navigation.sidebar
-    - navigation.scrollspy
-    - navigation.tabs
-    - navigation.next_prev
-    - navigation.edit_url
-    - navigation.meta
-    - navigation.breadcrumbs
-    - navigation.toc
-    - navigation.logo
-    - navigation.search
-    - navigation.language
-    - navigation.footer
-    - navigation.icon
-    - navigation.math
-    - navigation.code
-    - navigation.favicon
-    - navigation.meta
+    - Getting Started: pages/getting-started.md
+    - 1. Image Processing and Enhancement: pages/image-processing-and-enhancement.md
+    - 2. Feature Extraction: pages/feature-extraction.md
+    - 3. Segmentation and Grouping: pages/segmentation-and-grouping.md
+    - 4. Object Detection and Recognition: pages/object-detection-and-recognition.md
+    - 5. Motion Analysis and Tracking: pages/motion-analysis-and-tracking.md
+    - 6. Depth Perception and 3D Reconstruction: pages/depth-perception-and-3d-reconstruction.md
+    - 7. Color Vision: pages/color-vision.md
+    - 8. Attention and Search: pages/attention-and-search.md
+    - 9. Learning and Memory: pages/learning-and-memory.md
 
-  
-extra:
-  social:
-    - type: github
-      link: https://tonyfu97.github.io
-    - type: linkedin
-      link: https://www.linkedin.com/in/tony-fu-3721831a3/
+
+copyright: Copyright &copy; 2023 Tony Fu.

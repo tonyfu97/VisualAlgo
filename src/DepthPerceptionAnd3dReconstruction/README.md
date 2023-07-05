@@ -1,1 +1,0 @@
-# 6. Depth Perception and 3D Reconstruction
