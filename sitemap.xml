@@ -41,6 +41,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://tonyfu97.github.io/VisualAlgo/pages/matrix/</loc>
+         <lastmod>2023-07-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://tonyfu97.github.io/VisualAlgo/pages/motion-analysis-and-tracking/</loc>
          <lastmod>2023-07-05</lastmod>
          <changefreq>daily</changefreq>
