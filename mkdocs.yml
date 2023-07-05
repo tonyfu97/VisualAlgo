@@ -29,4 +29,10 @@ nav:
     - 9. Learning and Memory: pages/learning-and-memory.md
 
 
-copyright: Copyright &copy; 2023 Tony Fu.
+copyright: Copyright &copy; 2023 Tony Fu
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+markdown_extensions:
+  - mdx_math
