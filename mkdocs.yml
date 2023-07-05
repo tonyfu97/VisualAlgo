@@ -14,10 +14,14 @@ theme:
     hljs_languages:
         - yaml
         - django
+    features:
+      - content.codehilite
+      - content.code.copy
 
 nav:
     - Home: index.md
     - Getting Started: pages/getting-started.md
+    - Matrix: pages/matrix.md
     - 1. Image Processing and Enhancement: pages/image-processing-and-enhancement.md
     - 2. Feature Extraction: pages/feature-extraction.md
     - 3. Segmentation and Grouping: pages/segmentation-and-grouping.md
@@ -27,6 +31,7 @@ nav:
     - 7. Color Vision: pages/color-vision.md
     - 8. Attention and Search: pages/attention-and-search.md
     - 9. Learning and Memory: pages/learning-and-memory.md
+
 
 
 copyright: Copyright &copy; 2023 Tony Fu
