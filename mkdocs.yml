@@ -3,4 +3,97 @@ site_url: https://tonyfu97.github.io/VisualAlgo/
 nav:
     - Home: index.md
     - About: pages/about.md
-theme: readthedocs
+theme: 
+  name: material
+  palette:
+    primary: blue
+    accent: blue
+    toggle:
+      icon: menu
+    font:
+      text: '#333'
+      code: '#333'
+      headings: '#333'
+      links: '#333'
+      link: '#333'
+      pre: '#333'
+      pre_bg: '#333'
+      code_bg: '#333'
+      border: '#333'
+      sidebar: '#333'
+      sidebar_link: '#333'
+      blockquote: '#333'
+      blockquote_border: '#333'
+      blockquote_bg: '#333'
+      blockquote_cite: '#333'
+      search: '#333'
+      search_text: '#333'
+      search_bg: '#333'
+      search_placeholder: '#333'
+      search_border: '#333'
+      search_focus_border: '#333'
+      search_icon: '#333'
+      search_clear: '#333'
+      search_clear_hover: '#333'
+      search_result: '#333'
+      search_result_hover: '#333'
+      search_result_selected: '#333'
+      search_result_selected_hover: '#333'
+      search_result_meta: '#333'
+      search_result_meta_hover: '#333'
+      search_result_title: '#333'
+      search_result_title_hover: '#333'
+      search_result_action: '#333'
+      search_result_action_hover: '#333'
+      search_result_action_icon: '#333'
+      search_result_action_icon_hover: '#333'
+      search_result_action_icon_focus: '#333'
+      search_result_action_icon_pressed: '#333'
+      search_result_action_icon_disabled: '#333'
+      search_result_action_icon_selected: '#333'
+      search_result_action_icon_selected_hover: '#333'
+      search_result_action_icon_selected_focus: '#333'
+      search_result_action_icon_selected_pressed: '#333'
+      search_result_action_icon_selected_disabled: '#333'
+      search_result_action_icon_hover_focus: '#333'
+      search_result_action_icon_hover_pressed: '#333'
+      search_result_action_icon_hover_disabled: '#333'
+      search_result_action_icon_focus_pressed: '#333'
+      search_result_action_icon_focus_disabled: '#333'
+      search_result_action_icon_pressed_disabled: '#333'
+      search_result_action_icon_selected_hover_focus: '#333'
+      search_result_action_icon_selected_hover_pressed: '#333'
+      search_result_action_icon_selected_hover_disabled: '#333'
+      search_result_action_icon_selected_focus_pressed: '#333'
+      search_result_action_icon_selected_focus_disabled: '#
+  features:
+    - navigation.tabs
+    - navigation.expand
+    - navigation.sections
+    - navigation.top
+    - navigation.bottom
+    - navigation.sidebar
+    - navigation.scrollspy
+    - navigation.tabs
+    - navigation.next_prev
+    - navigation.edit_url
+    - navigation.meta
+    - navigation.breadcrumbs
+    - navigation.toc
+    - navigation.logo
+    - navigation.search
+    - navigation.language
+    - navigation.footer
+    - navigation.icon
+    - navigation.math
+    - navigation.code
+    - navigation.favicon
+    - navigation.meta
+
+  
+extra:
+  social:
+    - type: github
+      link: https://tonyfu97.github.io
+    - type: linkedin
+      link: https://www.linkedin.com/in/tony-fu-3721831a3/
