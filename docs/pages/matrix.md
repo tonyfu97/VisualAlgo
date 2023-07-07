@@ -8,7 +8,7 @@ The `Matrix` struct provides a two-dimensional matrix object, along with numerou
 #include "helpers/matrix.hpp"
 ```
 
-## Class Attributes
+## Struct Attributes
 
 * `rows` (`int`): The number of rows in the matrix.
 * `cols` (`int`): The number of columns in the matrix.
@@ -137,37 +137,41 @@ float mean = m.mean(); // mean is now 1.0
 
 Also supports `std()`, `max()`, and `min()` operations.
 
-
 ## Image Operations
 
-* `void Matrix::load(const std::string &filename)`: Loads an image from the specified file path and stores it as a grayscale matrix. The method can only handle images in PPM format (P6).
+* `void Matrix::load(const std::string &filename)`: This function loads an image from the specified file path and stores it as a grayscale matrix. The function can only handle images in PPM format (P6). If the file doesn't exist or the file format is not P6, it will throw a runtime error.
 
 ```cpp
 VisualAlgo::Matrix m;
 m.load("path_to_your_image.ppm"); // Loads the image from the specified path
 ```
-
 This function reads the image file as a binary file. It first reads the header to ensure that the image is in the correct format (P6), then reads the width and height of the image. The pixel data is then read and converted from RGB to grayscale using the ITU-R BT.709 luma transform. The grayscale pixel values are stored in the `data` member of the `Matrix` object.
 
-* `void Matrix::save(const std::string &filename)`: Saves the matrix as an image to the specified file path. The image is saved in PPM format (P6).
+* `void Matrix::save(const std::string &filename, bool normalize)`: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The `normalize` parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, 1.0);
-m.save("path_to_save_image.ppm"); // Saves the matrix as an image to the specified path
+m.save("path_to_save_image.ppm", true); // Normalizes and saves the matrix as an image to the specified path
 ```
+This function first checks if the data needs normalization based on the `normalize` flag. If true, it normalizes the data in the `Matrix` object to the range 0-255 using the `normalize255()` function. Then it writes the image data to the file in PPM format (P6). The pixel data is written as RGB, where the R, G, and B values are all equal, resulting in a grayscale image.
 
-This function first normalizes the data in the `Matrix` object to the range 0-255 using the `normalize255()` function. It then writes the image data to the file in PPM format (P6). The pixel data is written as RGB, where the R, G, and B values are all equal, resulting in a grayscale image.
-
-* `void Matrix::normalize255()`: Normalizes the values in the matrix to the range 0-255. This is used to prepare the data for saving as an image, since pixel values in an image must be in this range.
+* `void Matrix::normalize255()`: This function normalizes the values in the matrix to the range 0-255. This is useful to prepare the data for saving as an image, since pixel values in an image must be in this range.
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, 1.0);
 m.normalize255(); // Normalizes the matrix values to the range 0-255
 ```
-
-* `void Matrix::relu()`: Apply half-wave rectification (changes all negative pixels to zeros) to the matrix.
+* `void Matrix::relu()`: This function applies the ReLU (Rectified Linear Unit) operation to the matrix. It replaces all negative pixel values with zeros, effectively achieving half-wave rectification.
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, -1.0);
-m.relu; // Changes all negative values to 0
+m.relu(); // Changes all negative values to 0
 ```
+* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const`: This function performs the cross-correlation operation between the matrix and the provided kernel. The padding and stride parameters control the operation. If the kernel size is larger than the matrix or the stride is less than or equal to zero, or padding is negative, it will throw an invalid_argument exception.
+
+```cpp
+VisualAlgo::Matrix m(3, 4, 1.0);
+VisualAlgo::Matrix kernel(2, 2, 0.5);
+VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-correlation
+```
+This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.
