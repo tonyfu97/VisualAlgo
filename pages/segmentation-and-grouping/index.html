@@ -63,6 +63,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../stimulus/">Stimulus</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../image-processing-and-enhancement/">1. Image Processing and Enhancement</a>
                 </li>
               </ul>
@@ -74,8 +78,36 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">3. Segmentation and Grouping</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#region-growing">Region Growing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#watershed">Watershed</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#k-means-clustering">K-means Clustering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mean-shift">Mean Shift</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#grabcut">GrabCut</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#u-net">U-Net</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#region-proposal-network-rpn">Region Proposal Network (RPN)</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#neuroscience-models">Neuroscience Models</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#fbf-model">FBF Model</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configr-carpenter-gaddam-and-mingolla-2007">CONFIGR (Carpenter, Gaddam, and Mingolla, 2007)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tolerance-space-theory-tst-for-gestalt-proximity-principle-peng-yang-and-li-2021">Tolerance Space Theory (TST) for Gestalt Proximity Principle (Peng, Yang, and Li, 2021)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gestalt-laws-models">Gestalt Laws Models</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#border-ownership-models">Border Ownership Models</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -130,23 +162,33 @@
               
                 <h1 id="3-segmentation-and-grouping">3. Segmentation and Grouping</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
-<ul>
-<li>Region Growing</li>
-<li>Watershed</li>
-<li>K-means Clustering</li>
-<li>Mean Shift</li>
-<li>GrabCut</li>
-<li>U-Net</li>
-<li>Region Proposal Network (RPN)</li>
-</ul>
+<h3 id="region-growing">Region Growing</h3>
+<h3 id="watershed">Watershed</h3>
+<h3 id="k-means-clustering">K-means Clustering</h3>
+<h3 id="mean-shift">Mean Shift</h3>
+<h3 id="grabcut">GrabCut</h3>
+<h3 id="u-net">U-Net</h3>
+<h3 id="region-proposal-network-rpn">Region Proposal Network (RPN)</h3>
 <h2 id="neuroscience-models">Neuroscience Models</h2>
+<h3 id="fbf-model">FBF Model</h3>
 <ul>
-<li><a href="https://sites.bu.edu/steveg/files/2016/06/GroWyse1991NN.pdf">FBF Model (Grossberg and Wyse, 1991)</a>: </li>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/18024082/">CONFIGR (Carpenter, Gaddam, and Mingolla, 2007)</a>:</li>
-<li><a href="https://jov.arvojournals.org/article.aspx?articleid=2772625">Tolerance Space Theory (TST) for Gestalt Proximity Principle (Peng, Yang, and Li, 2021)</a>: </li>
-<li>Gestalt Laws Models</li>
-<li>Border Ownership Models</li>
+<li>Grossberg and Wyse, Figure-Ground Separation of Connected Scenic Figures: Boundaries, Filling-In, and Opponent Processing. <em>Neural Networks For Vision and Image Processing</em>, Chapter 7., 1992. <a href="https://sites.bu.edu/steveg/files/2016/06/GroWyse1991NN.pdf">(Paper on the same topic, but with bad scan quality)</a></li>
 </ul>
+<p>Explanation:
+The nerual network model is part of a larger pattern recongition model. It is responsible for the early processing step, up to the figure-ground separation step. It is made up of Feature Contour System (FCS) and the Boundary Contou System (BCS) proposed by Grossberg and Mingolla (1985). Because the sequence of processing is FCS-BCS-FCS, the model is named FCS networks. </p>
+<p>Note that FCS and BCS are characterize by the behavior. The models evolved to be very complex these days, and the exact implementation is often based on papers.</p>
+<p>The algorithm is broken up into 4 steps:
+*</p>
+<h3 id="configr-carpenter-gaddam-and-mingolla-2007">CONFIGR (Carpenter, Gaddam, and Mingolla, 2007)</h3>
+<ul>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/18024082/">Paper</a></li>
+</ul>
+<h3 id="tolerance-space-theory-tst-for-gestalt-proximity-principle-peng-yang-and-li-2021">Tolerance Space Theory (TST) for Gestalt Proximity Principle (Peng, Yang, and Li, 2021)</h3>
+<ul>
+<li><a href="https://jov.arvojournals.org/article.aspx?articleid=2772625">Paper</a></li>
+</ul>
+<h3 id="gestalt-laws-models">Gestalt Laws Models</h3>
+<h3 id="border-ownership-models">Border Ownership Models</h3>
               
             </div>
           </div><footer>

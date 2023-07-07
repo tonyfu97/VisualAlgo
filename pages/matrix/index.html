@@ -63,7 +63,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#include">Include</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#class-attributes">Class Attributes</a>
+    <li class="toctree-l2"><a class="reference internal" href="#struct-attributes">Struct Attributes</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#constructors">Constructors</a>
     </li>
@@ -75,7 +75,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#image-operations">Image Operations</a>
+    </li>
     </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../stimulus/">Stimulus</a>
                 </li>
               </ul>
               <ul>
@@ -138,17 +144,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="matrix-class-documentation">Matrix Class Documentation</h1>
-<p>The <code>Matrix</code> class provides a two-dimensional matrix object, along with numerous methods for performing operations on the matrix.</p>
+                <h1 id="visualalgomatrix-struct-documentation">VisualAlgo::Matrix Struct Documentation</h1>
+<p>The <code>Matrix</code> struct provides a two-dimensional matrix object, along with numerous methods for performing operations on the matrix.</p>
+<hr />
 <h2 id="include">Include</h2>
 <pre><code class="language-cpp">#include &quot;helpers/matrix.hpp&quot;
 </code></pre>
-<h2 id="class-attributes">Class Attributes</h2>
+<hr />
+<h2 id="struct-attributes">Struct Attributes</h2>
 <ul>
 <li><code>rows</code> (<code>int</code>): The number of rows in the matrix.</li>
 <li><code>cols</code> (<code>int</code>): The number of columns in the matrix.</li>
 <li><code>data</code> (<code>vector&lt;vector&lt;float&gt;&gt;</code>): A 2D vector that holds the matrix data.</li>
 </ul>
+<hr />
 <h2 id="constructors">Constructors</h2>
 <ul>
 <li><code>Matrix(int rows, int cols)</code>: Constructs a new <code>Matrix</code> object with the given number of rows and columns. The matrix is initialized with all elements set to 0.</li>
@@ -175,6 +184,7 @@ VisualAlgo::Matrix m(data); // Creates a 2x3 matrix with the provided data
 <pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 4, 1.0);
 VisualAlgo::Matrix m2(m1); // Creates a new matrix that is a copy of m1
 </code></pre>
+<hr />
 <h2 id="element-wise-operations">Element-wise Operations</h2>
 <p>Element-wise operations perform the operation on each element of the matrix independently.</p>
 <ul>
@@ -194,6 +204,7 @@ VisualAlgo::Matrix m3 = m1 + m2; // m3 is now a 2x2 matrix with all elements set
 <li><code>Matrix operator+(const float &amp;other)</code>: Add the provided float to all entries.</li>
 </ul>
 <p>Also support other common arithmetic operators.</p>
+<hr />
 <h2 id="matrix-operations">Matrix Operations</h2>
 <ul>
 <li><code>Matrix transpose()</code>: Returns the transpose of the current matrix.</li>
@@ -215,6 +226,7 @@ float result = m1.dot(m2); // result is now 18
 auto m2 = Matrix({{10, 11}, {20, 21}, {30, 31}});
 auto m3 = m1.matmul(m2);
 </code></pre>
+<hr />
 <h2 id="accessors">Accessors</h2>
 <ul>
 <li><code>void set(int row, int col, float value)</code>: Sets the value at the specified row and column in the matrix.</li>
@@ -234,6 +246,7 @@ float value = m.get(2, 3); // Gets the value at row 2, column 3
 <pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, 1.0);
 std::vector&lt;float&gt; row = m[1]; // Gets the second row of the matrix
 </code></pre>
+<hr />
 <h2 id="statistics">Statistics</h2>
 <ul>
 <li><code>float sum()</code>: Returns the sum of all elements in the matrix.</li>
@@ -248,12 +261,48 @@ float sum = m.sum(); // sum is now 6.0
 float mean = m.mean(); // mean is now 1.0
 </code></pre>
 <p>Also supports <code>std()</code>, <code>max()</code>, and <code>min()</code> operations.</p>
+<hr />
+<h2 id="image-operations">Image Operations</h2>
+<ul>
+<li><code>void Matrix::load(const std::string &amp;filename)</code>: This function loads an image from the specified file path and stores it as a grayscale matrix. The function can only handle images in PPM format (P6). If the file doesn't exist or the file format is not P6, it will throw a runtime error.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m;
+m.load(&quot;path_to_your_image.ppm&quot;); // Loads the image from the specified path
+</code></pre>
+<p>This function reads the image file as a binary file. It first reads the header to ensure that the image is in the correct format (P6), then reads the width and height of the image. The pixel data is then read and converted from RGB to grayscale using the ITU-R BT.709 luma transform. The grayscale pixel values are stored in the <code>data</code> member of the <code>Matrix</code> object.</p>
+<ul>
+<li><code>void Matrix::save(const std::string &amp;filename, bool normalize)</code>: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The <code>normalize</code> parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, 1.0);
+m.save(&quot;path_to_save_image.ppm&quot;, true); // Normalizes and saves the matrix as an image to the specified path
+</code></pre>
+<p>This function first checks if the data needs normalization based on the <code>normalize</code> flag. If true, it normalizes the data in the <code>Matrix</code> object to the range 0-255 using the <code>normalize255()</code> function. Then it writes the image data to the file in PPM format (P6). The pixel data is written as RGB, where the R, G, and B values are all equal, resulting in a grayscale image.</p>
+<ul>
+<li><code>void Matrix::normalize255()</code>: This function normalizes the values in the matrix to the range 0-255. This is useful to prepare the data for saving as an image, since pixel values in an image must be in this range.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, 1.0);
+m.normalize255(); // Normalizes the matrix values to the range 0-255
+</code></pre>
+<ul>
+<li><code>void Matrix::relu()</code>: This function applies the ReLU (Rectified Linear Unit) operation to the matrix. It replaces all negative pixel values with zeros, effectively achieving half-wave rectification.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, -1.0);
+m.relu(); // Changes all negative values to 0
+</code></pre>
+<ul>
+<li><code>Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &amp;kernel, int padding, int stride) const</code>: This function performs the cross-correlation operation between the matrix and the provided kernel. The padding and stride parameters control the operation. If the kernel size is larger than the matrix or the stride is less than or equal to zero, or padding is negative, it will throw an invalid_argument exception.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, 1.0);
+VisualAlgo::Matrix kernel(2, 2, 0.5);
+VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-correlation
+</code></pre>
+<p>This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../getting-started/" class="btn btn-neutral float-left" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../image-processing-and-enhancement/" class="btn btn-neutral float-right" title="1. Image Processing and Enhancement">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../stimulus/" class="btn btn-neutral float-right" title="Stimulus">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -284,7 +333,7 @@ float mean = m.mean(); // mean is now 1.0
       <span><a href="../getting-started/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../image-processing-and-enhancement/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../stimulus/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
