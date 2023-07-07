@@ -164,3 +164,10 @@ This function first normalizes the data in the `Matrix` object to the range 0-25
 VisualAlgo::Matrix m(3, 4, 1.0);
 m.normalize255(); // Normalizes the matrix values to the range 0-255
 ```
+
+* `void Matrix::relu()`: Apply half-wave rectification (changes all negative pixels to zeros) to the matrix.
+
+```cpp
+VisualAlgo::Matrix m(3, 4, -1.0);
+m.relu; // Changes all negative values to 0
+```

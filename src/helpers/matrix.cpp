@@ -5,10 +5,17 @@
 #include <stdexcept>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 namespace VisualAlgo
 {
     // Constructors
+    Matrix::Matrix()
+    {
+        this->rows = 0;
+        this->cols = 0;
+    }
+
     Matrix::Matrix(int rows, int cols)
     {
         if (rows <= 0 || cols <= 0)
@@ -337,8 +344,17 @@ namespace VisualAlgo
         }
     }
 
-    void Matrix::save(const std::string &filename)
+    void Matrix::save(const std::string &filename, bool normalize)
     {
+        if (normalize)
+        {
+            this->normalize255();
+        }
+        else if (this->max() > 255 || this->min() < 0)
+        {
+            throw std::runtime_error("Image values must be between 0 and 255. Please consider normalizing.");
+        }
+
         std::ofstream file(filename, std::ios::binary);
         if (!file)
         {
@@ -349,7 +365,6 @@ namespace VisualAlgo
         file << this->cols << " " << this->rows << "\n";
         file << 255 << "\n";
 
-        this->normalize255();
         for (int i = 0; i < rows; ++i)
         {
             for (int j = 0; j < cols; ++j)
@@ -386,6 +401,64 @@ namespace VisualAlgo
                 value = ((value - min_value) / range) * 255;
             }
         }
+    }
+
+    void Matrix::relu()
+    {
+        for (auto &row : this->data)
+        {
+            for (auto &value : row)
+            {
+                value = std::max(value, 0.0f);
+            }
+        }
+    }
+
+    Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const
+    {
+        if (kernel.rows > rows || kernel.cols > cols)
+        {
+            throw std::invalid_argument("Kernel dimensions cannot be larger than the input matrix dimensions.");
+        }
+
+        if (stride <= 0)
+        {
+            throw std::invalid_argument("Stride must be a positive integer.");
+        }
+
+        if (padding < 0)
+        {
+            throw std::invalid_argument("Padding cannot be negative.");
+        }
+        int out_rows = (rows + 2 * padding - kernel.rows) / stride + 1;
+        int out_cols = (cols + 2 * padding - kernel.cols) / stride + 1;
+
+        VisualAlgo::Matrix output(out_rows, out_cols, 0);
+
+        for (int i = 0; i < out_rows; ++i)
+        {
+            for (int j = 0; j < out_cols; ++j)
+            {
+                float sum = 0;
+                for (int p = 0; p < kernel.rows; ++p)
+                {
+                    for (int q = 0; q < kernel.cols; ++q)
+                    {
+                        int x = stride * i + p - padding;
+                        int y = stride * j + q - padding;
+
+                        // If within bounds of original image
+                        if (x >= 0 && y >= 0 && x < rows && y < cols)
+                        {
+                            sum += get(x, y) * kernel.get(p, q);
+                        }
+                    }
+                }
+                output.set(i, j, sum);
+            }
+        }
+
+        return output;
     }
 
     // Private

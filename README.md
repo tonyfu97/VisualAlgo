@@ -6,7 +6,7 @@ Please see the [Documentation](https://tonyfu97.github.io/VisualAlgo/) for more 
 
 ## Disclaimer
 
-This [repository](https://github.com/tonyfu97/VisualAlgo/) is created purely for educational purposes. It contains implementations of algorithms that might be copyrighted or protected by other legal means. The goal is to showcase these implementations as a personal project and to facilitate learning.
+This repository is created purely for educational purposes. It contains implementations of algorithms that might be copyrighted or protected by other legal means. The goal is to showcase these implementations as a personal project and to facilitate learning.
 
 Please note that while you are welcome to browse and learn from this code, I highly discourage using it directly in any production system or for any commercial purposes, as it may infringe upon the rights of the original algorithm authors or patent holders.
 

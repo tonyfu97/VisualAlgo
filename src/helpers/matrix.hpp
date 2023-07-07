@@ -12,6 +12,7 @@ namespace VisualAlgo
         std::vector<std::vector<float>> data;
 
         // Constructors
+        Matrix();
         Matrix(int rows, int cols);
         Matrix(int rows, int cols, float value);
         Matrix(std::vector<std::vector<float>> data);
@@ -60,8 +61,10 @@ namespace VisualAlgo
 
         // Image operations
         void load(const std::string& filename);
-        void save(const std::string& filename);
+        void save(const std::string &filename, bool normalize=false);
         void normalize255();
+        void relu();
+        Matrix cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const;
 
     private:
         void check_dim_equal(const Matrix &other);
