@@ -1,18 +1,23 @@
-# Matrix Struct Documentation
+# VisualAlgo::Matrix Struct Documentation
 
 The `Matrix` struct provides a two-dimensional matrix object, along with numerous methods for performing operations on the matrix.
+
+---
 
 ## Include
 
 ``` cpp
 #include "helpers/matrix.hpp"
 ```
+---
 
 ## Struct Attributes
 
 * `rows` (`int`): The number of rows in the matrix.
 * `cols` (`int`): The number of columns in the matrix.
 * `data` (`vector<vector<float>>`): A 2D vector that holds the matrix data.
+
+---
 
 ## Constructors
 
@@ -48,6 +53,8 @@ VisualAlgo::Matrix m1(3, 4, 1.0);
 VisualAlgo::Matrix m2(m1); // Creates a new matrix that is a copy of m1
 ```
 
+---
+
 ## Element-wise Operations
 
 Element-wise operations perform the operation on each element of the matrix independently.
@@ -70,6 +77,8 @@ VisualAlgo::Matrix m3 = m1 + m2; // m3 is now a 2x2 matrix with all elements set
 * ` Matrix operator+(const float &other)`: Add the provided float to all entries.
 
 Also support other common arithmetic operators.
+
+---
 
 ## Matrix Operations
 
@@ -96,6 +105,8 @@ auto m2 = Matrix({{10, 11}, {20, 21}, {30, 31}});
 auto m3 = m1.matmul(m2);
 ```
 
+---
+
 ## Accessors
 
 * `void set(int row, int col, float value)`: Sets the value at the specified row and column in the matrix.
@@ -119,6 +130,8 @@ VisualAlgo::Matrix m(3, 4, 1.0);
 std::vector<float> row = m[1]; // Gets the second row of the matrix
 ```
 
+---
+
 ## Statistics
 
 * `float sum()`: Returns the sum of all elements in the matrix.
@@ -136,6 +149,8 @@ float mean = m.mean(); // mean is now 1.0
 ```
 
 Also supports `std()`, `max()`, and `min()` operations.
+
+---
 
 ## Image Operations
 

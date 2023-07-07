@@ -2,6 +2,8 @@
 
 #include "helpers/matrix.hpp"
 
+#include <cmath>
+
 namespace VisualAlgo::SegmentationAndGrouping
 {
     class FBF
@@ -13,6 +15,6 @@ namespace VisualAlgo::SegmentationAndGrouping
         Matrix apply(Matrix input); 
 
     private:
-        float A, B, C, D, E, S, ALPHA, BETA;
+        float THETA_INCREMENT = M_PI / 8;
     };
 }
