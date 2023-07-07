@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 #include <stdexcept>
+#include <string>
+#include <fstream>
 
 namespace VisualAlgo
 {
@@ -31,7 +33,6 @@ namespace VisualAlgo
         this->cols = data.at(0).size();
         this->data = data;
     }
-
 
     Matrix::Matrix(const Matrix &other)
     {
@@ -295,6 +296,96 @@ namespace VisualAlgo
                     min = this->get(i, j);
             }
         return min;
+    }
+
+    // Image operations
+    void Matrix::load(const std::string &filename)
+    {
+        std::ifstream file(filename, std::ios::binary);
+        if (!file)
+        {
+            throw std::runtime_error("Cannot open file");
+        }
+
+        std::string header;
+        file >> header;
+        if (header != "P6")
+        {
+            throw std::runtime_error("Can only handle PPM format (P6)");
+        }
+
+        file >> this->cols >> this->rows;
+
+        int max_value;
+        file >> max_value;
+
+        file.get(); // consume newline
+
+        this->data = std::vector<std::vector<float>>(rows, std::vector<float>(cols, 0));
+
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; ++j)
+            {
+                unsigned char r, g, b;
+                file.read(reinterpret_cast<char *>(&r), 1);
+                file.read(reinterpret_cast<char *>(&g), 1);
+                file.read(reinterpret_cast<char *>(&b), 1);
+                // convert RGB to grayscale using the ITU-R BT.709 luma transform
+                this->set(i, j, 0.2126 * r + 0.7152 * g + 0.0722 * b);
+            }
+        }
+    }
+
+    void Matrix::save(const std::string &filename)
+    {
+        std::ofstream file(filename, std::ios::binary);
+        if (!file)
+        {
+            throw std::runtime_error("Cannot open file");
+        }
+
+        file << "P6\n";
+        file << this->cols << " " << this->rows << "\n";
+        file << 255 << "\n";
+
+        this->normalize255();
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; ++j)
+            {
+                unsigned char pixel = static_cast<unsigned char>(this->get(i, j));
+                file.write(reinterpret_cast<char *>(&pixel), 1); // R
+                file.write(reinterpret_cast<char *>(&pixel), 1); // G
+                file.write(reinterpret_cast<char *>(&pixel), 1); // B
+            }
+        }
+    }
+
+    void Matrix::normalize255()
+    {
+        float min_value = this->get(0, 0);
+        float max_value = this->get(0, 0);
+
+        for (const auto &row : this->data)
+        {
+            for (const auto &value : row)
+            {
+                min_value = std::min(min_value, value);
+                max_value = std::max(max_value, value);
+            }
+        }
+
+        float range = max_value - min_value;
+        if (range == 0)
+            return;
+        for (auto &row : this->data)
+        {
+            for (auto &value : row)
+            {
+                value = ((value - min_value) / range) * 255;
+            }
+        }
     }
 
     // Private

@@ -1,6 +1,6 @@
-# Matrix Class Documentation
+# Matrix Struct Documentation
 
-The `Matrix` class provides a two-dimensional matrix object, along with numerous methods for performing operations on the matrix.
+The `Matrix` struct provides a two-dimensional matrix object, along with numerous methods for performing operations on the matrix.
 
 ## Include
 
@@ -136,3 +136,31 @@ float mean = m.mean(); // mean is now 1.0
 ```
 
 Also supports `std()`, `max()`, and `min()` operations.
+
+
+## Image Operations
+
+* `void Matrix::load(const std::string &filename)`: Loads an image from the specified file path and stores it as a grayscale matrix. The method can only handle images in PPM format (P6).
+
+```cpp
+VisualAlgo::Matrix m;
+m.load("path_to_your_image.ppm"); // Loads the image from the specified path
+```
+
+This function reads the image file as a binary file. It first reads the header to ensure that the image is in the correct format (P6), then reads the width and height of the image. The pixel data is then read and converted from RGB to grayscale using the ITU-R BT.709 luma transform. The grayscale pixel values are stored in the `data` member of the `Matrix` object.
+
+* `void Matrix::save(const std::string &filename)`: Saves the matrix as an image to the specified file path. The image is saved in PPM format (P6).
+
+```cpp
+VisualAlgo::Matrix m(3, 4, 1.0);
+m.save("path_to_save_image.ppm"); // Saves the matrix as an image to the specified path
+```
+
+This function first normalizes the data in the `Matrix` object to the range 0-255 using the `normalize255()` function. It then writes the image data to the file in PPM format (P6). The pixel data is written as RGB, where the R, G, and B values are all equal, resulting in a grayscale image.
+
+* `void Matrix::normalize255()`: Normalizes the values in the matrix to the range 0-255. This is used to prepare the data for saving as an image, since pixel values in an image must be in this range.
+
+```cpp
+VisualAlgo::Matrix m(3, 4, 1.0);
+m.normalize255(); // Normalizes the matrix values to the range 0-255
+```

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 namespace VisualAlgo
 {
@@ -56,6 +57,11 @@ namespace VisualAlgo
         float std();
         float max();
         float min();
+
+        // Image operations
+        void load(const std::string& filename);
+        void save(const std::string& filename);
+        void normalize255();
 
     private:
         void check_dim_equal(const Matrix &other);
