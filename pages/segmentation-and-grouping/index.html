@@ -177,7 +177,7 @@
 <p>The FBF network model was used as part of the larger pattern recognition model by Grossberg et al.. It handles the initial steps of processing, up until the figure-ground separation phase. </p>
 <p>The FBF model is composed of two sub-systems: the Feature Contour System (FCS) and the Boundary Contour System (BCS), both initially proposed by Grossberg and Mingolla in 1985. As the processing sequence typically follows the pattern FCS-BCS-FCS, these combined systems are collectively referred to as the FBF networks.</p>
 <p>The central idea posited by Grossberg is that these two systems collaboratively enable us to recognize surfaces (handled by the FCS) and boundaries (handled by the BCS). The FCS's role is to fill in the entire boundary region with consistent surface characteristics, relying on the boundaries computed by the BCS, which connects collinear contours to establish these boundaries. A notable point raised by Grossberg is our ability to recognize boundaries even when they're not directly visible, leading to illusions such as the Kanizsa triangle.</p>
-<p>It's important to note that the FCS and BCS are hypothetical models for the visual system, distinguished by their function ("what" they are supposed to do) rather than their mechanism ("how" they are supposed to operate). These models have evolved significantly over time, and their definition is not bound by any specific method or implementation. The exact details often depend on specific research papers. Also, note that I've made a number of simplifications to the original model. For example, the original paper applied mathematics based on sub-pixel resolution (interpolating pixels), whereas the simple cells I used are entirely pixel-based.</p>
+<p>Please note that the FCS and BCS are hypothetical models for the visual system, distinguished by their function ("what" they are supposed to do) rather than their mechanism ("how" they are supposed to operate). These models have evolved significantly over time, and their definition is not bound by any specific method or implementation. The exact details often depend on specific research papers. Also, note that I've made a number of simplifications to the original model. For example, the original paper applied mathematics based on sub-pixel resolution (interpolating pixels), whereas the simple cells I used are entirely pixel-based.</p>
 <p><strong>Algorithm Breakdown</strong>: </p>
 <p>The FBF model algorithm consists of four steps:</p>
 <ul>
@@ -185,21 +185,61 @@
 <p><strong>Step 1: Discount the Illuminant</strong>: Instead of uniformly applying the ON-Center-OFF-Surround (ON-C) and OFF-Center-ON-Surround (OFF-C) kernels (also known as Difference of Gaussian), the kernel is scaled with the image value to handle areas with varying brightness levels. Grossberg describes these cells as "shunting" because their dynamics are dependent on their current state, akin to an electrical system with a (shunting) resistor. This is believed to be part of the FCS's work, as it needs to perceive surfaces as continuous over a broad range of illumination levels. The output of the ON-C and OFF-C processes are denoted as <script type="math/tex">\mathbf{x}</script> and <script type="math/tex">\bar{\mathbf{x}}</script> respectively:</p>
 <p>
 <script type="math/tex; mode=display"> \mathbf{x} = \frac{\mathbf{I} \otimes (B \mathbf{C} - D \mathbf{E})}{A + \mathbf{I} \otimes (\mathbf{C} + \mathbf{E})}\\
-\bar{\mathbf{x}} = \frac{A * S + \mathbf{I} \otimes (D \mathbf{E} - B \mathbf{C})}{A + \mathbf{I} \otimes (\mathbf{C} + \mathbf{E})}</script>
+\bar{\mathbf{x}} = \frac{A \cdot S + \mathbf{I} \otimes (D \mathbf{E} - B \mathbf{C})}{A + \mathbf{I} \otimes (\mathbf{C} + \mathbf{E})}</script>
 </p>
 <p>Here, the symbol <script type="math/tex">\otimes</script> represents the operation of 2D cross-correlation. <script type="math/tex">\mathbf{I}</script> represents the input image array, while <script type="math/tex">A</script>, <script type="math/tex">B</script>, and <script type="math/tex">D</script> are constants that define the shape of the ON-C and OFF-C kernels. The term <script type="math/tex">S</script> introduces the offset of the OFF-C kernel, ensuring that <script type="math/tex">\bar{\mathbf{x}}</script> primarily falls within the positive range. The values for those parameters can also be found in the paper.</p>
 <p>
 <script type="math/tex">\mathbf{C}</script> and <script type="math/tex">\mathbf{E}</script> denote two Gaussian kernels, as the ON-C and OFF-C kernels are "Differences of Gaussians" (DoG). The ON-C shape is derived from subtracting the wider and shorter Gaussian kernel <script type="math/tex">\mathbf{E}</script> from the narrower and taller Gaussian kernel <script type="math/tex">\mathbf{C}</script>. For the OFF-C kernel, the procedure is reversed. The formulas for these kernels are:</p>
 <p>
 <script type="math/tex; mode=display">
-\mathbf{C} = C e^{-\frac{(p - i)^2 + (q - j)^2)}{\alpha^2}}\\
-\mathbf{E} = E e^{-\frac{(p - i)^2 + (q - j)^2)}{\beta^2}}\\
+\mathbf{C} = C e^{-\frac{(p - i)^2 + (q - j)^2}{\alpha^2}}\\
+\mathbf{E} = E e^{-\frac{(p - i)^2 + (q - j)^2}{\beta^2}}\\
 </script>
 </p>
 <p>where <script type="math/tex">\alpha</script> and <script type="math/tex">\beta</script> are two other constants. (Interestingly, Grossberg and Wyse applied a logarithmic transformation to the arguments of the exponent in their paper, a step that I did not use in my implementation. Instead, I use the "standard" form of Gaussian shown above.)</p>
 </li>
 <li>
-<p><strong>Step 2: CORT-X 2 Filter</strong>: CORT-X 2 Filter is neurophysiologically inspired model based on Hubel and Wisels work on Simple, Complex, and Hypercomplex cells. They are the BCS part of this model. The CORT-X 2 Filter receives input from the previous step and outputs the boundaries. It can be further broken down into </p>
+<p><strong>Step 2: CORT-X 2 Filter</strong>: The CORT-X 2 Filter is a neurophysiologically inspired model that draws on Hubel and Wiesel's work on Simple, Complex, and Hypercomplex cells. It forms the BCS part of this model. The filter takes the output from the previous step as its input, and generates the boundaries. It operates in a purely feedforward manner and can be broken down into six sub-steps:</p>
+<ul>
+<li>
+<p><strong>Step 2a: Simple Cells</strong>: These cells receive either <script type="math/tex">\mathbf{x}</script> or <script type="math/tex">\bar{\mathbf{x}}</script> as inputs. The kernels are determined by two scales, <script type="math/tex">s</script>: <script type="math/tex">s=1</script>, with major and minor axes of 12 and 6 pixels, and <script type="math/tex">s=2</script>, with major and minor axes of 20 and 10 pixels. The kernel, <script type="math/tex">\mathbf{K}</script>, comprises two ellipse halves, <script type="math/tex">\mathbf{L_s}</script> and <script type="math/tex">\mathbf{R_s}</script>:</p>
+<p>
+<script type="math/tex; mode=display">\mathbf{K}_{s, L} (k) = \mathbf{L_s} (k) - \alpha_s \mathbf{R_s} (k) - \beta_s </script>
+<script type="math/tex; mode=display">\mathbf{K}_{s, R} (k) = \mathbf{R_s} (k) - \alpha_s \mathbf{L_s} (k) - \beta_s</script>
+</p>
+<p><img alt="simple-cell-kernel-example" src="../../images/SegmentationAndGrouping/FBF/simple_cell_kernel.png" /></p>
+<p>Here, <script type="math/tex">k</script> denotes the orientation index of the kernel, ranging from k_0 = 0, k_1 = 22.5, ... to k_7 = 157.5 degrees. For clarity, note that Grossberg and Wyse didn't just rotate the simple cell kernel by 360 degrees. Instead, they rotate two kernels, <script type="math/tex">\mathbf{L_s}</script> and <script type="math/tex">\mathbf{R_s}</script>, with opposite polarities by 180 degrees. This is because the kernels of the same orientation and opposite polarity will combine in the next step, making this notation more intuitive. The output of the simple cells comes from the cross-correlation between the ON-C (or OFF-C) signals, followed by half-wave rectification:</p>
+<p>
+<script type="math/tex; mode=display">\mathbf{S^+_{s, L}} (k) = \max(\mathbf{K}_{s, L} (k) \otimes \mathbf{x}, 0)</script>
+<script type="math/tex; mode=display">\mathbf{S^+_{s, R}} (k) = \max(\mathbf{K}_{s, R} (k) \otimes \mathbf{x}, 0)</script>
+<script type="math/tex; mode=display">\mathbf{S^-_{s, L}} (k) = \max(\mathbf{K}_{s, L} (k) \otimes \bar{\mathbf{x}}, 0)</script>
+<script type="math/tex; mode=display">\mathbf{S^-_{s, R}} (k) = \max(\mathbf{K}_{s, R} (k) \otimes \bar{\mathbf{x}}, 0)</script>
+</p>
+</li>
+<li>
+<p><strong>Step 2b: Complex Cells</strong>: The complex cells combine the responses from simple cells of the same orientation. Be aware that the <script type="math/tex">\mathbf{C}</script> notation here represents the response map of complex cells, not the Gaussian from Step 1.</p>
+<p>
+<script type="math/tex; mode=display">\mathbf{C}_s (k) = F \left[ \mathbf{S^+_{s, L}} (k) + \mathbf{S^+_{s, R}} (k) + \mathbf{S^-_{s, L}} (k) + \mathbf{S^-_{s, R}} (k) \right]</script>
+</p>
+<p>Here, <script type="math/tex">F</script> is another constant parameter. Half-wave rectification isn't necessary as the output is always non-negative.</p>
+</li>
+<li>
+<p><strong>Step 2c: Hypercomplex Cells (First Competitive Stage)</strong>: This step resembles the non-max suppression in Canny edge detection as it aims to inhibit texture around boundaries that lack other collinear edges. This is accomplished by dividing the complex cells response map by the cross-correlation between the complex cell response and the oriented competition kernel <script type="math/tex">\mathbf{G_s} (k)</script>. This kernel is normalized and positive everywhere except along the direction of the complex cell's corresponding orientation. Consequently, if there are non-collinear edges in the vicinity, the cross-correlation term in the denominator becomes large.</p>
+<p><img alt="oriented-competition-kernel" src="../../images/SegmentationAndGrouping/FBF/oriented_competition_kernel.png" /></p>
+<p>
+<script type="math/tex; mode=display">\mathbf{D}_{s} (k) = \max \left[\frac{\mathbf{C_s}(k)}{\epsilon + \mu \sum_m (\mathbf{C_s} (m) \otimes \mathbf{G_s} (k))} - \tau, 0\right]</script>
+</p>
+</li>
+<li>
+<p><strong>Step 2d: Hypercomplex Cells (Second Competitive Stage)</strong>: In this stage, only the dominant orientation is preserved (winner-takes-all) for each location on the complex cell map, <script type="math/tex">\mathbf{C_s} (k)</script>.</p>
+</li>
+</ul>
+<p>
+<script type="math/tex; mode=display">\mathbf{D}_s = \max_k \mathbf{D}_s (k)</script>
+</p>
+<ul>
+<li><strong>Step 2e: Multiple Scale Interaction: Boundary Localization and Noise Suppression</strong>: </li>
+</ul>
 </li>
 </ul>
 <h3 id="configr-carpenter-gaddam-and-mingolla-2007">CONFIGR (Carpenter, Gaddam, and Mingolla, 2007)</h3>
