@@ -89,7 +89,7 @@ namespace VisualAlgo
 
     TEST(MatrixTestSuite, MatrixAssignmentOperator)
     {
-       std::vector<std::vector<float>> data = {{1, 2, 3}, {4, 5, 6}};
+        std::vector<std::vector<float>> data = {{1, 2, 3}, {4, 5, 6}};
         Matrix m1(data);
         Matrix m2 = m1;
         CHECK_EQUAL(2, m2.rows);
@@ -632,7 +632,7 @@ namespace VisualAlgo
         CHECK_EQUAL(2, m3.cols);
         CHECK_EQUAL(37, m3.data[0][0]);
         CHECK_EQUAL(47, m3.data[0][1]);
-        
+
         // Test 2
         Matrix m4({{1, 2, 3}, {4, 5, 6}});
         Matrix m5({{1, 2}, {3, 4}});
@@ -705,6 +705,108 @@ namespace VisualAlgo
         }
         CHECK_EQUAL(true, exceptionThrown);
     }
+
+    TEST(MatrixTestSuite, MatrixZeros)
+    {
+        Matrix m = Matrix::zeros(2, 3);
+        CHECK_EQUAL(2, m.rows);
+        CHECK_EQUAL(3, m.cols);
+        CHECK_EQUAL(0, m.data[0][0]);
+        CHECK_EQUAL(0, m.data[0][1]);
+        CHECK_EQUAL(0, m.data[0][2]);
+        CHECK_EQUAL(0, m.data[1][0]);
+        CHECK_EQUAL(0, m.data[1][1]);
+        CHECK_EQUAL(0, m.data[1][2]);
+    }
+
+    TEST(MatrixTestSuite, MatrixOnes)
+    {
+        Matrix m = Matrix::ones(2, 3);
+        CHECK_EQUAL(2, m.rows);
+        CHECK_EQUAL(3, m.cols);
+        CHECK_EQUAL(1, m.data[0][0]);
+        CHECK_EQUAL(1, m.data[0][1]);
+        CHECK_EQUAL(1, m.data[0][2]);
+        CHECK_EQUAL(1, m.data[1][0]);
+        CHECK_EQUAL(1, m.data[1][1]);
+        CHECK_EQUAL(1, m.data[1][2]);
+    }
+
+    TEST(MatrixTestSuite, MatrixEye)
+    {
+        Matrix m = Matrix::eye(2, 3);
+        CHECK_EQUAL(2, m.rows);
+        CHECK_EQUAL(3, m.cols);
+        CHECK_EQUAL(1, m.data[0][0]);
+        CHECK_EQUAL(0, m.data[0][1]);
+        CHECK_EQUAL(0, m.data[0][2]);
+        CHECK_EQUAL(0, m.data[1][0]);
+        CHECK_EQUAL(1, m.data[1][1]);
+        CHECK_EQUAL(0, m.data[1][2]);
+    }
+
+    TEST(MatrixTestSuite, MatrixRandomWithRange)
+    {
+        Matrix m = Matrix::random(2, 3, 0, 1);
+        CHECK_EQUAL(2, m.rows);
+        CHECK_EQUAL(3, m.cols);
+        CHECK(m.max() <= 1);
+        CHECK(m.min() >= 0);
+    }
+
+    TEST(MatrixTestSuite, MatrixElementwiseMax)
+    {
+        Matrix a = Matrix({{1, 2, 3}, {4, 5, 6}});
+        Matrix b = Matrix({{2, 3, 4}, {5, 6, 7}});
+        Matrix c = Matrix::elementwise_max(a, b);
+        CHECK_EQUAL(2, c.rows);
+        CHECK_EQUAL(3, c.cols);
+        CHECK_EQUAL(2, c.data[0][0]);
+        CHECK_EQUAL(3, c.data[0][1]);
+        CHECK_EQUAL(4, c.data[0][2]);
+        CHECK_EQUAL(5, c.data[1][0]);
+        CHECK_EQUAL(6, c.data[1][1]);
+        CHECK_EQUAL(7, c.data[1][2]);
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix d = Matrix({{1, 2, 3}, {4, 5, 6}});
+            Matrix e = Matrix({{2, 3}, {5, 6}});
+            Matrix f = Matrix::elementwise_max(d, e);
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+    }
+
+    TEST(MatrixTestSuite, MatrixElementwiseMin)
+    {
+        Matrix a = Matrix({{5, 2, 3}, {4, 5, -3}});
+        Matrix b = Matrix({{2, 3, 4}, {5, -9, 7}});
+        Matrix c = Matrix::elementwise_min(a, b);
+        CHECK_EQUAL(2, c.rows);
+        CHECK_EQUAL(3, c.cols);
+        CHECK_EQUAL(2, c.data[0][0]);
+        CHECK_EQUAL(2, c.data[0][1]);
+        CHECK_EQUAL(3, c.data[0][2]);
+        CHECK_EQUAL(4, c.data[1][0]);
+        CHECK_EQUAL(-9, c.data[1][1]);
+        CHECK_EQUAL(-3, c.data[1][2]);
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix d = Matrix({{1, 2, 3}, {4, 5, 6}});
+            Matrix e = Matrix({{2, 3}, {5, 6}});
+            Matrix f = Matrix::elementwise_min(d, e);
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+    }
 }
-
-

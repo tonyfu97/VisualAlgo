@@ -55,6 +55,44 @@ VisualAlgo::Matrix m2(m1); // Creates a new matrix that is a copy of m1
 
 ---
 
+## Special Matrix Constructors
+
+* `Matrix::zeros(int rows, int cols)`: Returns a new `Matrix` object with the specified number of rows and columns. All elements of the matrix are initialized to 0.
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix::zeros(3, 4); // Creates a 3x4 matrix with all elements initialized to 0
+```
+
+* `Matrix::ones(int rows, int cols)`: Returns a new `Matrix` object with the specified number of rows and columns. All elements of the matrix are initialized to 1.
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix::ones(3, 4); // Creates a 3x4 matrix with all elements initialized to 1
+```
+
+* `Matrix::eye(int rows, int cols)`: Returns a new identity `Matrix` object with the specified number of rows and columns. All diagonal elements are set to 1, and all other elements are set to 0.
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix::eye(3, 3); // Creates a 3x3 identity matrix
+```
+
+---
+
+## Random Matrix Constructors
+
+* `Matrix::random(int rows, int cols)`: Returns a new `Matrix` object with the specified number of rows and columns. All elements of the matrix are initialized to a random floating point value in the range [0, 1].
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix::random(3, 4); // Creates a 3x4 matrix with all elements initialized to a random value
+```
+
+* `Matrix::random(int rows, int cols, float min, float max)`: Returns a new `Matrix` object with the specified number of rows and columns. All elements of the matrix are initialized to a random floating point value in the range [min, max].
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix::random(3, 4, -1.0, 1.0); // Creates a 3x4 matrix with all elements initialized to a random value between -1.0 and 1.0
+```
+
+---
+
 ## Element-wise Operations
 
 Element-wise operations perform the operation on each element of the matrix independently.
@@ -77,6 +115,26 @@ VisualAlgo::Matrix m3 = m1 + m2; // m3 is now a 2x2 matrix with all elements set
 * ` Matrix operator+(const float &other)`: Add the provided float to all entries.
 
 Also support other common arithmetic operators.
+
+---
+
+## Element-wise Comparison Functions
+
+* `Matrix::elementwise_max(const Matrix &a, const Matrix &b)`: Returns a new `Matrix` that is the element-wise maximum of matrices `a` and `b`. The dimensions of `a` and `b` must be the same.
+
+```cpp
+VisualAlgo::Matrix a = VisualAlgo::Matrix::ones(3, 4);
+VisualAlgo::Matrix b = VisualAlgo::Matrix::zeros(3, 4);
+VisualAlgo::Matrix m = VisualAlgo::Matrix::elementwise_max(a, b); // m will be a 3x4 matrix with all elements equal to 1
+```
+
+* `Matrix::elementwise_min(const Matrix &a, const Matrix &b)`: Returns a new `Matrix` that is the element-wise minimum of matrices `a` and `b`. The dimensions of `a` and `b` must be the same.
+
+```cpp
+VisualAlgo::Matrix a = VisualAlgo::Matrix::ones(3, 4);
+VisualAlgo::Matrix b = VisualAlgo::Matrix::zeros(3, 4);
+VisualAlgo::Matrix m = VisualAlgo::Matrix::elementwise_min(a, b); // m will be a 3x4 matrix with all elements equal to 0
+```
 
 ---
 
@@ -162,7 +220,13 @@ m.load("path_to_your_image.ppm"); // Loads the image from the specified path
 ```
 This function reads the image file as a binary file. It first reads the header to ensure that the image is in the correct format (P6), then reads the width and height of the image. The pixel data is then read and converted from RGB to grayscale using the ITU-R BT.709 luma transform. The grayscale pixel values are stored in the `data` member of the `Matrix` object.
 
-* `void Matrix::save(const std::string &filename, bool normalize)`: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The `normalize` parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.
+* `Matrix Matrix::load(const std::string &filename, int rows, int cols)`: Directly load an image.
+
+```cpp
+VisualAlgo::Matrix m = VisualAlgo::Matrix.load("path_to_your_image.ppm", 256, 256);
+```
+
+* `void Matrix::save(const std::string &filename, bool normalize) const`: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The `normalize` parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, 1.0);
@@ -190,3 +254,5 @@ VisualAlgo::Matrix kernel(2, 2, 0.5);
 VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-correlation
 ```
 This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.
+
+* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const`: Same as above, but keep the same size.

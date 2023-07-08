@@ -61,13 +61,25 @@ namespace VisualAlgo
 
         // Image operations
         void load(const std::string& filename);
-        void save(const std::string &filename, bool normalize=false);
+        static Matrix load(const std::string& filename, int rows, int cols);
+        void save(const std::string &filename, bool normalize=true) const;
         void normalize255();
         void relu();
         Matrix cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const;
+        Matrix cross_correlation(const VisualAlgo::Matrix &kernel) const;  // keep the same size
+
+        // Functions
+        static Matrix zeros(int rows, int cols);
+        static Matrix ones(int rows, int cols);
+        static Matrix eye(int rows, int cols);
+        static Matrix random(int rows, int cols);
+        static Matrix random(int rows, int cols, float min, float max);
+        static Matrix elementwise_max(const Matrix &a, const Matrix &b);
+        static Matrix elementwise_min(const Matrix &a, const Matrix &b);
 
     private:
         void check_dim_equal(const Matrix &other);
+        static void check_dim_equal(const Matrix &a, const Matrix &b);
     };
 
 }

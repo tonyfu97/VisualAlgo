@@ -53,3 +53,4 @@ clean:
 	rm -f $(PROJDIR)/bin/VisualAlgoTest
 	rm -f $(PROJDIR)/CppUnitLite/libCppUnitLite.a
 	rm -f $(PROJDIR)/bin/libVisualAlgo.a
+	rm -f $(BUILDDIR)/tests.o

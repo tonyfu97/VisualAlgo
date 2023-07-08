@@ -53,7 +53,6 @@ namespace VisualAlgo
     {
         if (this == &other)
             return *this;
-        Matrix::check_dim_equal(other);
         this->rows = other.rows;
         this->cols = other.cols;
         this->data = other.data;
@@ -311,14 +310,14 @@ namespace VisualAlgo
         std::ifstream file(filename, std::ios::binary);
         if (!file)
         {
-            throw std::runtime_error("Cannot open file");
+            throw std::runtime_error("Cannot open file: " + filename + ".");
         }
 
         std::string header;
         file >> header;
         if (header != "P6")
         {
-            throw std::runtime_error("Can only handle PPM format (P6)");
+            throw std::runtime_error("Can only handle PPM format (P6). Got: " + header + " instead.");
         }
 
         file >> this->cols >> this->rows;
@@ -344,13 +343,23 @@ namespace VisualAlgo
         }
     }
 
-    void Matrix::save(const std::string &filename, bool normalize)
+    Matrix Matrix::load(const std::string &filename, int rows, int cols)
     {
+        Matrix result(rows, cols);
+        result.load(filename);
+        return result;
+    }
+
+    void Matrix::save(const std::string &filename, bool normalize) const
+    {
+        // Make a copy of the matrix. Otherwise, the normalization will affect the original matrix.
+        Matrix copy = *this;
+
         if (normalize)
         {
-            this->normalize255();
+            copy.normalize255();
         }
-        else if (this->max() > 255 || this->min() < 0)
+        else if (copy.max() > 255 || copy.min() < 0)
         {
             throw std::runtime_error("Image values must be between 0 and 255. Please consider normalizing.");
         }
@@ -362,14 +371,14 @@ namespace VisualAlgo
         }
 
         file << "P6\n";
-        file << this->cols << " " << this->rows << "\n";
+        file << copy.cols << " " << copy.rows << "\n";
         file << 255 << "\n";
 
         for (int i = 0; i < rows; ++i)
         {
             for (int j = 0; j < cols; ++j)
             {
-                unsigned char pixel = static_cast<unsigned char>(this->get(i, j));
+                unsigned char pixel = static_cast<unsigned char>(copy.get(i, j));
                 file.write(reinterpret_cast<char *>(&pixel), 1); // R
                 file.write(reinterpret_cast<char *>(&pixel), 1); // G
                 file.write(reinterpret_cast<char *>(&pixel), 1); // B
@@ -461,10 +470,98 @@ namespace VisualAlgo
         return output;
     }
 
+    Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const
+    {
+        VisualAlgo::Matrix output(rows, cols);
+
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                float sum = 0;
+                for (int p = 0; p < kernel.rows; ++p)
+                {
+                    for (int q = 0; q < kernel.cols; ++q)
+                    {
+                        int x = i + p - kernel.rows / 2;
+                        int y = j + q - kernel.cols / 2;
+
+                        // If within bounds of original image
+                        if (x >= 0 && y >= 0 && x < rows && y < cols)
+                        {
+                            sum += get(x, y) * kernel.get(p, q);
+                        }
+                    }
+                }
+                output.set(i, j, sum);
+            }
+        }
+        return output;
+    }
+
+    // Functions
+    Matrix Matrix::zeros(int rows, int cols)
+    {
+        return Matrix(rows, cols, 0);
+    }
+
+    Matrix Matrix::ones(int rows, int cols)
+    {
+        return Matrix(rows, cols, 1);
+    }
+
+    Matrix Matrix::eye(int rows, int cols)
+    {
+        Matrix result(rows, cols, 0);
+        for (int i = 0; i < std::min(rows, cols); i++)
+            result.set(i, i, 1);
+        return result;
+    }
+
+    Matrix Matrix::random(int rows, int cols)
+    {
+        return Matrix::random(rows, cols, 0, 1);
+    }
+
+    Matrix Matrix::random(int rows, int cols, float min, float max)
+    {
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.set(i, j, min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min))));
+        return result;
+    }
+
+    Matrix Matrix::elementwise_max(const Matrix &a, const Matrix &b)
+    {
+        Matrix::check_dim_equal(a, b);
+        Matrix result(a.rows, a.cols);
+        for (int i = 0; i < a.rows; i++)
+            for (int j = 0; j < a.cols; j++)
+                result.set(i, j, std::max(a.get(i, j), b.get(i, j)));
+        return result;
+    }
+
+    Matrix Matrix::elementwise_min(const Matrix &a, const Matrix &b)
+    {
+        Matrix::check_dim_equal(a, b);
+        Matrix result(a.rows, a.cols);
+        for (int i = 0; i < a.rows; i++)
+            for (int j = 0; j < a.cols; j++)
+                result.set(i, j, std::min(a.get(i, j), b.get(i, j)));
+        return result;
+    }
+
     // Private
     void Matrix::check_dim_equal(const Matrix &other)
     {
         if (this->rows != other.rows || this->cols != other.cols)
-            throw std::invalid_argument("Matrix dimensions must be equal");
+            throw std::invalid_argument("Matrix dimensions must be equal. Got " + std::to_string(this->rows) + "x" + std::to_string(this->cols) + " and " + std::to_string(other.rows) + "x" + std::to_string(other.cols) + " instead.");
+    }
+
+    void Matrix::check_dim_equal(const Matrix &a, const Matrix &b)
+    {
+        if (a.rows != b.rows || a.cols != b.cols)
+            throw std::invalid_argument("Matrix dimensions must be equal. Got " + std::to_string(a.rows) + "x" + std::to_string(a.cols) + " and " + std::to_string(b.rows) + "x" + std::to_string(b.cols) + " instead.");
     }
 }

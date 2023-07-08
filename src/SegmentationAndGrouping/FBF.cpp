@@ -4,11 +4,29 @@
 #include <cmath>
 #include <stdexcept>
 #include <vector>
+#include <string>
 
 // Grossberg and Wyse (1992) take the log inside of the exponential. This is not a standard gaussian function.
 static float gaussian(float p, float q, float i, float j, float C_or_E, float alpha_or_beta)
 {
-    return C_or_E * exp(-pow(alpha_or_beta, -2) * log(2 * (p - i) * (p - i) + 2 * (q - j) * (q - j)));
+    // return C_or_E * exp(-pow(alpha_or_beta, -2) * log(2 * (p - i) * (p - i) + 2 * (q - j) * (q - j)));
+    // log(0) cause +inf. Let just use the standard gaussian function.
+    return C_or_E * exp(-pow(alpha_or_beta, -2) * (2 * (p - i) * (p - i) + 2 * (q - j) * (q - j)));
+}
+
+static VisualAlgo::Matrix gaussian(int rows, int cols, float C_or_E, float alpha_or_beta)
+{
+    VisualAlgo::Matrix matrix(rows, cols, 0);
+    float center_x = matrix.rows / 2;
+    float center_y = matrix.cols / 2;
+    for (int i = 0; i < matrix.rows; i++)
+    {
+        for (int j = 0; j < matrix.cols; j++)
+        {
+            matrix.set(i, j, gaussian(i, j, center_x, center_y, C_or_E, alpha_or_beta));
+        }
+    }
+    return matrix;
 }
 
 static VisualAlgo::Matrix half_ellipse(int major_axis, int minor_axis, float theta, float fill_value = 1, bool is_left = true)
@@ -51,24 +69,13 @@ struct ShuntingOnCell
 
     VisualAlgo::Matrix apply(VisualAlgo::Matrix input)
     {
-        VisualAlgo::Matrix output(input.rows, input.cols, 0);
-        for (int i = 0; i < input.rows; i++)
-        {
-            for (int j = 0; j < input.cols; j++)
-            {
-                float numerator_sum = 0;
-                float denominator_sum = A;
-                for (int p = 0; p < KERNEL_SIZE; p++)
-                {
-                    for (int q = 0; q < KERNEL_SIZE; q++)
-                    {
-                        numerator_sum += input.get(i, j) * (B * gaussian(p, q, i, j, C, ALPHA) - D * gaussian(p, q, i, j, E, BETA));
-                        denominator_sum += input.get(i, j) * (gaussian(p, q, i, j, C, ALPHA) + gaussian(p, q, i, j, E, BETA));
-                    }
-                }
-                output[i][j] = numerator_sum / denominator_sum;
-            }
-        }
+        VisualAlgo::Matrix on_center_off_surround = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) * B - gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA) * D;
+        VisualAlgo::Matrix numerator = input.cross_correlation(on_center_off_surround, KERNEL_SIZE / 2, 1);
+
+        VisualAlgo::Matrix denominator_kernel = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) + gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA);
+        VisualAlgo::Matrix denominator = input.cross_correlation(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
+
+        VisualAlgo::Matrix output = numerator / denominator;
         return output;
     }
 };
@@ -91,24 +98,13 @@ struct ShuntingOffCell
 
     VisualAlgo::Matrix apply(VisualAlgo::Matrix input)
     {
-        VisualAlgo::Matrix output(input.rows, input.cols, 0);
-        for (int i = 0; i < input.rows; i++)
-        {
-            for (int j = 0; j < input.cols; j++)
-            {
-                float numerator_sum = A * S;
-                float denominator_sum = A;
-                for (int p = 0; p < KERNEL_SIZE; p++)
-                {
-                    for (int q = 0; q < KERNEL_SIZE; q++)
-                    {
-                        numerator_sum += input.get(i, j) * (D * gaussian(p, q, i, j, E, BETA) - B * gaussian(p, q, i, j, C, ALPHA));
-                        denominator_sum += input.get(i, j) * (gaussian(p, q, i, j, C, ALPHA) + gaussian(p, q, i, j, E, BETA));
-                    }
-                }
-                output[i][j] = numerator_sum / denominator_sum - S;
-            }
-        }
+        VisualAlgo::Matrix off_center_on_surround = gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA) * D - gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) * B;
+        VisualAlgo::Matrix numerator = input.cross_correlation(off_center_on_surround, KERNEL_SIZE / 2, 1) + A * S;
+
+        VisualAlgo::Matrix denominator_kernel = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) + gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA);
+        VisualAlgo::Matrix denominator = input.cross_correlation(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
+
+        VisualAlgo::Matrix output = numerator / denominator;
         return output;
     }
 };
@@ -144,8 +140,8 @@ struct SimpleCell
     VisualAlgo::Matrix apply(VisualAlgo::Matrix input)
     {
         // Precompute the kernels. There are two halves.
-        VisualAlgo::Matrix L_kernel = half_ellipse(major_axis, minor_axis, theta, 1, true);
-        VisualAlgo::Matrix R_kernel = half_ellipse(major_axis, minor_axis, theta, 1, false);
+        VisualAlgo::Matrix L_kernel = half_ellipse(major_axis, major_axis, theta, 1, true);
+        VisualAlgo::Matrix R_kernel = half_ellipse(major_axis, major_axis, theta, 1, false);
         VisualAlgo::Matrix whole_kernel;
         if (is_left)
         {
@@ -190,36 +186,79 @@ struct ComplexCell
 
 struct HypercomplexCellFirstCompetitiveStage
 {
-    float EPSILON = 0.1;
-    float MU = 5;
-    float TAU = 0.1;
+    const int scale;
+    const float EPSILON = 0.1;
+    const float MU = 5;
+    const float TAU = 0.1;
+    const float THETA_INCREMENT = M_PI / 8;
 
-    HypercomplexCellFirstCompetitiveStage()
+    HypercomplexCellFirstCompetitiveStage(int scale) : scale(scale)
     {
     }
 
-    VisualAlgo::Matrix apply(VisualAlgo::Matrix complex)
+    VisualAlgo::Matrix oriented_competition_kernel(float theta)
     {
-        VisualAlgo::Matrix output(complex.rows, complex.cols, 0);
-        for (int i = 0; i < complex.rows; i++)
+        int KERNEL_SIZE;
+        if (scale == 1)
         {
-            for (int j = 0; j < complex.cols; j++)
+            KERNEL_SIZE = 8;
+        }
+        else
+        {
+            KERNEL_SIZE = 16;
+        }
+        // The oriented competition kernel is positive everywhere except
+        // along a one-pixel-wide line at the specified angle.
+        VisualAlgo::Matrix kernel(KERNEL_SIZE, KERNEL_SIZE, 1);
+        for (int i = 0; i < KERNEL_SIZE; i++)
+        {
+            for (int j = 0; j < KERNEL_SIZE; j++)
             {
-                float numerator_sum = 0;
-                float denominator_sum = 0;
-                for (int p = 0; p < complex.rows; p++)
+                float x = i - KERNEL_SIZE / 2;
+                float y = j - KERNEL_SIZE / 2;
+                float rotated_y = x * sin(theta) + y * cos(theta);
+                if (abs(rotated_y) <= 0.5)
                 {
-                    for (int q = 0; q < complex.cols; q++)
-                    {
-                        numerator_sum += complex.get(i, j) * exp(-pow((i - p) * (i - p) + (j - q) * (j - q), 2) / (2 * EPSILON * EPSILON));
-                        denominator_sum += exp(-pow((i - p) * (i - p) + (j - q) * (j - q), 2) / (2 * EPSILON * EPSILON));
-                    }
+                    kernel.set(i, j, 0);
                 }
-                output[i][j] = numerator_sum / denominator_sum;
             }
+        }
+        
+        // Normalize the kernel.
+        kernel /= kernel.sum();
+
+        kernel.save("results/SegmentationAndGrouping/FBF/oriented_competition_kernel_" + std::to_string(theta) + ".ppm", true);
+
+        return kernel;
+    }
+
+    std::vector<VisualAlgo::Matrix> apply(const std::vector<VisualAlgo::Matrix>& complex_cells)
+    {
+        std::vector<VisualAlgo::Matrix> output;
+        for (int theta_i = 0; theta_i < complex_cells.size(); theta_i++)
+        {
+            VisualAlgo::Matrix G = oriented_competition_kernel(theta_i * THETA_INCREMENT);
+
+            // D will be divived by the EPSILON + MU * (\sum_m \sum_{p, q} C(p, q, m) * C(p, q, m))
+            // The sum is over all the complex cells.
+            VisualAlgo::Matrix denominator = complex_cells[theta_i].cross_correlation(G);
+            denominator = denominator * MU + EPSILON;
+
+            // The numerator is the complex cell.
+            VisualAlgo::Matrix numerator = complex_cells[theta_i];
+
+            // Divide the numerator by the denominator.
+            VisualAlgo::Matrix D = (numerator / denominator) - TAU;
+
+            // Rectify the output.
+            D.relu();
+
+            // Save the output.
+            output.push_back(D);
         }
         return output;
     }
+    
 };
 
 namespace VisualAlgo::SegmentationAndGrouping
@@ -232,13 +271,25 @@ namespace VisualAlgo::SegmentationAndGrouping
     {
     }
 
-    Matrix FBF::apply(Matrix input)
+    void FBF::set_debug_dir(std::string dir)
     {
+        debug_dir = dir;
+    }
+
+    Matrix FBF::apply(Matrix input)
+    {        
         // Step 1: Discounting the Illuminant using the Shunting On and Shunting Off Cells
         auto shunting_on_cell = ShuntingOnCell();
         auto shunting_off_cell = ShuntingOffCell();
         Matrix shunting_on_output = shunting_on_cell.apply(input);
         Matrix shunting_off_output = shunting_off_cell.apply(input);
+
+        // Save the shunting on and off outputs for debugging.
+        if (debug_dir != "")
+        {
+            shunting_on_output.save(debug_dir + "/step1_shunting_on_output.ppm", true);
+            shunting_off_output.save(debug_dir + "/step1_shunting_off_output.ppm", true);
+        }
 
         // Step 2: CORT-X 2 Filter
         std::vector<Matrix> complex_cells_scale_1;  // 8 orientations
@@ -253,6 +304,14 @@ namespace VisualAlgo::SegmentationAndGrouping
                 auto simple_on_r = SimpleCell(theta, s, false).apply(shunting_on_output);
                 auto simple_off_l = SimpleCell(theta, s, true).apply(shunting_off_output);
                 auto simple_off_r = SimpleCell(theta, s, false).apply(shunting_off_output);
+
+                if (debug_dir != "")
+                {
+                    simple_on_l.save(debug_dir + "/step2a_simple_on_l_" + std::to_string(s) + "_" + std::to_string(i) + ".ppm", true);
+                    simple_on_r.save(debug_dir + "/step2a_simple_on_r_" + std::to_string(s) + "_" + std::to_string(i) + ".ppm", true);
+                    simple_off_l.save(debug_dir + "/step2a_simple_off_l_" + std::to_string(s) + "_" + std::to_string(i) + ".ppm", true);
+                    simple_off_r.save(debug_dir + "/step2a_simple_off_r_" + std::to_string(s) + "_" + std::to_string(i) + ".ppm", true);
+                }
                 
                 // Step 2b: Complex Cells
                 if (s == 1)
@@ -265,17 +324,52 @@ namespace VisualAlgo::SegmentationAndGrouping
                 }
             }
         }
+        if (debug_dir != "")
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                complex_cells_scale_1[i].save(debug_dir + "/step2b_complex_cells_scale_1_" + std::to_string(i) + ".ppm", true);
+                complex_cells_scale_2[i].save(debug_dir + "/step2b_complex_cells_scale_2_" + std::to_string(i) + ".ppm", true);
+            }
+        }
 
-        // Step 2c: Hypercomplex Cells (First Competitive Stage)
-        // Each complex cell excites the hypercomplexcell with similar orientation and inhibits the hypercomplex cell with orthogonal orientation.
+        // Step 2c: Hypercomplex Cells (First Competitive Stage - Noise Suppression Near Boundary)
+        // Similar to non-maximum suppression - the complex cells excite the 
+        // hypercomplex cells if they are collinear. Otherwise, they inhibit.
+        std::vector<Matrix> hypercomplex_cells_scale_1;  // 8 orientations
+        std::vector<Matrix> hypercomplex_cells_scale_2;  // 8 orientations
+        hypercomplex_cells_scale_1 = HypercomplexCellFirstCompetitiveStage(1).apply(complex_cells_scale_1);
+        hypercomplex_cells_scale_2 = HypercomplexCellFirstCompetitiveStage(2).apply(complex_cells_scale_2);
+        if (debug_dir != "")
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                hypercomplex_cells_scale_1[i].save(debug_dir + "/step2c_hypercomplex_cells_first_stage_scale_1_" + std::to_string(i) + ".ppm", true);
+                hypercomplex_cells_scale_2[i].save(debug_dir + "/step2c_hypercomplex_cells_first_stage_scale_2_" + std::to_string(i) + ".ppm", true);
+            }
+        }
+
+        // Step 2d: Hypercomplex Cells (Second Competitive Stage)
+        // Winner-Take-All - Only the oreintation with the highest response is kept.
+        Matrix hypercomplex_cells_scale_1_second_stage = Matrix(hypercomplex_cells_scale_1[0].rows, hypercomplex_cells_scale_1[0].cols, -99999);
+        Matrix hypercomplex_cells_scale_2_second_stage = Matrix(hypercomplex_cells_scale_2[0].rows, hypercomplex_cells_scale_2[0].cols, -99999);
+
+        for (int theta_i = 0; theta_i < 8; theta_i++)
+        {
+            hypercomplex_cells_scale_1_second_stage = Matrix::elementwise_max(hypercomplex_cells_scale_1_second_stage, hypercomplex_cells_scale_1[theta_i]);
+            hypercomplex_cells_scale_2_second_stage = Matrix::elementwise_max(hypercomplex_cells_scale_2_second_stage, hypercomplex_cells_scale_2[theta_i]);
+        }
+        if (debug_dir != "")
+        {
+            hypercomplex_cells_scale_1_second_stage.save(debug_dir + "/step2d_hypercomplex_cells_second_stage_scale_1.ppm", true);
+            hypercomplex_cells_scale_2_second_stage.save(debug_dir + "/step2d_hypercomplex_cells_second_stage_scale_2.ppm", true);
+        }
+
+        // Step 2e: Multiple Scale Interaction: Boundary Localization and Noise Suppression
         
 
 
-        // Step 2c: Hypercomplex Cells (Second Competitive Stage)
-
-        // Step 2d: Multiple Scale Interaction: Boundary Localization and Noise Suppression
-
-        // Step 2e: Long-Range Cooporation: Boundary Completion
+        // Step 2f: Long-Range Cooporation: Boundary Completion
 
         // CORT-X 2 Ouput
 
