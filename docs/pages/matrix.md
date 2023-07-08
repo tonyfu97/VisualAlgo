@@ -255,4 +255,4 @@ VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-
 ```
 This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.
 
-* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const`: Same as above, but keep the same size.
+* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const`: Same as above, but the output matrix is always the same size as the current matrix.

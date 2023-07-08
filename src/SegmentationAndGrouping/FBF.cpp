@@ -31,7 +31,8 @@ static VisualAlgo::Matrix gaussian(int rows, int cols, float C_or_E, float alpha
 
 static VisualAlgo::Matrix half_ellipse(int major_axis, int minor_axis, float theta, float fill_value = 1, bool is_left = true)
 {
-    VisualAlgo::Matrix matrix(major_axis, minor_axis, 0);
+    int KERNEL_SIZE = static_cast<int>(major_axis * 1.8);
+    VisualAlgo::Matrix matrix(KERNEL_SIZE, KERNEL_SIZE, 0);
     float center_x = matrix.rows / 2;
     float center_y = matrix.cols / 2;
     for (int i = 0; i < matrix.rows; i++)
@@ -140,8 +141,8 @@ struct SimpleCell
     VisualAlgo::Matrix apply(VisualAlgo::Matrix input)
     {
         // Precompute the kernels. There are two halves.
-        VisualAlgo::Matrix L_kernel = half_ellipse(major_axis, major_axis, theta, 1, true);
-        VisualAlgo::Matrix R_kernel = half_ellipse(major_axis, major_axis, theta, 1, false);
+        VisualAlgo::Matrix L_kernel = half_ellipse(major_axis, minor_axis, theta, 1, true);
+        VisualAlgo::Matrix R_kernel = half_ellipse(major_axis, minor_axis, theta, 1, false);
         VisualAlgo::Matrix whole_kernel;
         if (is_left)
         {
@@ -154,6 +155,10 @@ struct SimpleCell
 
         // Normalize the kernel.
         whole_kernel /= whole_kernel.sum();
+
+        // L_kernel.save("results/SegmentationAndGrouping/FBF/simple_cell_L_kernel_" + std::to_string(theta) + ".ppm", true);
+        // R_kernel.save("results/SegmentationAndGrouping/FBF/simple_cell_R_kernel_" + std::to_string(theta) + ".ppm", true);
+        // whole_kernel.save("results/SegmentationAndGrouping/FBF/simple_cell_kernel_" + std::to_string(theta) + ".ppm", true);
 
         // Cross correlate the kernels with the input.
         VisualAlgo::Matrix output = input.cross_correlation(whole_kernel, major_axis / 2, 1);
@@ -241,7 +246,12 @@ struct HypercomplexCellFirstCompetitiveStage
 
             // D will be divived by the EPSILON + MU * (\sum_m \sum_{p, q} C(p, q, m) * C(p, q, m))
             // The sum is over all the complex cells.
-            VisualAlgo::Matrix denominator = complex_cells[theta_i].cross_correlation(G);
+            VisualAlgo::Matrix denominator = VisualAlgo::Matrix(complex_cells[theta_i].rows, complex_cells[theta_i].cols, 0);
+
+            for (int theta_j = 0; theta_j < complex_cells.size(); theta_j++)
+            {
+                denominator += complex_cells[theta_i].cross_correlation(G);
+            }  
             denominator = denominator * MU + EPSILON;
 
             // The numerator is the complex cell.
