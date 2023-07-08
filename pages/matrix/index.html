@@ -67,7 +67,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#constructors">Constructors</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#special-matrix-constructors">Special Matrix Constructors</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#random-matrix-constructors">Random Matrix Constructors</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#element-wise-operations">Element-wise Operations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#element-wise-comparison-functions">Element-wise Comparison Functions</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#matrix-operations">Matrix Operations</a>
     </li>
@@ -185,6 +191,35 @@ VisualAlgo::Matrix m(data); // Creates a 2x3 matrix with the provided data
 VisualAlgo::Matrix m2(m1); // Creates a new matrix that is a copy of m1
 </code></pre>
 <hr />
+<h2 id="special-matrix-constructors">Special Matrix Constructors</h2>
+<ul>
+<li><code>Matrix::zeros(int rows, int cols)</code>: Returns a new <code>Matrix</code> object with the specified number of rows and columns. All elements of the matrix are initialized to 0.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix::zeros(3, 4); // Creates a 3x4 matrix with all elements initialized to 0
+</code></pre>
+<ul>
+<li><code>Matrix::ones(int rows, int cols)</code>: Returns a new <code>Matrix</code> object with the specified number of rows and columns. All elements of the matrix are initialized to 1.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix::ones(3, 4); // Creates a 3x4 matrix with all elements initialized to 1
+</code></pre>
+<ul>
+<li><code>Matrix::eye(int rows, int cols)</code>: Returns a new identity <code>Matrix</code> object with the specified number of rows and columns. All diagonal elements are set to 1, and all other elements are set to 0.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix::eye(3, 3); // Creates a 3x3 identity matrix
+</code></pre>
+<hr />
+<h2 id="random-matrix-constructors">Random Matrix Constructors</h2>
+<ul>
+<li><code>Matrix::random(int rows, int cols)</code>: Returns a new <code>Matrix</code> object with the specified number of rows and columns. All elements of the matrix are initialized to a random floating point value in the range [0, 1].</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix::random(3, 4); // Creates a 3x4 matrix with all elements initialized to a random value
+</code></pre>
+<ul>
+<li><code>Matrix::random(int rows, int cols, float min, float max)</code>: Returns a new <code>Matrix</code> object with the specified number of rows and columns. All elements of the matrix are initialized to a random floating point value in the range [min, max].</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix::random(3, 4, -1.0, 1.0); // Creates a 3x4 matrix with all elements initialized to a random value between -1.0 and 1.0
+</code></pre>
+<hr />
 <h2 id="element-wise-operations">Element-wise Operations</h2>
 <p>Element-wise operations perform the operation on each element of the matrix independently.</p>
 <ul>
@@ -204,6 +239,22 @@ VisualAlgo::Matrix m3 = m1 + m2; // m3 is now a 2x2 matrix with all elements set
 <li><code>Matrix operator+(const float &amp;other)</code>: Add the provided float to all entries.</li>
 </ul>
 <p>Also support other common arithmetic operators.</p>
+<hr />
+<h2 id="element-wise-comparison-functions">Element-wise Comparison Functions</h2>
+<ul>
+<li><code>Matrix::elementwise_max(const Matrix &amp;a, const Matrix &amp;b)</code>: Returns a new <code>Matrix</code> that is the element-wise maximum of matrices <code>a</code> and <code>b</code>. The dimensions of <code>a</code> and <code>b</code> must be the same.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix a = VisualAlgo::Matrix::ones(3, 4);
+VisualAlgo::Matrix b = VisualAlgo::Matrix::zeros(3, 4);
+VisualAlgo::Matrix m = VisualAlgo::Matrix::elementwise_max(a, b); // m will be a 3x4 matrix with all elements equal to 1
+</code></pre>
+<ul>
+<li><code>Matrix::elementwise_min(const Matrix &amp;a, const Matrix &amp;b)</code>: Returns a new <code>Matrix</code> that is the element-wise minimum of matrices <code>a</code> and <code>b</code>. The dimensions of <code>a</code> and <code>b</code> must be the same.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix a = VisualAlgo::Matrix::ones(3, 4);
+VisualAlgo::Matrix b = VisualAlgo::Matrix::zeros(3, 4);
+VisualAlgo::Matrix m = VisualAlgo::Matrix::elementwise_min(a, b); // m will be a 3x4 matrix with all elements equal to 0
+</code></pre>
 <hr />
 <h2 id="matrix-operations">Matrix Operations</h2>
 <ul>
@@ -271,7 +322,12 @@ m.load(&quot;path_to_your_image.ppm&quot;); // Loads the image from the specifie
 </code></pre>
 <p>This function reads the image file as a binary file. It first reads the header to ensure that the image is in the correct format (P6), then reads the width and height of the image. The pixel data is then read and converted from RGB to grayscale using the ITU-R BT.709 luma transform. The grayscale pixel values are stored in the <code>data</code> member of the <code>Matrix</code> object.</p>
 <ul>
-<li><code>void Matrix::save(const std::string &amp;filename, bool normalize)</code>: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The <code>normalize</code> parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.</li>
+<li><code>Matrix Matrix::load(const std::string &amp;filename, int rows, int cols)</code>: Directly load an image.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m = VisualAlgo::Matrix.load(&quot;path_to_your_image.ppm&quot;, 256, 256);
+</code></pre>
+<ul>
+<li><code>void Matrix::save(const std::string &amp;filename, bool normalize) const</code>: This function saves the matrix as an image to the specified file path. The image is saved in PPM format (P6). The <code>normalize</code> parameter specifies whether the matrix data should be normalized to the range 0-255 before saving. If not normalized and the pixel values are not within this range, a runtime error is thrown.</li>
 </ul>
 <pre><code class="language-cpp">VisualAlgo::Matrix m(3, 4, 1.0);
 m.save(&quot;path_to_save_image.ppm&quot;, true); // Normalizes and saves the matrix as an image to the specified path
@@ -297,6 +353,9 @@ VisualAlgo::Matrix kernel(2, 2, 0.5);
 VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-correlation
 </code></pre>
 <p>This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.</p>
+<ul>
+<li><code>Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &amp;kernel) const</code>: Same as above, but keep the same size.</li>
+</ul>
               
             </div>
           </div><footer>

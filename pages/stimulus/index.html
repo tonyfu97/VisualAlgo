@@ -144,8 +144,9 @@
 <ul>
 <li><code>Matrix random_mondrian(int rows, int cols, int num_rectangles);</code></li>
 </ul>
+<p>The type of stimuli were used in Edwin Land's research on illuminant discounting and filling-in (1977 and 1983). Land named it McCann Mondrians, a tribute to his research partner, John McCann, and the Dutch artist Piet Mondrian (Grossberg, 2021).</p>
 <p>Creates a new <code>Matrix</code> object with the given number of <code>rows</code> and <code>cols</code>, and draws a specified number of random overlapping rectangles in it.</p>
-<p>Each rectangle has a random position and size, and a random value in the range [0, 1].</p>
+<p>Each rectangle has a random position and size, and a random value in the range [0, 1]. The size of the rectangle scales with <code>rows</code> and <code>cols</code>.</p>
 <p>Returns the new <code>Matrix</code>.</p>
 <pre><code class="language-cpp">VisualAlgo::Stimulus::Matrix matrix = random_mondrian(10, 10, 10);
 </code></pre>
