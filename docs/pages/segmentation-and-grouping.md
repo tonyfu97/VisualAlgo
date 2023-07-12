@@ -49,7 +49,7 @@ The FBF model algorithm consists of four steps:
 
 * **Step 2: CORT-X 2 Filter**: The CORT-X 2 Filter is a neurophysiologically inspired model that draws on Hubel and Wiesel's work on Simple, Complex, and Hypercomplex cells. It forms the BCS part of this model. The filter takes the output from the previous step as its input, and generates the boundaries. It operates in a purely feedforward manner and can be broken down into six sub-steps:
 
-    * **Step 2a: Simple Cells**: These cells receive either \(\mathbf{x}\) or \(\bar{\mathbf{x}}\) as inputs. The kernels are determined by two scales, \(s\): \(s=1\), with major and minor axes of 12 and 6 pixels, and \(s=2\), with major and minor axes of 20 and 10 pixels. The kernel, \(\mathbf{K}\), comprises two ellipse halves, \(\mathbf{L_s}\) and \(\mathbf{R_s}\):
+    * **Step 2a: Simple Cells**: These cells receive either \(\mathbf{x}\) or \(\bar{\mathbf{x}}\) as inputs. The are two scales kernels \(s\) for the kernels: \(s=1\), with major and minor axes of 12 and 6 pixels, and \(s=2\), with major and minor axes of 20 and 10 pixels. The kernel, \(\mathbf{K}\), comprises two ellipse halves, \(\mathbf{L_s}\) and \(\mathbf{R_s}\):
 
         $$\mathbf{K}_{s, L} (k) = \mathbf{L_s} (k) - \alpha_s \mathbf{R_s} (k) - \beta_s $$
         $$\mathbf{K}_{s, R} (k) = \mathbf{R_s} (k) - \alpha_s \mathbf{L_s} (k) - \beta_s$$
@@ -77,7 +77,7 @@ The FBF model algorithm consists of four steps:
 
     * **Step 2d: Hypercomplex Cells (Second Competitive Stage)**: In this stage, only the dominant orientation is preserved (winner-takes-all) for each location on the complex cell map, \(\mathbf{C_s} (k)\).
 
-    $$\mathbf{D}_s = \max_k \mathbf{D}_s (k)$$
+    $$\mathbf{D}_s := \max_k \mathbf{D}_s (k)$$
 
     * **Step 2e: Multiple Scale Interaction: Boundary Localization and Noise Suppression**: 
 
