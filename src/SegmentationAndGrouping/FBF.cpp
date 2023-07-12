@@ -214,7 +214,8 @@ namespace VisualAlgo::SegmentationAndGrouping
 
     Matrix FBF::apply(Matrix input)
     {
-        ProgressBar progressBar(9, "Applying FBF");
+        int NUM_STEPS = 9;  // number of step() calls by the progress bar
+        ProgressBar progressBar(NUM_STEPS, "Applying FBF");
     
         // Step 1: Discounting the Illuminant using the Shunting On and Shunting Off Cells
         progressBar.step("Step 1: Discounting the Illuminant using the Shunting On and Shunting Off Cells");
