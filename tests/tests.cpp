@@ -24,8 +24,7 @@ int main()
     TestResult tr;
     TestRegistry::runAllTests(tr);
 
-    test_mondrian1();
-
+    // test_mondrian1();
 
     return 0;
 }

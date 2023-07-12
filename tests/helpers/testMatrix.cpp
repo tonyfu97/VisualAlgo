@@ -410,6 +410,56 @@ namespace VisualAlgo
         CHECK_EQUAL(7, m.data[1][2]);
     }
 
+    // Comparison
+    TEST(MatrixTestSuite, MatrixEquality)
+    {
+        Matrix m1({{1, 2, 3}, {4, 5, 6}});
+        Matrix m2({{1, 2, 3}, {4, 5, 6}});
+        CHECK_EQUAL(true, m1 == m2);
+        CHECK_EQUAL(false, m1 != m2);
+
+        m2[0][0] = 2;
+        CHECK_EQUAL(false, m1 == m2);
+        CHECK_EQUAL(true, m1 != m2);
+    }
+
+    TEST(MatrixTestSuite, MatrixIsClose)
+    {
+        Matrix m1({{1, 2, 3}, {4, 5, 6}});
+        Matrix m2({{1, 2, 3}, {4, 5, 6}});
+        CHECK_EQUAL(true, m1.is_close(m2));
+
+        m2[0][0] = 1.00001;
+        CHECK_EQUAL(true, m1.is_close(m2, 1e-4));
+
+        m2[0][0] = 0.99999;
+        CHECK_EQUAL(true, m1.is_close(m2, 1e-4));
+
+        m2[0][0] = 2;
+        CHECK_EQUAL(false, m1.is_close(m2));
+    }
+
+    TEST(MatrixTestSuite, MatrixGreaterThan)
+    {
+        Matrix m1({{1, 2, 3}, {4, 5, 6}});
+        Matrix m2({{-1, 2, 4}, {-99, 55, 0}});
+        Matrix greater_than_expected({{1, 0, 0}, {1, 0, 1}});
+        Matrix greater_than_equal_expected({{1, 1, 0}, {1, 0, 1}});
+        CHECK(greater_than_expected == (m1 > m2));
+        CHECK(greater_than_equal_expected == (m1 >= m2));
+    } 
+
+    TEST(MatrixTestSuite, MatrixLessThan)
+    {
+        Matrix m1({{1, 2, 3}, {4, 5, 6}});
+        Matrix m2({{-1, 2, 4}, {-99, 55, 0}});
+        Matrix less_than_expected({{0, 0, 1}, {0, 1, 0}});
+        Matrix less_than_equal_expected({{0, 1, 1}, {0, 1, 0}});
+        CHECK(less_than_expected == (m1 < m2));
+        CHECK(less_than_equal_expected == (m1 <= m2));
+    }
+
+    // Matrix operations
     TEST(MatrixTestSuite, MatrixTranspose)
     {
         Matrix m(2, 3, 1);
@@ -596,6 +646,22 @@ namespace VisualAlgo
         CHECK_EQUAL(true, exceptionThrown);
     }
 
+    TEST(MatrixTestSuite, MatrixNormalize)
+    {
+        Matrix m1({{0, 0, 0}, {0, 1, 2}});
+        m1.normalize();
+        CHECK_EQUAL(2, m1.rows);
+        CHECK_EQUAL(3, m1.cols);
+        CHECK_DOUBLES_EQUAL(1.0, m1.max(), 0.0001);
+        CHECK_DOUBLES_EQUAL(0.0, m1.min(), 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[0][0], 0, 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[0][1], 0, 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[0][2], 0, 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[1][0], 0, 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[1][1], 0.5, 0.0001);
+        CHECK_DOUBLES_EQUAL(m1[1][2], 1.0, 0.0001);
+    }
+
     TEST(MatrixTestSuite, MatrixNormalize255)
     {
         Matrix m1({{0, 0, 0}, {0, 1, 2}});
@@ -622,12 +688,12 @@ namespace VisualAlgo
 
     TEST(MatrixTestSuite, MatrixCrossCorrelation)
     {
-        // Test for Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const
+        // Test for Matrix Matrix::cross_correlate(const VisualAlgo::Matrix &kernel, int padding, int stride) const
 
         // Test 1
         Matrix m1({{1, 2, 3}, {4, 5, 6}});
         Matrix m2({{1, 2}, {3, 4}});
-        Matrix m3 = m1.cross_correlation(m2, 0, 1);
+        Matrix m3 = m1.cross_correlate(m2, 0, 1);
         CHECK_EQUAL(1, m3.rows);
         CHECK_EQUAL(2, m3.cols);
         CHECK_EQUAL(37, m3.data[0][0]);
@@ -636,7 +702,7 @@ namespace VisualAlgo
         // Test 2
         Matrix m4({{1, 2, 3}, {4, 5, 6}});
         Matrix m5({{1, 2}, {3, 4}});
-        Matrix m6 = m4.cross_correlation(m5, 1, 1);
+        Matrix m6 = m4.cross_correlate(m5, 1, 1);
         CHECK_EQUAL(3, m6.rows);
         CHECK_EQUAL(4, m6.cols);
         CHECK_EQUAL(4, m6.data[0][0]);
@@ -655,7 +721,7 @@ namespace VisualAlgo
         // Test 3
         Matrix m7({{1, 2, 3}, {4, 5, 6}});
         Matrix m8({{1, 2}, {3, 4}});
-        Matrix m9 = m7.cross_correlation(m8, 1, 2);
+        Matrix m9 = m7.cross_correlate(m8, 1, 2);
         CHECK_EQUAL(2, m9.rows);
         CHECK_EQUAL(2, m9.cols);
         CHECK_EQUAL(4, m9.data[0][0]);
@@ -669,7 +735,7 @@ namespace VisualAlgo
         {
             Matrix m10({{1, 2, 3}, {4, 5, 6}});
             Matrix m11({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
-            Matrix m12 = m10.cross_correlation(m11, 0, 1);
+            Matrix m12 = m10.cross_correlate(m11, 0, 1);
         }
         catch (const std::invalid_argument &e)
         {
@@ -683,7 +749,7 @@ namespace VisualAlgo
         {
             Matrix m13({{1, 2, 3}, {4, 5, 6}});
             Matrix m14({{1, 2}, {3, 4}});
-            Matrix m15 = m13.cross_correlation(m14, 0, -1);
+            Matrix m15 = m13.cross_correlate(m14, 0, -1);
         }
         catch (const std::invalid_argument &e)
         {
@@ -697,7 +763,7 @@ namespace VisualAlgo
         {
             Matrix m13({{1, 2, 3}, {4, 5, 6}});
             Matrix m14({{1, 2}, {3, 4}});
-            Matrix m15 = m13.cross_correlation(m14, -2, 0);
+            Matrix m15 = m13.cross_correlate(m14, -2, 0);
         }
         catch (const std::invalid_argument &e)
         {

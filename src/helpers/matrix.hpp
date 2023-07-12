@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace VisualAlgo
 {
@@ -42,15 +43,32 @@ namespace VisualAlgo
         Matrix &operator*=(const float &other);
         Matrix &operator/=(const float &other);
 
+        // Comparison
+        bool operator==(const Matrix &other) const;
+        bool operator!=(const Matrix &other) const;
+        bool is_close(const Matrix &other, float tolerance=1e-5) const;
+
+        // for the rest of the comparison operators, true is 1 and false is 0
+        Matrix operator>(const Matrix &other) const;
+        Matrix operator<(const Matrix &other) const;
+        Matrix operator>=(const Matrix &other) const;
+        Matrix operator<=(const Matrix &other) const;
+
+        Matrix operator>(const float &other) const;
+        Matrix operator<(const float &other) const;
+        Matrix operator>=(const float &other) const;
+        Matrix operator<=(const float &other) const;
+
         // Matrix operations
         Matrix transpose();
         float dot(const Matrix &other);
-        Matrix matmul(const Matrix &other);
+        Matrix matmul(const Matrix &other) const;
 
         // Accessors
         void set(int row, int col, float value);
         const float get(int row, int col) const;
         std::vector<float> &operator[](int row);
+        friend std::ostream &operator<<(std::ostream &os, const Matrix &matrix);
 
         // Statistics
         float sum();
@@ -63,10 +81,15 @@ namespace VisualAlgo
         void load(const std::string& filename);
         static Matrix load(const std::string& filename, int rows, int cols);
         void save(const std::string &filename, bool normalize=true) const;
-        void normalize255();
+        void normalize();  // [0, 1.0]
+        void normalize255(); // [0, 255.0]
         void relu();
-        Matrix cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const;
-        Matrix cross_correlation(const VisualAlgo::Matrix &kernel) const;  // keep the same size
+        void abs();
+        Matrix cross_correlate(const VisualAlgo::Matrix &kernel, int padding, int stride) const;
+        Matrix cross_correlate(const VisualAlgo::Matrix &kernel) const;  // keeps the same size, does wrap around
+        Matrix flip() const;
+        Matrix convolve(const VisualAlgo::Matrix &kernel, int padding, int stride) const;
+        Matrix convolve(const VisualAlgo::Matrix &kernel) const;  // keeps the same size, does wrap around
 
         // Functions
         static Matrix zeros(int rows, int cols);
@@ -78,7 +101,7 @@ namespace VisualAlgo
         static Matrix elementwise_min(const Matrix &a, const Matrix &b);
 
     private:
-        void check_dim_equal(const Matrix &other);
+        void check_dim_equal(const Matrix &other) const;
         static void check_dim_equal(const Matrix &a, const Matrix &b);
     };
 

@@ -204,6 +204,113 @@ namespace VisualAlgo
         return *this;
     }
 
+    // Comparison
+    bool Matrix::operator==(const Matrix &other) const
+    {
+        if (this->rows != other.rows || this->cols != other.cols)
+            return false;
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+                if (this->get(i, j) != other.get(i, j))
+                    return false;
+        return true;
+    }
+
+    bool Matrix::operator!=(const Matrix &other) const
+    {
+        return !(*this == other);
+    }
+
+    bool Matrix::is_close(const Matrix &other, float tolerance) const
+    {
+        if (this->rows != other.rows || this->cols != other.cols)
+            return false;
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+            {
+                float diff = this->get(i, j) - other.get(i, j);
+                if (diff < -tolerance || diff > tolerance)
+                    return false;
+            }
+        return true;
+    }
+
+    Matrix Matrix::operator>(const Matrix &other) const
+    {
+        Matrix::check_dim_equal(other);
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < other.cols; j++)
+                result.set(i, j, this->get(i, j) > other.get(i, j));
+        return result;
+    }
+
+    Matrix Matrix::operator<(const Matrix &other) const
+    {
+        Matrix::check_dim_equal(other);
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < other.cols; j++)
+                result.set(i, j, this->get(i, j) < other.get(i, j));
+        return result;
+    }
+
+    Matrix Matrix::operator>=(const Matrix &other) const
+    {
+        Matrix::check_dim_equal(other);
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < other.cols; j++)
+                result.set(i, j, this->get(i, j) >= other.get(i, j));
+        return result;
+    }
+
+    Matrix Matrix::operator<=(const Matrix &other) const
+    {
+        Matrix::check_dim_equal(other);
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < other.cols; j++)
+                result.set(i, j, this->get(i, j) <= other.get(i, j));
+        return result;
+    }
+
+    Matrix Matrix::operator>(const float &other) const
+    {
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+                result.set(i, j, this->get(i, j) > other);
+        return result;
+    }
+
+    Matrix Matrix::operator<(const float &other) const
+    {
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+                result.set(i, j, this->get(i, j) < other);
+        return result;
+    }
+
+    Matrix Matrix::operator>=(const float &other) const
+    {
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+                result.set(i, j, this->get(i, j) >= other);
+        return result;
+    }
+
+    Matrix Matrix::operator<=(const float &other) const
+    {
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+                result.set(i, j, this->get(i, j) <= other);
+        return result;
+    }
+
     // Matrix operations
     Matrix Matrix::transpose()
     {
@@ -224,7 +331,7 @@ namespace VisualAlgo
         return result;
     }
 
-    Matrix Matrix::matmul(const Matrix &other)
+    Matrix Matrix::matmul(const Matrix &other) const
     {
         if (this->cols != other.rows)
             throw std::invalid_argument("Matrix dimensions must be compatible");
@@ -250,6 +357,26 @@ namespace VisualAlgo
     std::vector<float> &Matrix::operator[](int row)
     {
         return this->data.at(row);
+    }
+
+    std::ostream &operator<<(std::ostream &os, const Matrix &matrix)
+    {
+        os << "[";
+        for (int i = 0; i < matrix.rows; i++)
+        {
+            os << "[";
+            for (int j = 0; j < matrix.cols; j++)
+            {
+                os << matrix.get(i, j);
+                if (j != matrix.cols - 1)
+                    os << ", ";
+            }
+            os << "]";
+            if (i != matrix.rows - 1)
+                os << ",\n";
+        }
+        os << "]";
+        return os;
     }
 
     // Statistics
@@ -367,7 +494,7 @@ namespace VisualAlgo
         std::ofstream file(filename, std::ios::binary);
         if (!file)
         {
-            throw std::runtime_error("Cannot open file");
+            throw std::runtime_error("Cannot open file: " + filename + ".");
         }
 
         file << "P6\n";
@@ -382,6 +509,32 @@ namespace VisualAlgo
                 file.write(reinterpret_cast<char *>(&pixel), 1); // R
                 file.write(reinterpret_cast<char *>(&pixel), 1); // G
                 file.write(reinterpret_cast<char *>(&pixel), 1); // B
+            }
+        }
+    }
+
+    void Matrix::normalize()
+    {
+        float min_value = this->get(0, 0);
+        float max_value = this->get(0, 0);
+
+        for (const auto &row : this->data)
+        {
+            for (const auto &value : row)
+            {
+                min_value = std::min(min_value, value);
+                max_value = std::max(max_value, value);
+            }
+        }
+
+        float range = max_value - min_value;
+        if (range == 0)
+            return;
+        for (auto &row : this->data)
+        {
+            for (auto &value : row)
+            {
+                value = (value - min_value) / range;
             }
         }
     }
@@ -423,7 +576,18 @@ namespace VisualAlgo
         }
     }
 
-    Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const
+    void Matrix::abs()
+    {
+        for (auto &row : this->data)
+        {
+            for (auto &value : row)
+            {
+                value = std::abs(value);
+            }
+        }
+    }
+
+    Matrix Matrix::cross_correlate(const VisualAlgo::Matrix &kernel, int padding, int stride) const // TODO: Vectorize
     {
         if (kernel.rows > rows || kernel.cols > cols)
         {
@@ -470,9 +634,12 @@ namespace VisualAlgo
         return output;
     }
 
-    Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const
+    Matrix Matrix::cross_correlate(const VisualAlgo::Matrix &kernel) const
     {
         VisualAlgo::Matrix output(rows, cols);
+
+        int kernel_center_x = kernel.rows / 2;
+        int kernel_center_y = kernel.cols / 2;
 
         for (int i = 0; i < rows; ++i)
         {
@@ -483,20 +650,60 @@ namespace VisualAlgo
                 {
                     for (int q = 0; q < kernel.cols; ++q)
                     {
-                        int x = i + p - kernel.rows / 2;
-                        int y = j + q - kernel.cols / 2;
+                        // Compute coordinates in input image, including possible overhang
+                        int x = i + p - kernel_center_x;
+                        int y = j + q - kernel_center_y;
 
-                        // If within bounds of original image
-                        if (x >= 0 && y >= 0 && x < rows && y < cols)
+                        // Handle overhang with mirror padding
+                        if (x < 0)
                         {
-                            sum += get(x, y) * kernel.get(p, q);
+                            x = -x;
                         }
+                        if (x >= rows)
+                        {
+                            x = 2 * rows - x - 1;
+                        }
+                        if (y < 0)
+                        {
+                            y = -y;
+                        }
+                        if (y >= cols)
+                        {
+                            y = 2 * cols - y - 1;
+                        }
+
+                        sum += get(x, y) * kernel.get(p, q);
                     }
                 }
                 output.set(i, j, sum);
             }
         }
         return output;
+    }
+
+    Matrix Matrix::flip() const
+    {
+        Matrix flipped(rows, cols);
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                flipped.set(i, j, get(rows - i - 1, cols - j - 1));
+            }
+        }
+        return flipped;
+    }
+
+    Matrix Matrix::convolve(const VisualAlgo::Matrix &kernel, int padding, int stride) const
+    {
+        Matrix flipped_kernel = kernel.flip();
+        return this->cross_correlate(flipped_kernel, padding, stride);
+    }
+
+    Matrix Matrix::convolve(const VisualAlgo::Matrix &kernel) const
+    {
+        Matrix flipped_kernel = kernel.flip();
+        return this->cross_correlate(flipped_kernel);
     }
 
     // Functions
@@ -553,7 +760,7 @@ namespace VisualAlgo
     }
 
     // Private
-    void Matrix::check_dim_equal(const Matrix &other)
+    void Matrix::check_dim_equal(const Matrix &other) const
     {
         if (this->rows != other.rows || this->cols != other.cols)
             throw std::invalid_argument("Matrix dimensions must be equal. Got " + std::to_string(this->rows) + "x" + std::to_string(this->cols) + " and " + std::to_string(other.rows) + "x" + std::to_string(other.cols) + " instead.");

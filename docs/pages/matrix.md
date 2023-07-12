@@ -136,6 +136,53 @@ VisualAlgo::Matrix b = VisualAlgo::Matrix::zeros(3, 4);
 VisualAlgo::Matrix m = VisualAlgo::Matrix::elementwise_min(a, b); // m will be a 3x4 matrix with all elements equal to 0
 ```
 
+The `Matrix` struct supports a variety of comparison operations for comparing two `Matrix` objects or a `Matrix` object with a float.
+
+* `bool operator==(const Matrix &other) const`: Compares the current matrix with `other` for equality. Returns `true` if all elements in the two matrices are exactly equal, and `false` otherwise.
+
+```cpp
+Matrix m1({{1, 2, 3}, {4, 5, 6}});
+Matrix m2({{1, 2, 3}, {4, 5, 6}});
+bool isEqual = (m1 == m2); // Returns true
+```
+
+* `bool operator!=(const Matrix &other) const`: Compares the current matrix with `other` for inequality. Returns `true` if any element in the two matrices is not equal, and `false` otherwise.
+
+```cpp
+Matrix m1({{1, 2, 3}, {4, 5, 6}});
+Matrix m2({{1, 2, 3}, {7, 8, 9}});
+bool isNotEqual = (m1 != m2); // Returns true
+```
+
+* `bool is_close(const Matrix &other, float tolerance=1e-5) const`: Compares the current matrix with `other` within a given `tolerance`. Returns `true` if the absolute difference between each corresponding pair of elements in the two matrices is less than or equal to the `tolerance`, and `false` otherwise.
+
+```cpp
+Matrix m1({{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}});
+Matrix m2({{1.00001, 2.00001, 3.00001}, {3.99999, 5.00001, 5.99999}});
+bool isClose = m1.is_close(m2); // Returns true
+```
+
+* `Matrix operator>(const Matrix &other) const`: Returns a binary matrix with `1`s where the corresponding element in the current matrix is greater than that in `other`, and `0`s elsewhere.
+
+```cpp
+Matrix m1({{1, 2, 3}, {4, 5, 6}});
+Matrix m2({{-1, 2, 4}, {-99, 55, 0}});
+Matrix m3 = m1 > m2; // Returns a binary matrix
+```
+
+* `Matrix operator<(const Matrix &other) const`: Similar to the `>` operator, but checks for less than.
+
+* `Matrix operator>=(const Matrix &other) const`: Similar to the `>` operator, but checks for greater than or equal to.
+
+* `Matrix operator<=(const Matrix &other) const`: Similar to the `>` operator, but checks for less than or equal to.
+
+In addition to the matrix-matrix comparison operators, there are similar matrix-float comparison operators for comparing each element in a matrix to a float. These are `operator>(const float &other) const`, `operator<(const float &other) const`, `operator>=(const float &other) const`, and `operator<=(const float &other) const`.
+
+```cpp
+Matrix m1({{1, 2, 3}, {4, 5, 6}});
+Matrix m2 = m1 > 3; // Returns a binary matrix with `1`s where the elements in m1 are greater than 3 and `0`s elsewhere
+```
+
 ---
 
 ## Matrix Operations
@@ -234,11 +281,18 @@ m.save("path_to_save_image.ppm", true); // Normalizes and saves the matrix as an
 ```
 This function first checks if the data needs normalization based on the `normalize` flag. If true, it normalizes the data in the `Matrix` object to the range 0-255 using the `normalize255()` function. Then it writes the image data to the file in PPM format (P6). The pixel data is written as RGB, where the R, G, and B values are all equal, resulting in a grayscale image.
 
-* `void Matrix::normalize255()`: This function normalizes the values in the matrix to the range 0-255. This is useful to prepare the data for saving as an image, since pixel values in an image must be in this range.
+* `void Matrix::normalize()`: This function normalizes the values in the matrix to the range [0, 1].
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, 1.0);
-m.normalize255(); // Normalizes the matrix values to the range 0-255
+m.normalize(); // Normalizes the matrix values to the range [0, 1.0]
+```
+
+* `void Matrix::normalize255()`: This function normalizes the values in the matrix to the range [0.0, 255.0]. This is useful to prepare the data for saving as an image, since pixel values in an image must be in this range.
+
+```cpp
+VisualAlgo::Matrix m(3, 4, 1.0);
+m.normalize255(); // Normalizes the matrix values to the range [0, 255.0]
 ```
 * `void Matrix::relu()`: This function applies the ReLU (Rectified Linear Unit) operation to the matrix. It replaces all negative pixel values with zeros, effectively achieving half-wave rectification.
 
@@ -246,13 +300,24 @@ m.normalize255(); // Normalizes the matrix values to the range 0-255
 VisualAlgo::Matrix m(3, 4, -1.0);
 m.relu(); // Changes all negative values to 0
 ```
-* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel, int padding, int stride) const`: This function performs the cross-correlation operation between the matrix and the provided kernel. The padding and stride parameters control the operation. If the kernel size is larger than the matrix or the stride is less than or equal to zero, or padding is negative, it will throw an invalid_argument exception.
+
+* `void abs()`: This function take the absolute value of all the entries.
+
+* `Matrix Matrix::cross_correlate(const VisualAlgo::Matrix &kernel, int padding, int stride) const`: This function performs the cross-correlation operation between the matrix and the provided kernel. The padding and stride parameters control the operation. If the kernel size is larger than the matrix or the stride is less than or equal to zero, or padding is negative, it will throw an invalid_argument exception.
 
 ```cpp
 VisualAlgo::Matrix m(3, 4, 1.0);
 VisualAlgo::Matrix kernel(2, 2, 0.5);
-VisualAlgo::Matrix result = m.cross_correlation(kernel, 1, 2); // Perform cross-correlation
+VisualAlgo::Matrix result = m.cross_correlate(kernel, 1, 2); // Perform cross-correlation
 ```
-This function creates an output matrix of appropriate size based on the input matrix, kernel, padding and stride. It then performs the cross-correlation operation and stores the result in the output matrix.
+This function creates an output matrix of appropriate size based on the input matrix, kernel, padding, and stride. It then performs the cross-correlation operation and stores the result in the output matrix.
 
-* `Matrix Matrix::cross_correlation(const VisualAlgo::Matrix &kernel) const`: Same as above, but the output matrix is always the same size as the current matrix.
+* `Matrix Matrix::cross_correlate(const VisualAlgo::Matrix &kernel) const`: This function performs cross-correlation on the matrix with the provided kernel. The output matrix is always the same size as the input matrix. This operation effectively considers there to be zero padding beyond the edges of the original matrix and will wrap around when indexing beyond its dimensions.
+
+* `Matrix Matrix::cross_correlate_full(const VisualAlgo::Matrix &kernel) const`: This function performs cross-correlation operation on the matrix with the provided kernel, with zero padding. The output matrix size is larger than the input matrix size, taking into account the kernel size and the full overlap.
+
+* `Matrix Matrix::flip() const`: This function returns a new matrix which is the flipped version of the current matrix. This is particularly useful when trying to perform convolution using a kernel, as convolution is mathematically the same as cross-correlation with a flipped kernel.
+
+* `Matrix Matrix::convolve(const VisualAlgo::Matrix &kernel, int padding, int stride) const`: This function performs convolution between the matrix and the provided kernel. It first flips the kernel and then performs cross-correlation. The padding and stride parameters are similar to the cross-correlation function.
+
+* `Matrix Matrix::convolve(const VisualAlgo::Matrix &kernel) const`: This function performs convolution on the matrix with the provided kernel and keeps the same size. This operation effectively considers there to be zero padding beyond the edges of the original matrix and will wrap around when indexing beyond its dimensions.

@@ -61,10 +61,10 @@ namespace VisualAlgo::SegmentationAndGrouping
     Matrix ShuntingOnCell::apply(Matrix input)
     {
         Matrix on_center_off_surround = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) * B - gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA) * D;
-        Matrix numerator = input.cross_correlation(on_center_off_surround, KERNEL_SIZE / 2, 1);
+        Matrix numerator = input.cross_correlate(on_center_off_surround, KERNEL_SIZE / 2, 1);
 
         Matrix denominator_kernel = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) + gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA);
-        Matrix denominator = input.cross_correlation(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
+        Matrix denominator = input.cross_correlate(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
 
         Matrix output = numerator / denominator;
         return output;
@@ -73,10 +73,10 @@ namespace VisualAlgo::SegmentationAndGrouping
     Matrix ShuntingOffCell::apply(Matrix input)
     {
         Matrix off_center_on_surround = gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA) * D - gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) * B;
-        Matrix numerator = input.cross_correlation(off_center_on_surround, KERNEL_SIZE / 2, 1) + A * S;
+        Matrix numerator = input.cross_correlate(off_center_on_surround, KERNEL_SIZE / 2, 1) + A * S;
 
         Matrix denominator_kernel = gaussian(KERNEL_SIZE, KERNEL_SIZE, C, ALPHA) + gaussian(KERNEL_SIZE, KERNEL_SIZE, E, BETA);
-        Matrix denominator = input.cross_correlation(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
+        Matrix denominator = input.cross_correlate(denominator_kernel, KERNEL_SIZE / 2, 1) + A;
 
         Matrix output = numerator / denominator;
         return output;
@@ -120,7 +120,7 @@ namespace VisualAlgo::SegmentationAndGrouping
         whole_kernel /= whole_kernel.sum();
 
         // Cross correlate the kernels with the input.
-        Matrix output = input.cross_correlation(whole_kernel, major_axis / 2, 1);
+        Matrix output = input.cross_correlate(whole_kernel, major_axis / 2, 1);
 
         // Rectify the output.
         output.relu();
@@ -184,7 +184,7 @@ namespace VisualAlgo::SegmentationAndGrouping
 
             for (int theta_j = 0; theta_j < complex_cells.size(); theta_j++)
             {
-                denominator += complex_cells[theta_i].cross_correlation(G);
+                denominator += complex_cells[theta_i].cross_correlate(G);
             }
             denominator = denominator * MU + EPSILON;
 
