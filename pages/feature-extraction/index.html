@@ -83,6 +83,8 @@
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples">Visual Examples</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
@@ -165,17 +167,40 @@
                 <h1 id="2-feature-extraction">2. Feature Extraction</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
 <h3 id="sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (<code>VisualAlgo::FeatureExtraction::Gradients</code>)</h3>
-<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction.</p>
+<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. </p>
+<p>The key technique used by this class is the Sobel operator, which is a pair of 3x3 convolution kernels. These kernels are designed to respond maximally to edges running vertically and horizontally relative to the pixel grid.</p>
+<p>The x-direction kernel is as follows:</p>
+<p>
+<script type="math/tex; mode=display">
+SobelX = 
+\begin{bmatrix}
+1 & 0 & -1 \\
+2 & 0 & -2 \\
+1 & 0 & -1
+\end{bmatrix}
+</script>
+</p>
+<p>The y-direction kernel is as follows:</p>
+<p>
+<script type="math/tex; mode=display">
+SobelY = 
+\begin{bmatrix}
+1 & 2 & 1 \\
+0 & 0 & 0 \\
+-1 & -2 & -1
+\end{bmatrix}
+</script>
+</p>
 <h4 id="include">Include</h4>
 <pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
 </code></pre>
 <h4 id="static-functions">Static Functions</h4>
 <ul>
 <li>
-<p><code>Matrix computeXGradient(const Matrix&amp; image)</code>: This static function takes an input image in the form of a <code>Matrix</code> and computes the x-direction gradients of the image. This operation typically involves convolving the image with a kernel (e.g., the Sobel operator in the x-direction) that detects changes in intensity in the x-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the x-direction gradient at the corresponding pixel in the input image.</p>
+<p><code>Matrix computeXGradient(const Matrix&amp; image)</code>: This static function takes an input image in the form of a <code>Matrix</code> and computes the x-direction gradients of the image. This operation involves convolving the image with the SobelX kernel that detects changes in intensity in the x-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the x-direction gradient at the corresponding pixel in the input image.</p>
 </li>
 <li>
-<p><code>Matrix computeYGradient(const Matrix&amp; image)</code>: This static function works similar to <code>computeXGradient</code>, but it computes the gradients in the y-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.</p>
+<p><code>Matrix computeYGradient(const Matrix&amp; image)</code>: This static function works similar to <code>computeXGradient</code>, but it computes the gradients in the y-direction. The image is convolved with the SobelY kernel. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.</p>
 </li>
 </ul>
 <h4 id="example-usage">Example Usage</h4>
@@ -192,6 +217,15 @@ image_x_gradient.save(&quot;datasets/FeatureExtraction/cat_x_gradient.ppm&quot;,
 image_y_gradient.save(&quot;datasets/FeatureExtraction/cat_y_gradient.ppm&quot;, true);
 </code></pre>
 <p>In this code, <code>computeXGradient</code> and <code>computeYGradient</code> are used to calculate the x and y gradients of the loaded image respectively. The resulting gradient images are then saved to file for later analysis or visualization.</p>
+<h4 id="visual-examples">Visual Examples</h4>
+<p>Below are visual examples of the original image and the computed gradients.</p>
+<p>Original Image:</p>
+<p><img alt="original_lighthouse" src="../../images/FeatureExtraction/lighthouse_original.png" /></p>
+<p>X-direction Gradient:</p>
+<p><img alt="sobel_x_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_x.png" /></p>
+<p>Y-direction Gradient:</p>
+<p><img alt="sobel_y_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_y.png" /></p>
+<p>These images demonstrate how the Sobel filter is able to capture the changes in intensity in both x and y directions, making it a valuable tool for edge detection and feature extraction.</p>
 <hr />
 <h3 id="canny-edge-detection">Canny Edge Detection</h3>
 <hr />
