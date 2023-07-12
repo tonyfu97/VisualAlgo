@@ -74,8 +74,40 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">2. Feature Extraction</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#visualalgofeatureextractiongradients-class-documentation">VisualAlgo::FeatureExtraction::Gradients Class Documentation</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#include">Include</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#static-functions">Static Functions</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-usage">Example Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#corner-detection">Corner Detection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#blob-detection">Blob Detection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sift">SIFT</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#surf">SURF</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#orb">ORB</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hog">HOG</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#neuroscience-models">Neuroscience Models</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#simple-and-complex-cell-models">Simple and Complex Cell Models</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -134,19 +166,52 @@
               
                 <h1 id="2-feature-extraction">2. Feature Extraction</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
+<h3 id="visualalgofeatureextractiongradients-class-documentation"><code>VisualAlgo::FeatureExtraction::Gradients</code> Class Documentation</h3>
+<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction.</p>
+<h4 id="include">Include</h4>
+<pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
+</code></pre>
+<h4 id="static-functions">Static Functions</h4>
 <ul>
-<li>Canny Edge Detection</li>
-<li>Corner Detection</li>
-<li>Blob Detection</li>
-<li>SIFT</li>
-<li>SURF</li>
-<li>ORB</li>
-<li>HOG</li>
+<li>
+<p><code>Matrix computeXGradient(const Matrix&amp; image)</code>: This static function takes an input image in the form of a <code>Matrix</code> and computes the x-direction gradients of the image. This operation typically involves convolving the image with a kernel (e.g., the Sobel operator in the x-direction) that detects changes in intensity in the x-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the x-direction gradient at the corresponding pixel in the input image.</p>
+</li>
+<li>
+<p><code>Matrix computeYGradient(const Matrix&amp; image)</code>: This static function works similar to <code>computeXGradient</code>, but it computes the gradients in the y-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.</p>
+</li>
 </ul>
+<h2 id="example-usage">Example Usage</h2>
+<p>In this example, the <code>Gradients</code> class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.</p>
+<pre><code class="language-cpp">VisualAlgo::Matrix image;
+image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+image.normalize();
+
+VisualAlgo::Matrix image_x_gradient, image_y_gradient;
+image_x_gradient = VisualAlgo::FeatureExtraction::Gradients::computeXGradient(image);
+image_y_gradient = VisualAlgo::FeatureExtraction::Gradients::computeYGradient(image);
+
+image_x_gradient.save(&quot;datasets/FeatureExtraction/cat_x_gradient.ppm&quot;, true);
+image_y_gradient.save(&quot;datasets/FeatureExtraction/cat_y_gradient.ppm&quot;, true);
+</code></pre>
+<p>In this code, <code>computeXGradient</code> and <code>computeYGradient</code> are used to calculate the x and y gradients of the loaded image respectively. The resulting gradient images are then saved to file for later analysis or visualization.</p>
+<hr />
+<h3 id="canny-edge-detection">Canny Edge Detection</h3>
+<hr />
+<h3 id="corner-detection">Corner Detection</h3>
+<hr />
+<h3 id="blob-detection">Blob Detection</h3>
+<hr />
+<h3 id="sift">SIFT</h3>
+<hr />
+<h3 id="surf">SURF</h3>
+<hr />
+<h3 id="orb">ORB</h3>
+<hr />
+<h3 id="hog">HOG</h3>
+<hr />
 <h2 id="neuroscience-models">Neuroscience Models</h2>
-<ul>
-<li>Simple and Complex Cell Models</li>
-</ul>
+<h3 id="simple-and-complex-cell-models">Simple and Complex Cell Models</h3>
+<hr />
               
             </div>
           </div><footer>

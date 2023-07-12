@@ -202,7 +202,7 @@
 <p><strong>Step 2: CORT-X 2 Filter</strong>: The CORT-X 2 Filter is a neurophysiologically inspired model that draws on Hubel and Wiesel's work on Simple, Complex, and Hypercomplex cells. It forms the BCS part of this model. The filter takes the output from the previous step as its input, and generates the boundaries. It operates in a purely feedforward manner and can be broken down into six sub-steps:</p>
 <ul>
 <li>
-<p><strong>Step 2a: Simple Cells</strong>: These cells receive either <script type="math/tex">\mathbf{x}</script> or <script type="math/tex">\bar{\mathbf{x}}</script> as inputs. The kernels are determined by two scales, <script type="math/tex">s</script>: <script type="math/tex">s=1</script>, with major and minor axes of 12 and 6 pixels, and <script type="math/tex">s=2</script>, with major and minor axes of 20 and 10 pixels. The kernel, <script type="math/tex">\mathbf{K}</script>, comprises two ellipse halves, <script type="math/tex">\mathbf{L_s}</script> and <script type="math/tex">\mathbf{R_s}</script>:</p>
+<p><strong>Step 2a: Simple Cells</strong>: These cells receive either <script type="math/tex">\mathbf{x}</script> or <script type="math/tex">\bar{\mathbf{x}}</script> as inputs. The are two scales kernels <script type="math/tex">s</script> for the kernels: <script type="math/tex">s=1</script>, with major and minor axes of 12 and 6 pixels, and <script type="math/tex">s=2</script>, with major and minor axes of 20 and 10 pixels. The kernel, <script type="math/tex">\mathbf{K}</script>, comprises two ellipse halves, <script type="math/tex">\mathbf{L_s}</script> and <script type="math/tex">\mathbf{R_s}</script>:</p>
 <p>
 <script type="math/tex; mode=display">\mathbf{K}_{s, L} (k) = \mathbf{L_s} (k) - \alpha_s \mathbf{R_s} (k) - \beta_s </script>
 <script type="math/tex; mode=display">\mathbf{K}_{s, R} (k) = \mathbf{R_s} (k) - \alpha_s \mathbf{L_s} (k) - \beta_s</script>
@@ -235,7 +235,7 @@
 </li>
 </ul>
 <p>
-<script type="math/tex; mode=display">\mathbf{D}_s = \max_k \mathbf{D}_s (k)</script>
+<script type="math/tex; mode=display">\mathbf{D}_s := \max_k \mathbf{D}_s (k)</script>
 </p>
 <ul>
 <li><strong>Step 2e: Multiple Scale Interaction: Boundary Localization and Noise Suppression</strong>: </li>
