@@ -75,18 +75,16 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#visualalgofeatureextractiongradients-class-documentation">VisualAlgo::FeatureExtraction::Gradients Class Documentation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (VisualAlgo::FeatureExtraction::Gradients)</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#include">Include</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#static-functions">Static Functions</a>
     </li>
-        </ul>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#example-usage">Example Usage</a>
-        <ul>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#corner-detection">Corner Detection</a>
@@ -166,7 +164,7 @@
               
                 <h1 id="2-feature-extraction">2. Feature Extraction</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
-<h3 id="visualalgofeatureextractiongradients-class-documentation"><code>VisualAlgo::FeatureExtraction::Gradients</code> Class Documentation</h3>
+<h3 id="sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (<code>VisualAlgo::FeatureExtraction::Gradients</code>)</h3>
 <p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction.</p>
 <h4 id="include">Include</h4>
 <pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
@@ -180,7 +178,7 @@
 <p><code>Matrix computeYGradient(const Matrix&amp; image)</code>: This static function works similar to <code>computeXGradient</code>, but it computes the gradients in the y-direction. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.</p>
 </li>
 </ul>
-<h2 id="example-usage">Example Usage</h2>
+<h4 id="example-usage">Example Usage</h4>
 <p>In this example, the <code>Gradients</code> class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.</p>
 <pre><code class="language-cpp">VisualAlgo::Matrix image;
 image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
