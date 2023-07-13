@@ -104,6 +104,14 @@
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods">Class Members and Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_3">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples_1">Visual Examples</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#corner-detection">Corner Detection</a>
     </li>
@@ -304,6 +312,62 @@ edge_thinned_image.save(&quot;datasets/FeatureExtraction/cat_edge_non_max_suppre
 <p>The implementation assumes that the image has already been smoothed to remove noise and that appropriate gradient magnitude and direction have been computed. The edge non-maximum suppression is then used to thin out the edges in the image.</p>
 <hr />
 <h3 id="canny-edge-detection">Canny Edge Detection</h3>
+<p>The <code>Canny</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is an implementation of the Canny edge detection algorithm. The Canny edge detection algorithm, developed by John F. Canny in 1986, is a multi-stage algorithm used to detect a wide range of edges in images. The Canny algorithm involves several stages:</p>
+<ol>
+<li>
+<p><strong>Noise Reduction</strong>: Since edge detection is susceptible to noise in an image, the first step is to remove the noise. This is typically done using a Gaussian filter.</p>
+</li>
+<li>
+<p><strong>Gradient Calculation</strong>: The edge in an image is the area where there is a sharp change in the color or intensity of the image. The Gradient calculation step measures this change in the x and y direction.</p>
+</li>
+<li>
+<p><strong>Non-maximum Suppression</strong>: The Gradient calculation process results in thick edges. The purpose of non-maximum suppression is to convert these thick edges into thin lines.</p>
+</li>
+<li>
+<p><strong>Double Threshold</strong>: Potential edges are determined by thresholding the remaining pixels based on their gradient value. This results in strong edges, weak edges, and non-edges.</p>
+</li>
+<li>
+<p><strong>Edge Tracking by Hysteresis</strong>: Weak edges are pruned based on their connectivity. If a weak edge is connected to a strong edge, it is considered part of an edge. Otherwise, it is discarded.</p>
+</li>
+</ol>
+<h4 id="class-members-and-methods">Class Members and Methods</h4>
+<ul>
+<li>
+<p><code>Canny(float sigma, float low_threshold, float high_threshold)</code>: Constructor that initializes a <code>Canny</code> instance with the specified sigma value for the Gaussian filter, and low and high threshold values for edge detection.</p>
+</li>
+<li>
+<p><code>Matrix apply(const Matrix &amp;image)</code>: Applies the Canny edge detection algorithm to an input image. This function first applies Gaussian filtering to the input image for smoothing and noise reduction, then computes the gradients of the smoothed image. After that, it applies non-maximum suppression to the gradient magnitude of the image to thin the edges. Finally, it applies thresholding and edge tracking to detect the edges in the image.</p>
+</li>
+<li>
+<p><code>Matrix applyThreshold(const Matrix &amp;image)</code>: A private method that applies thresholding to an image based on the low and high threshold values. This is used to detect potential edges in the image.</p>
+</li>
+<li>
+<p><code>Matrix trackEdges(const Matrix &amp;image)</code>: A private method that tracks edges in an image using hysteresis thresholding. This is used to finalize the detected edges in the image.</p>
+</li>
+</ul>
+<h4 id="example-usage_3">Example Usage</h4>
+<p>In this example, the <code>Canny</code> class is used to apply the Canny edge detection algorithm to a series of images. The images are first loaded and normalized. The <code>apply</code> function of the <code>Canny</code> class is then called with each image as argument, and the resulting edge-detected images are saved to files. The detected edges are then compared with expected results to ensure the edge detection is correct.</p>
+<pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
+#include &quot;FeatureExtraction/Canny.hpp&quot;
+
+VisualAlgo::Matrix image, image_canny_expected;
+image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+image_canny_expected.load(&quot;datasets/FeatureExtraction/cat_expected_canny.ppm&quot;);
+
+image.normalize();
+image_canny_expected.normalize();
+
+VisualAlgo::FeatureExtraction::Canny canny(1.0f, 0.1f, 0.2f);
+VisualAlgo::Matrix image_canny = canny.apply(image);
+
+image_canny.save(&quot;datasets/FeatureExtraction/cat_canny.ppm&quot;, true);
+</code></pre>
+<h4 id="visual-examples_1">Visual Examples</h4>
+<p>Below are visual examples of the original image and the computed Canny edges.</p>
+<p>Original Image:</p>
+<p><img alt="original_lighthouse" src="../../images/FeatureExtraction/lighthouse_original.png" /></p>
+<p>Canny Edges (sigma = 1.0, low_threshold = 0.1, high_threshold = 0.2):</p>
+<p><img alt="canny_lighthouse" src="../../images/FeatureExtraction/lighthouse_canny.png" /></p>
 <hr />
 <h3 id="corner-detection">Corner Detection</h3>
 <hr />
