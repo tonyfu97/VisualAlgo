@@ -9,7 +9,7 @@
 const float TOLERANCE = 0.01;
 const float MAX_PROPORTION_ABS_DIFF = 0.05;
 
-static float proportion_abs_diff_exceed_tol(const VisualAlgo::Matrix& m1, const VisualAlgo::Matrix& m2)
+static float proportion_abs_diff_exceed_tol(const VisualAlgo::Matrix& m1, const VisualAlgo::Matrix& m2, float tol=TOLERANCE)
 {
     // Make sure both matrix are normalize
     VisualAlgo::Matrix m1_norm = m1;
@@ -23,7 +23,7 @@ static float proportion_abs_diff_exceed_tol(const VisualAlgo::Matrix& m1, const 
     {
         for (int j = 0; j < m1_norm.cols; j++)
         {
-            if (std::abs(m1_norm.get(i, j) - m2_norm.get(i, j)) > TOLERANCE)
+            if (std::abs(m1_norm.get(i, j) - m2_norm.get(i, j)) > tol)
             {
                 count++;
             }
@@ -33,7 +33,7 @@ static float proportion_abs_diff_exceed_tol(const VisualAlgo::Matrix& m1, const 
     return proportion;
 }
 
-static bool test_gradients(std::string img_name)
+static bool test_gradients_xy(std::string img_name)
 {
     VisualAlgo::Matrix image, image_x_gradient_expected, image_y_gradient_expected;
     image.load("datasets/FeatureExtraction/" + img_name + "_resized.ppm");
@@ -59,15 +59,55 @@ static bool test_gradients(std::string img_name)
     return (padetx < MAX_PROPORTION_ABS_DIFF) && (padety < MAX_PROPORTION_ABS_DIFF);
 }
 
+static bool test_gradients_magnitude(std::string img_name)
+{
+    VisualAlgo::Matrix image, image_gradient_magnitude_expected;
+    image.load("datasets/FeatureExtraction/" + img_name + "_resized.ppm");
+    image_gradient_magnitude_expected.load("datasets/FeatureExtraction/" + img_name + "_expected_grad_magnitude.ppm");
+
+    VisualAlgo::Matrix image_gradient_magnitude;
+    image_gradient_magnitude = VisualAlgo::FeatureExtraction::Gradients::computeGradientMagnitude(image);
+
+    image_gradient_magnitude.save("datasets/FeatureExtraction/" + img_name + "_grad_magnitude.ppm", true);
+
+    float padet = proportion_abs_diff_exceed_tol(image_gradient_magnitude, image_gradient_magnitude_expected);
+
+    // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_grad_magnitude.ppm: " << padet << std::endl;
+
+    return padet < MAX_PROPORTION_ABS_DIFF;
+}
+
+static bool test_gradients_direction(std::string img_name)
+{
+    VisualAlgo::Matrix image, image_gradient_direction_expected;
+    image.load("datasets/FeatureExtraction/" + img_name + "_resized.ppm");
+    image_gradient_direction_expected.load("datasets/FeatureExtraction/" + img_name + "_expected_grad_direction.ppm");
+
+    VisualAlgo::Matrix image_gradient_direction;
+    image_gradient_direction = VisualAlgo::FeatureExtraction::Gradients::computeGradientDirection(image);
+
+    image_gradient_direction.save("datasets/FeatureExtraction/" + img_name + "_grad_direction.ppm", true);
+
+    float padet = proportion_abs_diff_exceed_tol(image_gradient_direction, image_gradient_direction_expected, 0.1);  // tolerance is 0.1 because the gradient direction is not as accurate as the gradient magnitude
+
+    // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_grad_direction.ppm: " << padet << std::endl;
+
+    return padet < MAX_PROPORTION_ABS_DIFF;
+}
+
 namespace VisualAlgo::FeatureExtraction
 {
     TEST(GradientsTestSuite, GradientsCat)
     {
-        CHECK(test_gradients("cat"));
+        CHECK(test_gradients_xy("cat"));
+        CHECK(test_gradients_magnitude("cat"));
+        CHECK(test_gradients_direction("cat"));
     }
 
     TEST(GradientsTestSuite, GradientsLighthouse)
     {
-        CHECK(test_gradients("lighthouse"));
+        CHECK(test_gradients_xy("lighthouse"));
+        CHECK(test_gradients_magnitude("lighthouse"));
+        CHECK(test_gradients_direction("lighthouse"));
     }
 }

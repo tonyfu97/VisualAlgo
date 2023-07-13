@@ -4,31 +4,11 @@
 
 ### Sobel Filters (`VisualAlgo::FeatureExtraction::Gradients`)
 
-The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. 
+The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a utility class for computing various gradient measurements of an image. These are important components in many computer vision and image processing tasks such as edge detection and feature extraction. 
 
-The key technique used by this class is the Sobel operator, which is a pair of 3x3 convolution kernels. These kernels are designed to respond maximally to edges running vertically and horizontally relative to the pixel grid.
+The key technique used by this class is the Sobel operator, which is a pair of 3x3 convolution kernels. These kernels are designed to respond maximally to edges running vertically and horizontally relative to the pixel grid, one for each direction (x and y). 
 
-The x-direction kernel is as follows:
-
-$$
-Sobel_x = 
-\begin{bmatrix}
-1 & 0 & -1 \\
-2 & 0 & -2 \\
-1 & 0 & -1
-\end{bmatrix}
-$$
-
-The y-direction kernel is as follows:
-
-$$
-Sobel_y = 
-\begin{bmatrix}
-1 & 2 & 1 \\
-0 & 0 & 0 \\
--1 & -2 & -1
-\end{bmatrix}
-$$
+Once the x and y gradients have been computed, it's often useful to also compute the gradient magnitude and direction. The gradient magnitude gives the amount of change at each pixel and the direction gives the orientation of change. 
 
 #### Include
 
@@ -42,28 +22,38 @@ $$
 
 * `Matrix computeYGradient(const Matrix& image)`: This static function works similar to `computeXGradient`, but it computes the gradients in the y-direction. The image is convolved with the SobelY kernel. The output is a `Matrix` of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.
 
+* `Matrix computeGradientMagnitude(const Matrix& xGradient, const Matrix& yGradient)`: This static function computes the magnitude of the gradient at each pixel. The gradient magnitude is defined as the square root of the sum of the squares of the x and y gradients. The output is a `Matrix` of the same size as the input gradients, where each element represents the gradient magnitude at the corresponding pixel.
+
+* `Matrix computeGradientDirection(const Matrix& xGradient, const Matrix& yGradient)`: This static function computes the direction of the gradient at each pixel. The gradient direction is defined as the arctangent of the ratio of the y-gradient to the x-gradient. The output is a `Matrix` of the same size as the input gradients, where each element represents the gradient direction at the corresponding pixel.
+
+    The gradient direction is calculated as the arctangent of the ratio of the y-gradient to the x-gradient. In areas of the image where the x-gradient is near zero, the ratio can become very large or very small, leading to potential instability in the arctangent calculation. Unlike the other libraries, I have not addressed this issue yet.
+
 #### Example Usage
 
-In this example, the `Gradients` class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.
+In this example, the `Gradients` class is used to compute the x and y gradients of an image, as well as the gradient magnitude and direction. These results are then saved to file and compared with the expected results to ensure the computations are correct.
 
 ```cpp
 VisualAlgo::Matrix image;
-image.load("datasets/FeatureExtraction/cat_resized.ppm");
+image.load("datasets/FeatureExtraction/lighthouse_resized.ppm");
 image.normalize();
 
-VisualAlgo::Matrix image_x_gradient, image_y_gradient;
+VisualAlgo::Matrix image_x_gradient, image_y_gradient, image_gradient_magnitude, image_gradient_direction;
 image_x_gradient = VisualAlgo::FeatureExtraction::Gradients::computeXGradient(image);
 image_y_gradient = VisualAlgo::FeatureExtraction::Gradients::computeYGradient(image);
+image_gradient_magnitude = VisualAlgo::FeatureExtraction::Gradients::computeGradientMagnitude(image_x_gradient, image_y_gradient);
+image_gradient_direction = VisualAlgo::FeatureExtraction::Gradients::computeGradientDirection(image_x_gradient, image_y_gradient);
 
-image_x_gradient.save("datasets/FeatureExtraction/cat_x_gradient.ppm", true);
-image_y_gradient.save("datasets/FeatureExtraction/cat_y_gradient.ppm", true);
+image_x_gradient.save("datasets/FeatureExtraction/lighthouse_x_gradient.ppm", true);
+image_y_gradient.save("datasets/FeatureExtraction/lighthouse_y_gradient.ppm", true);
+image_gradient_magnitude.save("datasets/FeatureExtraction/lighthouse_gradient_magnitude.ppm", true);
+image_gradient_direction.save("datasets/FeatureExtraction/lighthouse_gradient_direction.ppm", true);
 ```
 
-In this code, `computeXGradient` and `computeYGradient` are used to calculate the x and y gradients of the loaded image respectively. The resulting gradient images are then saved to file for later analysis or visualization.
+In this code, `computeXGradient` and `computeYGradient` are used to calculate the x and y gradients of the loaded image respectively. Then `computeGradientMagnitude` and `computeGradientDirection` are used to compute the gradient magnitude and direction respectively. The resulting images are then saved to file for later analysis or visualization.
 
 #### Visual Examples
 
-Below are visual examples of the original image and the computed gradients.
+Below are visual examples of the original image and the computed gradients, gradient magnitude, and gradient direction.
 
 Original Image:
 
@@ -76,6 +66,14 @@ X-direction Gradient:
 Y-direction Gradient:
 
 ![sobel_y_lighthouse](../images/FeatureExtraction/lighthouse_sobel_y.png)
+
+Gradient Magnitude:
+
+![sobel_mag_lighthouse](../images/FeatureExtraction/lighthouse_sobel_magnitude.png)
+
+Gradient Direction:
+
+![sobel_dir_lighthouse](../images/FeatureExtraction/lighthouse_sobel_direction.png)
 
 ---
 
