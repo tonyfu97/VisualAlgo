@@ -1,5 +1,5 @@
 #include "TestHarness.h"
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 #include "helpers/stimulus.hpp"
 #include "SegmentationAndGrouping/FBF.hpp"
 

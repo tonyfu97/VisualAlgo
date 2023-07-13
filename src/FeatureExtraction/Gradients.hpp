@@ -1,6 +1,6 @@
 #pragma once
 
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 
 namespace VisualAlgo::FeatureExtraction {
     class Gradients {

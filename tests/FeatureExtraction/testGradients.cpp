@@ -1,5 +1,5 @@
 #include "TestHarness.h"
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 #include "FeatureExtraction/Gradients.hpp"
 
 #include <iostream>
@@ -54,7 +54,7 @@ static bool test_gradients(std::string img_name)
     float padetx = proportion_abs_diff_exceed_tol(image_x_gradient, image_x_gradient_expected);
     float padety = proportion_abs_diff_exceed_tol(image_y_gradient, image_y_gradient_expected);
 
-    std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_x_gradient.ppm: " << padetx << ", y_gradient.ppm: " << padety << std::endl;
+    // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_x_gradient.ppm: " << padetx << ", y_gradient.ppm: " << padety << std::endl;
 
     return (padetx < MAX_PROPORTION_ABS_DIFF) && (padety < MAX_PROPORTION_ABS_DIFF);
 }

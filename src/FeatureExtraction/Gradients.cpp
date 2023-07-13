@@ -1,5 +1,5 @@
 #include "Gradients.hpp"
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 
 namespace VisualAlgo::FeatureExtraction {
     Matrix Gradients::computeXGradient(const Matrix& image) {

@@ -1,6 +1,6 @@
 #include "FBF.hpp"
-#include "helpers/matrix.hpp"
-#include "helpers/progress_bar.hpp"
+#include "helpers/Matrix.hpp"
+#include "helpers/ProgressBar.hpp"
 
 #include <cmath>
 #include <stdexcept>

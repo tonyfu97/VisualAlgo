@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 
 #define DEBUG 1
 

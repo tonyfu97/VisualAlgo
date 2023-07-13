@@ -1,5 +1,5 @@
 #include <iostream>
-#include "helpers/progress_bar.hpp"
+#include "helpers/ProgressBar.hpp"
 
 namespace VisualAlgo
 {

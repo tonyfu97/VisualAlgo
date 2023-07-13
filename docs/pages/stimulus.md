@@ -8,7 +8,7 @@ The `VisualAlgo::Stimulus` namespace provides functions to create stimuli in the
 
 ```cpp
 #include "helpers/stimulus.hpp"
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 ```
 
 ---

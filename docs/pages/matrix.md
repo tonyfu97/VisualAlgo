@@ -7,7 +7,7 @@ The `Matrix` struct provides a two-dimensional matrix object, along with numerou
 ## Include
 
 ``` cpp
-#include "helpers/matrix.hpp"
+#include "helpers/Matrix.hpp"
 ```
 ---
 

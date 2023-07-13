@@ -1,5 +1,5 @@
 #include "stimulus.hpp"
-#include "matrix.hpp"
+#include "Matrix.hpp"
 
 #include <random>
 #include <stdexcept>
