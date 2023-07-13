@@ -93,7 +93,15 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#non-maximum-suppression-for-edges-not-bounding-boxes">Non-Maximum Suppression (For Edges, not Bounding Boxes)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#edge-non-maximum-suppression">Edge Non-Maximum Suppression</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-methods">Class Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_2">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#note">Note</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
     </li>
@@ -264,7 +272,36 @@ gradient_direction.save(&quot;datasets/FeatureExtraction/cat_gradient_direction.
 <p>Gradient Direction:</p>
 <p><img alt="sobel_dir_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_direction.png" /></p>
 <hr />
-<h3 id="non-maximum-suppression-for-edges-not-bounding-boxes">Non-Maximum Suppression (For Edges, not Bounding Boxes)</h3>
+<h3 id="edge-non-maximum-suppression">Edge Non-Maximum Suppression</h3>
+<p>The <code>EdgeNonMaxSuppression</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is used for edge thinning in an image. It operates by suppressing all the non-maximum edges in the computed gradient of the image, leading to thin edges in the output. This is a key step in several edge detection algorithms such as the Canny edge detector.</p>
+<p><img alt="edge_non_max_suppression" src="../../images/FeatureExtraction/edge_non_max_suppression.jpg" /></p>
+<h4 id="class-methods">Class Methods</h4>
+<ul>
+<li>
+<p><code>Matrix apply(const Matrix &amp;image)</code>: This method takes as input a <code>Matrix</code> representing an image and applies edge non-maximum suppression to it. It first computes the x and y gradients of the image, then the gradient magnitude and direction using the <code>Gradients</code> class. After that, it calls the other <code>apply</code> method with the computed gradient magnitude and direction as arguments.</p>
+</li>
+<li>
+<p><code>Matrix apply(const Matrix &amp;gradientMagnitude, const Matrix &amp;gradientDirection)</code>: This method takes as input a <code>Matrix</code> each representing the gradient magnitude and direction of an image. It then applies edge non-maximum suppression to it. For each pixel, it rounds the gradient direction to one of four possible directions, then compares the gradient magnitude of the current pixel with its two neighbors in the direction of the gradient. If the gradient magnitude of the current pixel is greater than both of its neighbors, it is preserved in the output; otherwise, it is suppressed.</p>
+</li>
+</ul>
+<h4 id="example-usage_2">Example Usage</h4>
+<p>In this example, the <code>EdgeNonMaxSuppression</code> class is used to apply edge non-maximum suppression to an image. The image is first loaded and normalized. The <code>apply</code> function of the <code>EdgeNonMaxSuppression</code> class is then called with the image as argument, and the resulting edge-thinned image is saved to file.</p>
+<pre><code class="language-cpp">#include &quot;FeatureExtraction/EdgeNonMaxSuppression.hpp&quot;
+#include &quot;helpers/Matrix.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+image.normalize();
+
+VisualAlgo::FeatureExtraction::EdgeNonMaxSuppression edgeNonMaxSuppression;
+VisualAlgo::Matrix edge_thinned_image;
+edge_thinned_image = edgeNonMaxSuppression.apply(image);
+
+edge_thinned_image.save(&quot;datasets/FeatureExtraction/cat_edge_non_max_suppression.ppm&quot;, true);
+</code></pre>
+<p>In this code, an instance of <code>EdgeNonMaxSuppression</code> is created. The <code>apply</code> function of this instance is called with the loaded and normalized image as argument. The function returns an edge-thinned image which is saved to file for later analysis or visualization.</p>
+<h4 id="note">Note</h4>
+<p>The implementation assumes that the image has already been smoothed to remove noise and that appropriate gradient magnitude and direction have been computed. The edge non-maximum suppression is then used to thin out the edges in the image.</p>
 <hr />
 <h3 id="canny-edge-detection">Canny Edge Detection</h3>
 <hr />
