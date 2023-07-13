@@ -75,13 +75,17 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (VisualAlgo::FeatureExtraction::Gradients)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#filters">Filters</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#include">Include</a>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
     </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gradients-class-visualalgofeatureextractiongradients">Gradients Class (VisualAlgo::FeatureExtraction::Gradients)</a>
+        <ul>
     <li class="toctree-l4"><a class="reference internal" href="#static-functions">Static Functions</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_1">Example Usage</a>
     </li>
     <li class="toctree-l4"><a class="reference internal" href="#warning">Warning</a>
     </li>
@@ -89,7 +93,7 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#non-max-suppression">Non-Max Suppression</a>
+    <li class="toctree-l3"><a class="reference internal" href="#non-maximum-suppression-for-edges-not-bounding-boxes">Non-Maximum Suppression (For Edges, not Bounding Boxes)</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
     </li>
@@ -170,11 +174,45 @@
               
                 <h1 id="2-feature-extraction">2. Feature Extraction</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
-<h3 id="sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (<code>VisualAlgo::FeatureExtraction::Gradients</code>)</h3>
-<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. </p>
-<h4 id="include">Include</h4>
-<pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
+<h3 id="filters">Filters</h3>
+<p>In the <code>VisualAlgo::FeatureExtraction</code> namespace, a suite of filter classes are provided for image processing tasks:</p>
+<ul>
+<li>
+<p><code>Filter</code>: A base class with a pure virtual <code>apply</code> method for applying the filter to an image. </p>
+</li>
+<li>
+<p><code>GaussianFilter</code>: A subclass of <code>Filter</code> that implements a Gaussian filter for image smoothing and noise reduction. It provides a constructor <code>GaussianFilter(float sigma)</code> to create a Gaussian filter with a specified sigma value, and overrides the <code>apply</code> method to perform Gaussian filtering on an image.</p>
+</li>
+<li>
+<p><code>SobelFilterX</code> and <code>SobelFilterY</code>: These are subclasses of <code>Filter</code> that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors <code>SobelFilterX()</code> and <code>SobelFilterY()</code> create the respective filters, and the <code>apply</code> method is overridden in each class to apply the corresponding Sobel filter on an image.</p>
+</li>
+</ul>
+<h4 id="example-usage">Example Usage</h4>
+<p>In this example, the <code>GaussianFilter</code>, <code>SobelFilterX</code>, and <code>SobelFilterY</code> classes are used to apply corresponding filters to an image. The filtered images are then saved for later analysis or visualization.</p>
+<pre><code class="language-cpp">#include &quot;FeatureExtraction/Filter.hpp&quot;
+#include &quot;helpers/Matrix.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+image.normalize();
+
+VisualAlgo::FeatureExtraction::GaussianFilter gaussianFilter(0.8f);
+VisualAlgo::FeatureExtraction::SobelFilterX sobelXFilter;
+VisualAlgo::FeatureExtraction::SobelFilterY sobelYFilter;
+
+VisualAlgo::Matrix image_gaussian, image_sobel_x, image_sobel_y;
+image_gaussian = gaussianFilter.apply(image);
+image_sobel_x = sobelXFilter.apply(image);
+image_sobel_y = sobelYFilter.apply(image);
+
+image_gaussian.save(&quot;datasets/FeatureExtraction/cat_gaussian.ppm&quot;, true);
+image_sobel_x.save(&quot;datasets/FeatureExtraction/cat_sobel_x.ppm&quot;, true);
+image_sobel_y.save(&quot;datasets/FeatureExtraction/cat_sobel_y.ppm&quot;, true);
 </code></pre>
+<p>In this code, instances of <code>GaussianFilter</code>, <code>SobelFilterX</code>, and <code>SobelFilterY</code> are directly created. Each filter is then applied to the loaded image by calling their <code>apply</code> function, and the resulting filtered images are saved to files for later analysis or visualization.</p>
+<hr />
+<h3 id="gradients-class-visualalgofeatureextractiongradients">Gradients Class (<code>VisualAlgo::FeatureExtraction::Gradients</code>)</h3>
+<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. </p>
 <h4 id="static-functions">Static Functions</h4>
 <ul>
 <li>
@@ -190,9 +228,12 @@
 <p><code>Matrix computeGradientDirection(const Matrix&amp; xGradient, const Matrix&amp; yGradient, float threshold = 0.01)</code>: This function computes the direction of the gradient at each pixel, defined as the arctangent of the ratio of the y-gradient to the x-gradient. It accepts a threshold parameter to filter out low magnitude gradients, reducing the noise. Any gradient with a magnitude less than the threshold will be set to zero in the output matrix.</p>
 </li>
 </ul>
-<h4 id="example-usage">Example Usage</h4>
+<h4 id="example-usage_1">Example Usage</h4>
 <p>In this example, the <code>Gradients</code> class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.</p>
-<pre><code class="language-cpp">VisualAlgo::Matrix image;
+<pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
+#include &quot;helpers/Matrix.hpp&quot;
+
+VisualAlgo::Matrix image;
 image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
 image.normalize();
 
@@ -223,7 +264,7 @@ gradient_direction.save(&quot;datasets/FeatureExtraction/cat_gradient_direction.
 <p>Gradient Direction:</p>
 <p><img alt="sobel_dir_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_direction.png" /></p>
 <hr />
-<h3 id="non-max-suppression">Non-Max Suppression</h3>
+<h3 id="non-maximum-suppression-for-edges-not-bounding-boxes">Non-Maximum Suppression (For Edges, not Bounding Boxes)</h3>
 <hr />
 <h3 id="canny-edge-detection">Canny Edge Detection</h3>
 <hr />
