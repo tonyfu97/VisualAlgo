@@ -1,5 +1,5 @@
 #include "TestHarness.h"
-#include "helpers/stimulus.hpp"
+#include "helpers/Stimulus.hpp"
 
 namespace VisualAlgo::Stimulus
 {

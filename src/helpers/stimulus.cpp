@@ -1,4 +1,4 @@
-#include "stimulus.hpp"
+#include "Stimulus.hpp"
 #include "Matrix.hpp"
 
 #include <random>
