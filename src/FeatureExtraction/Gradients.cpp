@@ -1,5 +1,6 @@
-#include "Gradients.hpp"
 #include "helpers/Matrix.hpp"
+#include "FeatureExtraction/Gradients.hpp"
+#include "FeatureExtraction/Filter.hpp"
 
 #include <cmath>
 
@@ -7,20 +8,14 @@ namespace VisualAlgo::FeatureExtraction
 {
     Matrix Gradients::computeXGradient(const Matrix &image)
     {
-        Matrix sobelX = Matrix({{1, 0, -1},
-                                {2, 0, -2},
-                                {1, 0, -1}});
-
-        return image.convolve(sobelX);
+        SobelFilterX filter;
+        return filter.apply(image);
     }
 
     Matrix Gradients::computeYGradient(const Matrix &image)
     {
-        Matrix sobelY = Matrix({{1, 2, 1},
-                                {0, 0, 0},
-                                {-1, -2, -1}});
-
-        return image.convolve(sobelY);
+        SobelFilterY filter;
+        return filter.apply(image);
     }
 
     Matrix Gradients::computeGradientMagnitude(const Matrix &xGradient, const Matrix &yGradient)

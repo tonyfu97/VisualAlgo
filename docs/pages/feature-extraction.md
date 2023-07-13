@@ -1,18 +1,50 @@
 # 2. Feature Extraction
 
-Certainly! Here's how the updated documentation might look like:
-
 ## Computer Vision Algorithms
 
-### Sobel Filters (`VisualAlgo::FeatureExtraction::Gradients`)
+### Filters
 
-The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. 
+In the `VisualAlgo::FeatureExtraction` namespace, a suite of filter classes are provided for image processing tasks:
 
-#### Include
+- `Filter`: A base class with a pure virtual `apply` method for applying the filter to an image. 
+
+- `GaussianFilter`: A subclass of `Filter` that implements a Gaussian filter for image smoothing and noise reduction. It provides a constructor `GaussianFilter(float sigma)` to create a Gaussian filter with a specified sigma value, and overrides the `apply` method to perform Gaussian filtering on an image.
+
+- `SobelFilterX` and `SobelFilterY`: These are subclasses of `Filter` that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors `SobelFilterX()` and `SobelFilterY()` create the respective filters, and the `apply` method is overridden in each class to apply the corresponding Sobel filter on an image.
+
+#### Example Usage
+
+In this example, the `GaussianFilter`, `SobelFilterX`, and `SobelFilterY` classes are used to apply corresponding filters to an image. The filtered images are then saved for later analysis or visualization.
 
 ```cpp
-#include "FeatureExtraction/Gradients.hpp"
+#include "FeatureExtraction/Filter.hpp"
+#include "helpers/Matrix.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/FeatureExtraction/cat_resized.ppm");
+image.normalize();
+
+VisualAlgo::FeatureExtraction::GaussianFilter gaussianFilter(0.8f);
+VisualAlgo::FeatureExtraction::SobelFilterX sobelXFilter;
+VisualAlgo::FeatureExtraction::SobelFilterY sobelYFilter;
+
+VisualAlgo::Matrix image_gaussian, image_sobel_x, image_sobel_y;
+image_gaussian = gaussianFilter.apply(image);
+image_sobel_x = sobelXFilter.apply(image);
+image_sobel_y = sobelYFilter.apply(image);
+
+image_gaussian.save("datasets/FeatureExtraction/cat_gaussian.ppm", true);
+image_sobel_x.save("datasets/FeatureExtraction/cat_sobel_x.ppm", true);
+image_sobel_y.save("datasets/FeatureExtraction/cat_sobel_y.ppm", true);
 ```
+
+In this code, instances of `GaussianFilter`, `SobelFilterX`, and `SobelFilterY` are directly created. Each filter is then applied to the loaded image by calling their `apply` function, and the resulting filtered images are saved to files for later analysis or visualization.
+
+---
+
+### Gradients Class (`VisualAlgo::FeatureExtraction::Gradients`)
+
+The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. 
 
 #### Static Functions
 
@@ -29,6 +61,9 @@ The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a util
 In this example, the `Gradients` class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.
 
 ```cpp
+#include "FeatureExtraction/Gradients.hpp"
+#include "helpers/Matrix.hpp"
+
 VisualAlgo::Matrix image;
 image.load("datasets/FeatureExtraction/cat_resized.ppm");
 image.normalize();
@@ -77,7 +112,7 @@ Gradient Direction:
 
 ---
 
-### Non-Max Suppression
+### Non-Maximum Suppression (For Edges, not Bounding Boxes)
 
 ---
 

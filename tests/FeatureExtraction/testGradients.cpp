@@ -88,7 +88,7 @@ static bool test_gradients_direction(std::string img_name)
 
     image_gradient_direction.save("datasets/FeatureExtraction/" + img_name + "_grad_direction.ppm", true);
 
-    float padet = proportion_abs_diff_exceed_tol(image_gradient_direction, image_gradient_direction_expected, 0.1);  // tolerance is 0.1 because the gradient direction is not as accurate as the gradient magnitude
+    float padet = proportion_abs_diff_exceed_tol(image_gradient_direction, image_gradient_direction_expected, 0.1);  // tolerance is 0.1 because the gradient direction is not as accurate as the gradient magnitude. And also because the gradient direction is in unit radians, so the difference is not as obvious as the gradient magnitude.
 
     // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_grad_direction.ppm: " << padet << std::endl;
 

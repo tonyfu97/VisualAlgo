@@ -1,12 +1,12 @@
-#include "FeatureExtraction/NonMaxSuppression.hpp"
-#include "helpers/Matrix.hpp"
+#include "FeatureExtraction/EdgeNonMaxSuppression.hpp"
 #include "FeatureExtraction/Gradients.hpp"
+#include "helpers/Matrix.hpp"
 
 #include <cmath>
 
 namespace VisualAlgo::FeatureExtraction
 {
-    Matrix NonMaxSuppression::apply(const Matrix &image)
+    Matrix EdgeNonMaxSuppression::apply(const Matrix &image)
     {
         Matrix xGradient = Gradients::computeXGradient(image);
         Matrix yGradient = Gradients::computeYGradient(image);
@@ -17,7 +17,7 @@ namespace VisualAlgo::FeatureExtraction
         return apply(gradientMagnitude, gradientDirection);
     }
 
-    Matrix NonMaxSuppression::apply(const Matrix &gradientMagnitude, const Matrix &gradientDirection)
+    Matrix EdgeNonMaxSuppression::apply(const Matrix &gradientMagnitude, const Matrix &gradientDirection)
     {
         Matrix result(gradientMagnitude.rows, gradientMagnitude.cols);
 
