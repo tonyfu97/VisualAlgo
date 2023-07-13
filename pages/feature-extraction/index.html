@@ -87,6 +87,8 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#non-max-suppression">Non-Max Suppression</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#canny-edge-detection">Canny Edge Detection</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#corner-detection">Corner Detection</a>
@@ -167,30 +169,9 @@
                 <h1 id="2-feature-extraction">2. Feature Extraction</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
 <h3 id="sobel-filters-visualalgofeatureextractiongradients">Sobel Filters (<code>VisualAlgo::FeatureExtraction::Gradients</code>)</h3>
-<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. </p>
-<p>The key technique used by this class is the Sobel operator, which is a pair of 3x3 convolution kernels. These kernels are designed to respond maximally to edges running vertically and horizontally relative to the pixel grid.</p>
-<p>The x-direction kernel is as follows:</p>
-<p>
-<script type="math/tex; mode=display">
-SobelX = 
-\begin{bmatrix}
-1 & 0 & -1 \\
-2 & 0 & -2 \\
-1 & 0 & -1
-\end{bmatrix}
-</script>
-</p>
-<p>The y-direction kernel is as follows:</p>
-<p>
-<script type="math/tex; mode=display">
-SobelY = 
-\begin{bmatrix}
-1 & 2 & 1 \\
-0 & 0 & 0 \\
--1 & -2 & -1
-\end{bmatrix}
-</script>
-</p>
+<p>The <code>Gradients</code> class in the <code>VisualAlgo::FeatureExtraction</code> namespace is a utility class for computing various gradient measurements of an image. These are important components in many computer vision and image processing tasks such as edge detection and feature extraction. </p>
+<p>The key technique used by this class is the Sobel operator, which is a pair of 3x3 convolution kernels. These kernels are designed to respond maximally to edges running vertically and horizontally relative to the pixel grid, one for each direction (x and y). </p>
+<p>Once the x and y gradients have been computed, it's often useful to also compute the gradient magnitude and direction. The gradient magnitude gives the amount of change at each pixel and the direction gives the orientation of change. </p>
 <h4 id="include">Include</h4>
 <pre><code class="language-cpp">#include &quot;FeatureExtraction/Gradients.hpp&quot;
 </code></pre>
@@ -202,30 +183,46 @@ SobelY =
 <li>
 <p><code>Matrix computeYGradient(const Matrix&amp; image)</code>: This static function works similar to <code>computeXGradient</code>, but it computes the gradients in the y-direction. The image is convolved with the SobelY kernel. The output is a <code>Matrix</code> of the same size as the input image, where each element represents the y-direction gradient at the corresponding pixel in the input image.</p>
 </li>
+<li>
+<p><code>Matrix computeGradientMagnitude(const Matrix&amp; xGradient, const Matrix&amp; yGradient)</code>: This static function computes the magnitude of the gradient at each pixel. The gradient magnitude is defined as the square root of the sum of the squares of the x and y gradients. The output is a <code>Matrix</code> of the same size as the input gradients, where each element represents the gradient magnitude at the corresponding pixel.</p>
+</li>
+<li>
+<p><code>Matrix computeGradientDirection(const Matrix&amp; xGradient, const Matrix&amp; yGradient)</code>: This static function computes the direction of the gradient at each pixel. The gradient direction is defined as the arctangent of the ratio of the y-gradient to the x-gradient. The output is a <code>Matrix</code> of the same size as the input gradients, where each element represents the gradient direction at the corresponding pixel.</p>
+<p>The gradient direction is calculated as the arctangent of the ratio of the y-gradient to the x-gradient. In areas of the image where the x-gradient is near zero, the ratio can become very large or very small, leading to potential instability in the arctangent calculation. Unlike the other libraries, I have not addressed this issue yet.</p>
+</li>
 </ul>
 <h4 id="example-usage">Example Usage</h4>
-<p>In this example, the <code>Gradients</code> class is used to compute the x and y gradients of an image. These gradients are then saved to file and compared with the expected gradients to ensure the computations are correct.</p>
+<p>In this example, the <code>Gradients</code> class is used to compute the x and y gradients of an image, as well as the gradient magnitude and direction. These results are then saved to file and compared with the expected results to ensure the computations are correct.</p>
 <pre><code class="language-cpp">VisualAlgo::Matrix image;
-image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+image.load(&quot;datasets/FeatureExtraction/lighthouse_resized.ppm&quot;);
 image.normalize();
 
-VisualAlgo::Matrix image_x_gradient, image_y_gradient;
+VisualAlgo::Matrix image_x_gradient, image_y_gradient, image_gradient_magnitude, image_gradient_direction;
 image_x_gradient = VisualAlgo::FeatureExtraction::Gradients::computeXGradient(image);
 image_y_gradient = VisualAlgo::FeatureExtraction::Gradients::computeYGradient(image);
+image_gradient_magnitude = VisualAlgo::FeatureExtraction::Gradients::computeGradientMagnitude(image_x_gradient, image_y_gradient);
+image_gradient_direction = VisualAlgo::FeatureExtraction::Gradients::computeGradientDirection(image_x_gradient, image_y_gradient);
 
-image_x_gradient.save(&quot;datasets/FeatureExtraction/cat_x_gradient.ppm&quot;, true);
-image_y_gradient.save(&quot;datasets/FeatureExtraction/cat_y_gradient.ppm&quot;, true);
+image_x_gradient.save(&quot;datasets/FeatureExtraction/lighthouse_x_gradient.ppm&quot;, true);
+image_y_gradient.save(&quot;datasets/FeatureExtraction/lighthouse_y_gradient.ppm&quot;, true);
+image_gradient_magnitude.save(&quot;datasets/FeatureExtraction/lighthouse_gradient_magnitude.ppm&quot;, true);
+image_gradient_direction.save(&quot;datasets/FeatureExtraction/lighthouse_gradient_direction.ppm&quot;, true);
 </code></pre>
-<p>In this code, <code>computeXGradient</code> and <code>computeYGradient</code> are used to calculate the x and y gradients of the loaded image respectively. The resulting gradient images are then saved to file for later analysis or visualization.</p>
+<p>In this code, <code>computeXGradient</code> and <code>computeYGradient</code> are used to calculate the x and y gradients of the loaded image respectively. Then <code>computeGradientMagnitude</code> and <code>computeGradientDirection</code> are used to compute the gradient magnitude and direction respectively. The resulting images are then saved to file for later analysis or visualization.</p>
 <h4 id="visual-examples">Visual Examples</h4>
-<p>Below are visual examples of the original image and the computed gradients.</p>
+<p>Below are visual examples of the original image and the computed gradients, gradient magnitude, and gradient direction.</p>
 <p>Original Image:</p>
 <p><img alt="original_lighthouse" src="../../images/FeatureExtraction/lighthouse_original.png" /></p>
 <p>X-direction Gradient:</p>
 <p><img alt="sobel_x_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_x.png" /></p>
 <p>Y-direction Gradient:</p>
 <p><img alt="sobel_y_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_y.png" /></p>
-<p>These images demonstrate how the Sobel filter is able to capture the changes in intensity in both x and y directions, making it a valuable tool for edge detection and feature extraction.</p>
+<p>Gradient Magnitude:</p>
+<p><img alt="sobel_mag_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_magnitude.png" /></p>
+<p>Gradient Direction:</p>
+<p><img alt="sobel_dir_lighthouse" src="../../images/FeatureExtraction/lighthouse_sobel_direction.png" /></p>
+<hr />
+<h3 id="non-max-suppression">Non-Max Suppression</h3>
 <hr />
 <h3 id="canny-edge-detection">Canny Edge Detection</h3>
 <hr />
