@@ -1,37 +1,13 @@
 #include "TestHarness.h"
 #include "helpers/Matrix.hpp"
 #include "FeatureExtraction/Gradients.hpp"
+#include "test_utils.hpp"
 
 #include <iostream>
 #include <string>
 #include <cmath>
 
-const float TOLERANCE = 0.01;
 const float MAX_PROPORTION_ABS_DIFF = 0.05;
-
-static float proportion_abs_diff_exceed_tol(const VisualAlgo::Matrix& m1, const VisualAlgo::Matrix& m2, float tol=TOLERANCE)
-{
-    // Make sure both matrix are normalize
-    VisualAlgo::Matrix m1_norm = m1;
-    VisualAlgo::Matrix m2_norm = m2;   
-    m1_norm.normalize();
-    m2_norm.normalize();
-
-    // Calculate the proportion of pixels that have an absolute difference greater than TOLERANCE
-    int count = 0;
-    for (int i = 0; i < m1_norm.rows; i++)
-    {
-        for (int j = 0; j < m1_norm.cols; j++)
-        {
-            if (std::abs(m1_norm.get(i, j) - m2_norm.get(i, j)) > tol)
-            {
-                count++;
-            }
-        }
-    }
-    float proportion = static_cast<float>(count) / (m1_norm.rows * m1_norm.cols);
-    return proportion;
-}
 
 static bool test_gradients_xy(std::string img_name)
 {
@@ -50,9 +26,9 @@ static bool test_gradients_xy(std::string img_name)
 
     image_x_gradient.save("datasets/FeatureExtraction/" + img_name + "_x_gradient.ppm", true);
     image_y_gradient.save("datasets/FeatureExtraction/" + img_name + "_y_gradient.ppm", true);
-    
-    float padetx = proportion_abs_diff_exceed_tol(image_x_gradient, image_x_gradient_expected);
-    float padety = proportion_abs_diff_exceed_tol(image_y_gradient, image_y_gradient_expected);
+
+    float padetx = proportionAbsDiffExceedTol(image_x_gradient, image_x_gradient_expected);
+    float padety = proportionAbsDiffExceedTol(image_y_gradient, image_y_gradient_expected);
 
     // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_x_gradient.ppm: " << padetx << ", y_gradient.ppm: " << padety << std::endl;
 
@@ -70,7 +46,7 @@ static bool test_gradients_magnitude(std::string img_name)
 
     image_gradient_magnitude.save("datasets/FeatureExtraction/" + img_name + "_grad_magnitude.ppm", true);
 
-    float padet = proportion_abs_diff_exceed_tol(image_gradient_magnitude, image_gradient_magnitude_expected);
+    float padet = proportionAbsDiffExceedTol(image_gradient_magnitude, image_gradient_magnitude_expected);
 
     // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_grad_magnitude.ppm: " << padet << std::endl;
 
@@ -88,7 +64,7 @@ static bool test_gradients_direction(std::string img_name)
 
     image_gradient_direction.save("datasets/FeatureExtraction/" + img_name + "_grad_direction.ppm", true);
 
-    float padet = proportion_abs_diff_exceed_tol(image_gradient_direction, image_gradient_direction_expected, 0.1);  // tolerance is 0.1 because the gradient direction is not as accurate as the gradient magnitude. And also because the gradient direction is in unit radians, so the difference is not as obvious as the gradient magnitude.
+    float padet = proportionAbsDiffExceedTol(image_gradient_direction, image_gradient_direction_expected, 0.1); // tolerance is 0.1 because the gradient direction is not as accurate as the gradient magnitude. And also because the gradient direction is in unit radians, so the difference is not as obvious as the gradient magnitude.
 
     // std::cout << "Proportion of absolute difference exceeding tolerance for " << img_name << "_grad_direction.ppm: " << padet << std::endl;
 

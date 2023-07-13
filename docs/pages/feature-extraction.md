@@ -112,7 +112,54 @@ Gradient Direction:
 
 ---
 
-### Non-Maximum Suppression (For Edges, not Bounding Boxes)
+### Edge Non-Maximum Suppression
+
+The `EdgeNonMaxSuppression` class in the `VisualAlgo::FeatureExtraction` namespace is used for edge thinning in an image. It operates by suppressing all the non-maximum edges in the computed gradient of the image, leading to thin edges in the output. This is a key step in several edge detection algorithms such as the Canny edge detector.
+
+![edge_non_max_suppression](../images/FeatureExtraction/edge_non_max_suppression.jpg)
+
+#### Class Methods
+
+- `Matrix apply(const Matrix &image)`: This method takes as input a `Matrix` representing an image and applies edge non-maximum suppression to it. It first computes the x and y gradients of the image, then the gradient magnitude and direction using the `Gradients` class. After that, it calls the other `apply` method with the computed gradient magnitude and direction as arguments.
+
+- `Matrix apply(const Matrix &gradientMagnitude, const Matrix &gradientDirection)`: This method takes as input a `Matrix` each representing the gradient magnitude and direction of an image. It then applies edge non-maximum suppression to it. For each pixel, it rounds the gradient direction to one of four possible directions, then compares the gradient magnitude of the current pixel with its two neighbors in the direction of the gradient. If the gradient magnitude of the current pixel is greater than both of its neighbors, it is preserved in the output; otherwise, it is suppressed.
+
+#### Example Usage
+
+In this example, the `EdgeNonMaxSuppression` class is used to apply edge non-maximum suppression to an image. The image is first loaded and normalized. The `apply` function of the `EdgeNonMaxSuppression` class is then called with the image as argument, and the resulting edge-thinned image is saved to file.
+
+```cpp
+#include "FeatureExtraction/EdgeNonMaxSuppression.hpp"
+#include "helpers/Matrix.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/FeatureExtraction/cat_resized.ppm");
+image.normalize();
+
+VisualAlgo::FeatureExtraction::EdgeNonMaxSuppression edgeNonMaxSuppression;
+VisualAlgo::Matrix edge_thinned_image;
+edge_thinned_image = edgeNonMaxSuppression.apply(image);
+
+edge_thinned_image.save("datasets/FeatureExtraction/cat_edge_non_max_suppression.ppm", true);
+```
+
+In this code, an instance of `EdgeNonMaxSuppression` is created. The `apply` function of this instance is called with the loaded and normalized image as argument. The function returns an edge-thinned image which is saved to file for later analysis or visualization.
+
+#### Visual Examples
+
+Below are visual examples of the original image and the result after applying edge non-maximum suppression.
+
+Original Image:
+
+![original_cat](../images/FeatureExtraction/cat_original.png)
+
+Edge-thinned Image:
+
+![edge_non_max_suppression_cat](../images/FeatureExtraction/cat_edge_non_max_suppression.png)
+
+#### Note
+
+The implementation assumes that the image has already been smoothed to remove noise and that appropriate gradient magnitude and direction have been computed. The edge non-maximum suppression is then used to thin out the edges in the image.
 
 ---
 
