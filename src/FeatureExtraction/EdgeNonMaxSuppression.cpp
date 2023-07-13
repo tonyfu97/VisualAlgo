@@ -27,16 +27,17 @@ namespace VisualAlgo::FeatureExtraction
             {
                 float direction = gradientDirection.get(i, j);
 
-                // approximate the direction to four possible directions
+                // 1. Round the gradient direction to one of four possible directions: 0, 45, 90, 135
                 float roundedDirection = round(direction / (M_PI / 4)) * (M_PI / 4);
 
                 int dx = round(cos(roundedDirection));
                 int dy = round(sin(roundedDirection));
 
-                // compare with the neighboring pixels in the gradient direction
+                // 2. Compuare with neighbors in the gradient direction
                 if (gradientMagnitude.get(i, j) > gradientMagnitude.get(i + dy, j + dx) &&
                     gradientMagnitude.get(i, j) > gradientMagnitude.get(i - dy, j - dx))
-                {
+                {   
+                    // 3. If the magnitude is greater than both neighbors, set it in the output image.
                     result.set(i, j, gradientMagnitude.get(i, j));
                 }
             }

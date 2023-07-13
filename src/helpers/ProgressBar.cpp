@@ -8,6 +8,14 @@ namespace VisualAlgo
     {
     }
 
+    ProgressBar::~ProgressBar()
+    {
+        if (DEBUG)
+        {
+            std::cout << std::endl;
+        }
+    }
+
     void ProgressBar::step(const std::string &step_info)
     {
         if (DEBUG)

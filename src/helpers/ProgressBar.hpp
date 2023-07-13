@@ -10,6 +10,7 @@ namespace VisualAlgo {
     class ProgressBar {
     public:
         ProgressBar(unsigned int steps, std::string info);
+        ~ProgressBar();
 
         void step(const std::string& step_info = "");
 
