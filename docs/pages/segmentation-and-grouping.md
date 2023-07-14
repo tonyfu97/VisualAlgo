@@ -7,7 +7,7 @@
 ### Mean Shift
 ### GrabCut
 ### U-Net
-### Region Proposal Network (RPN)
+### Classical Region Proposal Methods
 
 ---
 

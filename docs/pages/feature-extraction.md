@@ -4,7 +4,7 @@
 
 ### Filters
 
-In the `VisualAlgo::FeatureExtraction` namespace, a suite of filter classes are provided for image processing tasks:
+In the `VisualAlgo::FeatureExtraction` namespace, a set of filter classes are provided for image processing tasks:
 
 - `Filter`: A base class with a pure virtual `apply` method for applying the filter to an image. 
 
@@ -51,8 +51,6 @@ image_gaussian.save("datasets/FeatureExtraction/cat_gaussian.ppm", true);
 image_sobel_x.save("datasets/FeatureExtraction/cat_sobel_x.ppm", true);
 image_sobel_y.save("datasets/FeatureExtraction/cat_sobel_y.ppm", true);
 ```
-
-In this code, instances of `GaussianFilter`, `SobelFilterX`, and `SobelFilterY` are directly created. Each filter is then applied to the loaded image by calling their `apply` function, and the resulting filtered images are saved to files for later analysis or visualization.
 
 ---
 
@@ -157,8 +155,6 @@ edge_thinned_image = edgeNonMaxSuppression.apply(image);
 edge_thinned_image.save("datasets/FeatureExtraction/cat_edge_non_max_suppression.ppm", true);
 ```
 
-In this code, an instance of `EdgeNonMaxSuppression` is created. The `apply` function of this instance is called with the loaded and normalized image as argument. The function returns an edge-thinned image which is saved to file for later analysis or visualization.
-
 #### Note
 
 The implementation assumes that the image has already been smoothed to remove noise and that appropriate gradient magnitude and direction have been computed. The edge non-maximum suppression is then used to thin out the edges in the image.
@@ -222,9 +218,9 @@ Canny Edges (sigma = 1.0, low_threshold = 0.1, high_threshold = 0.2):
 
 ### Harris Corner Detection
 
-The `Harris` class in the `VisualAlgo::FeatureExtraction` namespace provides an implementation of the Harris Corner Detection algorithm. This algorithm, introduced by Chris Harris and Mike Stephens in 1988, is a corner detection operator that identifies corners and edge junctions in images. It is particularly effective due to its invariance to rotation, scale, and illumination changes. 
+The `Harris` class in the `VisualAlgo::FeatureExtraction` namespace provides an implementation of the Harris Corner Detection algorithm. This algorithm, introduced by Chris Harris and Mike Stephens in 1988, is a corner detection operator that identifies corners and edge junctions in images. It is effective due to its invariance to rotation, scale, and illumination changes. 
 
-The Harris Corner Detection algorithm operates through several stages, each crucial to identifying and highlighting the corners in the image:
+The Harris Corner Detection algorithm has several stages:
 
 1. **Gradient Calculation**: The algorithm begins by calculating the gradient images Ix and Iy. These are obtained by convolving the original image with a derivative of Gaussian filter, providing a measure of intensity change in both the x and y directions.
 
@@ -244,14 +240,18 @@ The Harris Corner Detection algorithm operates through several stages, each cruc
 
     $$\text{trace}(M) = S_{xx} + S_{yy}$$
 
-    The determinant and the trace can be thought of as being related to the eigenvalues of the matrix \(M\). The determinant of \(M\) (\(\det(M)\)) is equal to the product of the eigenvalues of \(M\) (λ1*λ2), while the trace of \(M\) (\(\text{trace}(M)\)) is equal to the sum of the eigenvalues (λ1 + λ2).
+    The structure tensor \(M\) plays a key role in feature detection as it represents the distribution of gradients within a specific neighborhood around a point. Rather than directly comparing the gradient of a pixel with those of its neighbors, we use a Gaussian function to calculate an average gradient across an area.
 
-    The corner response \(R\) is thus a function of the eigenvalues of \(M\), indicating the presence of a corner: when both eigenvalues are large (implying strong responses in both x and y directions), \(R\) will be large, indicating a corner. Conversely, when one or both eigenvalues are small, \(R\) will be small, indicating an edge or flat region. The parameter \(k\) is a sensitivity factor, typically set to a small value (e.g., 0.04 - 0.06) to balance the importance of the determinant and the trace in the response score \(R\).
+    In essence, the structure tensor captures the underlying geometric structure in the vicinity of each pixel. It accomplishes this by portraying gradient orientations as an ellipse in the (\(I_x, I_y\)) plane within a specific window. Here, the determinant is directly proportional to the area of the ellipse, while the trace is equivalent to the sum of the lengths of the ellipse's major and minor axes.
+
+    - Presence of an edge: When an image contains an edge, the distribution of gradients forms a slender, elongated ellipse. This happens because the intensity changes consistently in one direction (along the edge) and shows little to no change in the direction perpendicular to it. The major axis of this ellipse aligns with the direction of the edge.
+    
+    - Presence of a corner: If a corner is present, the gradients are distributed more evenly, resulting in an elliptical shape that resembles a circle. This is because a corner features significant intensity changes in multiple directions.
+    
+    - Flat region: In a flat region of the image, where there is minimal change in intensity in any direction, the ellipse is small, signaling the absence of distinctive features.
 
 
 5. **Thresholding**: The final step involves applying a threshold value to the corner response matrix, \(R\). Positions in the image that correspond to R values above the threshold are considered corners. The output is an image with highlighted positions where corners exist. 
-
-By providing an efficient and robust method to detect corners, the Harris Corner Detector can be crucial in feature detection tasks in computer vision, including image alignment, 3D reconstruction, motion tracking, and object recognition.
 
 #### Class Members and Methods
 
