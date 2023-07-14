@@ -49,5 +49,16 @@ namespace VisualAlgo::FeatureExtraction
                                 {-1, -2, -1}});
     };
 
+    class LoGFilter : public Filter
+    {
+    public:
+        LoGFilter(float sigma);
+        virtual Matrix apply(const Matrix &image) const override;
+    private:
+        float sigma;
+        Matrix kernel;
+        Matrix computeLoGKernel(float sigma) const;
+    };
+
     // TODO: add more filters as needed
 }

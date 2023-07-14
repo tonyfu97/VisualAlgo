@@ -8,9 +8,23 @@ In the `VisualAlgo::FeatureExtraction` namespace, a suite of filter classes are 
 
 - `Filter`: A base class with a pure virtual `apply` method for applying the filter to an image. 
 
-- `GaussianFilter`: A subclass of `Filter` that implements a Gaussian filter for image smoothing and noise reduction. It provides a constructor `GaussianFilter(float sigma)` to create a Gaussian filter with a specified sigma value, and overrides the `apply` method to perform Gaussian filtering on an image.
+- `GaussianFilter`: A subclass of `Filter` that implements a Gaussian filter for image smoothing and noise reduction. It provides a constructor `GaussianFilter(float sigma)` to create a Gaussian filter with a specified sigma value, and overrides the `apply` method to perform Gaussian filtering on an image. The formula for the 2D Gaussian kernel is:
 
-- `SobelFilterX` and `SobelFilterY`: These are subclasses of `Filter` that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors `SobelFilterX()` and `SobelFilterY()` create the respective filters, and the `apply` method is overridden in each class to apply the corresponding Sobel filter on an image.
+$$
+g(x, y) = \frac{1}{2\pi\sigma^2} \exp\left(-\frac{x^2 + y^2}{2\sigma^2}\right)
+$$
+
+- `SobelFilterX` and `SobelFilterY`: These are subclasses of `Filter` that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors `SobelFilterX()` and `SobelFilterY()` create the respective filters, and the `apply` method is overridden in each class to apply the corresponding Sobel filter on an image. The kernels are:
+
+$$Sobel_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}$$
+  
+$$Sobel_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}$$
+
+- `LoGFilter`: The Laplacian of Gaussian (LoG) filter, used for edge detection and blob detection tasks. The constructor `LoGFilter(float sigma)` creates a LoG filter with a specified sigma value, and overrides the `apply` method to perform LoG filtering on an image. The Laplacian of Gaussian is defined as the second derivative of the Gaussian, so applying the LoG operation to an image corresponds to smoothing the image with a Gaussian filter and then finding the second derivative of the result. The formula for the 2D LoG kernel is:
+
+$$
+g(x, y) = \frac{(x^2 + y^2 - 2\sigma^2)}{2\pi\sigma^4} \exp\left(-\frac{x^2 + y^2}{2\sigma^2}\right)
+$$
 
 #### Example Usage
 
@@ -42,15 +56,15 @@ In this code, instances of `GaussianFilter`, `SobelFilterX`, and `SobelFilterY` 
 
 ---
 
-### Gradients Class (`VisualAlgo::FeatureExtraction::Gradients`)
+### Gradients Class
 
 The `Gradients` class in the `VisualAlgo::FeatureExtraction` namespace is a utility class for computing the x and y gradients of an image, which are important components in various computer vision and image processing tasks such as edge detection and feature extraction. 
 
 #### Static Functions
 
-* `Matrix computeXGradient(const Matrix& image)`: This function computes the x-direction gradients of the image.
+* `Matrix computeXGradient(const Matrix& image)`: This function computes the x-direction gradients of the image using a Sobel filter.
 
-* `Matrix computeYGradient(const Matrix& image)`: This function computes the y-direction gradients of the image.
+* `Matrix computeYGradient(const Matrix& image)`: This function computes the y-direction gradients of the image using a Sobel filter.
 
 * `Matrix computeGradientMagnitude(const Matrix& xGradient, const Matrix& yGradient)`: This function computes the magnitude of the gradient at each pixel, defined as the square root of the sum of the squares of the x and y gradients. The output is a `Matrix` where each element represents the gradient magnitude at the corresponding pixel.
 
@@ -177,7 +191,7 @@ The `Canny` class in the `VisualAlgo::FeatureExtraction` namespace is an impleme
 
 #### Example Usage
 
-In this example, the `Canny` class is used to apply the Canny edge detection algorithm to a series of images. The images are first loaded and normalized. The `apply` function of the `Canny` class is then called with each image as argument, and the resulting edge-detected images are saved to files. The detected edges are then compared with expected results to ensure the edge detection is correct.
+In this example, the `Canny` class is used to apply the Canny edge detection algorithm to a cat image.
 
 ```cpp
 #include "helpers/Matrix.hpp"
@@ -185,10 +199,6 @@ In this example, the `Canny` class is used to apply the Canny edge detection alg
 
 VisualAlgo::Matrix image, image_canny_expected;
 image.load("datasets/FeatureExtraction/cat_resized.ppm");
-image_canny_expected.load("datasets/FeatureExtraction/cat_expected_canny.ppm");
-
-image.normalize();
-image_canny_expected.normalize();
 
 VisualAlgo::FeatureExtraction::Canny canny(1.0f, 0.1f, 0.2f);
 VisualAlgo::Matrix image_canny = canny.apply(image);
@@ -210,7 +220,76 @@ Canny Edges (sigma = 1.0, low_threshold = 0.1, high_threshold = 0.2):
 
 ---
 
-### Corner Detection
+### Harris Corner Detection
+
+The `Harris` class in the `VisualAlgo::FeatureExtraction` namespace provides an implementation of the Harris Corner Detection algorithm. This algorithm, introduced by Chris Harris and Mike Stephens in 1988, is a corner detection operator that identifies corners and edge junctions in images. It is particularly effective due to its invariance to rotation, scale, and illumination changes. 
+
+The Harris Corner Detection algorithm operates through several stages, each crucial to identifying and highlighting the corners in the image:
+
+1. **Gradient Calculation**: The algorithm begins by calculating the gradient images Ix and Iy. These are obtained by convolving the original image with a derivative of Gaussian filter, providing a measure of intensity change in both the x and y directions.
+
+2. **Components of the Structure Tensor**: The algorithm then calculates three images, each corresponding to the components of the structure tensor (also known as the second moment matrix) for each pixel. These images are \(I_x^2\), \(I_y^2\), and \(I_x \cdot I_y\), representing the gradient squared in each direction and the product of the gradients, respectively.
+
+3. **Gaussian smoothing**: Next, the images obtained from the previous step are convolved with a Gaussian filter. This smoothing process allows for the aggregation of the squared and product of gradients over a certain neighborhood, leading to the images \(S_{xx}\), \(S_{yy}\), and \(S_{xy}\).
+
+4. **Corner Response Calculation**: The corner response matrix, \(R\), is calculated for each pixel in the image using the formula \(R = \det(M) - k*(\text{trace}(M))^2\), where M is the structure tensor, or second moment matrix. \(M\) is a \(2 \times 2\) matrix defined as follows:
+
+    $$
+    M = \begin{bmatrix} S_{xx} & S_{xy} \\ S_{xy} & S_{yy} \end{bmatrix}
+    $$
+
+    The determinant of \(M\) (\(\det(M)\)) and the trace of \(M\) (\(\text{trace}(M)\)) are computed as follows:
+
+    $$\det(M) = S_{xx} \cdot S_{yy} - S_{xy} \cdot S_{xy}$$
+
+    $$\text{trace}(M) = S_{xx} + S_{yy}$$
+
+    The determinant and the trace can be thought of as being related to the eigenvalues of the matrix \(M\). The determinant of \(M\) (\(\det(M)\)) is equal to the product of the eigenvalues of \(M\) (λ1*λ2), while the trace of \(M\) (\(\text{trace}(M)\)) is equal to the sum of the eigenvalues (λ1 + λ2).
+
+    The corner response \(R\) is thus a function of the eigenvalues of \(M\), indicating the presence of a corner: when both eigenvalues are large (implying strong responses in both x and y directions), \(R\) will be large, indicating a corner. Conversely, when one or both eigenvalues are small, \(R\) will be small, indicating an edge or flat region. The parameter \(k\) is a sensitivity factor, typically set to a small value (e.g., 0.04 - 0.06) to balance the importance of the determinant and the trace in the response score \(R\).
+
+
+5. **Thresholding**: The final step involves applying a threshold value to the corner response matrix, \(R\). Positions in the image that correspond to R values above the threshold are considered corners. The output is an image with highlighted positions where corners exist. 
+
+By providing an efficient and robust method to detect corners, the Harris Corner Detector can be crucial in feature detection tasks in computer vision, including image alignment, 3D reconstruction, motion tracking, and object recognition.
+
+#### Class Members and Methods
+
+- `Harris(float sigma, float k, float threshold)`: Constructor that initializes a `Harris` instance with the specified sigma value for the Gaussian filter, a k value used in the formula for the response \(R\), and a threshold value for detecting corners.
+
+- `Matrix apply(const Matrix &image) const`: Applies the Harris Corner Detection algorith to an input image.
+
+- `std::vector<std::pair<int, int>> detect(const Matrix &image)`: Applies the Harris Corner Detection algorithm to an input image. The `apply` method above actually calls this method.
+
+#### Example Usage
+
+In this example, the `Harris` class is used to apply the Harris Corner Detection algorithm to a cat image.
+
+```cpp
+#include "helpers/Matrix.hpp"
+#include "FeatureExtraction/Harris.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/FeatureExtraction/cat_resized.ppm");
+image.normalize();
+
+VisualAlgo::FeatureExtraction::Harris harris(1.0f, 0.04f, 0.2f);
+VisualAlgo::Matrix image_harris = harris.apply(image);
+
+image_harris.save("datasets/FeatureExtraction/cat_harris.ppm", true);
+```
+
+#### Visual Examples
+
+Below are visual examples of the original image and the detected corners.
+
+Original Image:
+
+![original_cat](../images/FeatureExtraction/lighthouse_original.png)
+
+Detected Corners (sigma = 1.0, k = 0.04, threshold = 0.2):
+
+![harris_cat](../images/FeatureExtraction/lighthouse_harris.png)
 
 ---
 

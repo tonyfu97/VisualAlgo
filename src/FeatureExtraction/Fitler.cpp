@@ -61,4 +61,36 @@ namespace VisualAlgo::FeatureExtraction
     {
         return image.convolve(kernel);
     }
+
+    LoGFilter::LoGFilter(float sigma)
+    {
+        this->sigma = sigma;
+        this->kernel = computeLoGKernel(sigma);
+    }
+
+    Matrix LoGFilter::apply(const Matrix &image) const
+    {
+        return image.convolve(kernel);
+    }
+
+    Matrix LoGFilter::computeLoGKernel(float sigma) const
+    {
+        int size = 2 * ceil(3 * sigma) + 1;
+        Matrix kernel(size, size);
+
+        float sum = 0.0f;
+        for (int i = 0; i < size; i++)
+        {
+            int x = i - size / 2;
+            for (int j = 0; j < size; j++)
+            {
+                int y = j - size / 2;
+                float value = (x * x + y * y - 2 * sigma * sigma) * exp(-(x * x + y * y) / (2 * sigma * sigma));
+                kernel.set(i, j, value);
+                sum += value;
+            }
+        }
+
+        return kernel / sum;
+    }
 }

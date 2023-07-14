@@ -38,11 +38,11 @@ namespace VisualAlgo::FeatureExtraction
             {
                 if (image.get(i, j) > high_threshold)
                 {
-                    thresholded.set(i, j, 255);  // Strong edge
+                    thresholded.set(i, j, 255); // Strong edge
                 }
                 else if (image.get(i, j) > low_threshold)
                 {
-                    thresholded.set(i, j, 128);  // Weak edge
+                    thresholded.set(i, j, 128); // Weak edge
                 }
                 // else: thresholded[i][j] = 0;  // No edge
             }
