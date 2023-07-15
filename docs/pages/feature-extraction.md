@@ -293,7 +293,67 @@ Detected Corners (sigma = 1.0, k = 0.04, threshold = 0.2):
 
 ---
 
-### Blob Detection
+### Blob Detection using DoG and LoG
+
+The `BlobDoG` and `BlobLoG` classes in the `VisualAlgo::FeatureExtraction` namespace implement blob detection algorithms using Difference of Gaussians (DoG) and Laplacian of Gaussians (LoG) respectively. In image processing, a "blob" refers to a group of pixels within an image that share specific characteristics, forming a distinct region of interest. Notably, detected blobs may not always resemble what we typically visualize as a blob, since their identification relies more on algorithmic criteria rather than human visual perception.
+
+The input image is processed with a Gaussian filter (for DoG) or a Laplacian of Gaussian filter (for LoG) at different scales, generating what we refer to as "scale-space" - a 3D representation. Subsequently, a **3D** window is used to locate the local maxima. (Yes, this comparison is not conducted across the entire scale but within a windowed range of scales.)
+
+#### Class Members and Methods
+
+- `BlobDoG(float initial_sigma, float k, float threshold, int window_size, int octaves)` and `BlobLoG(float initial_sigma, float k, float threshold, int window_size, int octaves)`: Constructors that initialize a `BlobDoG` or `BlobLoG` instance with the specified parameters. 
+
+    - `initial_sigma`: the initial standard deviation for the Gaussian filter. It determines the size of the smallest scale (or blob) that can be detected. It should be a positive value.
+    
+    - `k`: the scale multiplication factor. It determines the factor by which the scale increases for each subsequent layer in an octave. It can be any real number other than 1. If `k` is greater than 1, the scales increase in size, and if `k` is less than 1, the scales decrease in size.
+    
+    - `threshold`: the minimum intensity difference to consider for a point to be a local maximum in the scale-space. It should be a positive value.
+    
+    - `window_size`: the size of the window used for local maxima detection in the scale-space. It needs to be an odd, positive integer and determines the size of the 3D neighborhood (x, y, and scale) within which the local maxima are searched. This helps in detecting blobs of varying sizes.
+    
+    - `octaves`: the number of octaves to be used in the scale-space representation. An octave in this context represents a series of scale-space layers where the scale doubles from beginning to end. It should be a positive integer.
+
+- `Matrix apply(const Matrix &image)`: Applies the blob detection algorithm to an input image and returns a Matrix where the blobs are highlighted.
+
+- `std::vector<std::tuple<int, int, float>> detect(const Matrix &image)`: Returns a vector of tuples indicating the detected blobs. Each tuple contains the row and column of the detected blob and the sigma value at which the blob was detected.
+
+#### Example Usage
+
+In this example, the `BlobDoG` and `BlobLoG` classes are used to apply the blob detection algorithms to an image.
+
+```cpp
+#include "helpers/Matrix.hpp"
+#include "FeatureExtraction/Blob.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/FeatureExtraction/cat_resized.ppm");
+
+VisualAlgo::FeatureExtraction::BlobDoG blobDoG(1.0f, 1.6f, 0.03f, 3, 4);
+VisualAlgo::Matrix image_blobs_DoG = blobDoG.apply(image);
+
+image_blobs_DoG.save("datasets/FeatureExtraction/cat_blobs_DoG.ppm", true);
+
+VisualAlgo::FeatureExtraction::BlobLoG blobLoG(1.0f, 1.6f, 0.03f, 3, 4);
+VisualAlgo::Matrix image_blobs_LoG = blobLoG.apply(image);
+
+image_blobs_LoG.save("datasets/FeatureExtraction/cat_blobs_LoG.ppm", true);
+```
+
+#### Visual Examples
+
+Below are visual examples of the original image and the detected blobs using DoG and LoG.
+
+Original Image:
+
+![original_mondrian](../images/FeatureExtraction/mondrian_original.png)
+
+Blobs using DoG (initial_sigma = 10.0, k = 0.7, threshold = 0.2, window_size = 5, octaves = 1):
+
+![DoG_mondrian](../images/FeatureExtraction/mondrian_blob_dog.png)
+
+Blobs using LoG (initial_sigma = 10.0, k = 0.7, threshold = 0.2, window_size = 5, octaves = 1):
+
+![LoG_mondrian](../images/FeatureExtraction/mondrian_blob_log.png)
 
 ---
 
