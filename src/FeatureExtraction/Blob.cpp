@@ -61,7 +61,21 @@ namespace VisualAlgo::FeatureExtraction
 
     BlobDoG::BlobDoG(float initial_sigma, float k, float threshold, int window_size, int octaves)
         : initial_sigma(initial_sigma), k(k), threshold(threshold), window_size(window_size), octaves(octaves)
-    {
+    {   
+        if (octaves < 0)
+            throw std::invalid_argument("Octaves must be non-negative.");
+        
+        if (initial_sigma <= 0)
+            throw std::invalid_argument("Initial sigma must be positive.");
+        
+        if ((k <= (1 + 1e-6)) && (k >= (1 - 1e-6)))
+            throw std::invalid_argument("k is too close to 1.");
+        
+        if (window_size < 1)
+            throw std::invalid_argument("Window size must be at least 1.");
+        
+        if (window_size % 2 == 0)
+            throw std::invalid_argument("Window size must be odd.");
     }
 
     Matrix BlobDoG::apply(const Matrix &image) const
@@ -104,6 +118,20 @@ namespace VisualAlgo::FeatureExtraction
     BlobLoG::BlobLoG(float initial_sigma, float k, float threshold, int window_size, int octaves)
         : initial_sigma(initial_sigma), k(k), threshold(threshold), window_size(window_size), octaves(octaves)
     {
+        if (octaves < 0)
+            throw std::invalid_argument("Octaves must be non-negative.");
+        
+        if (initial_sigma <= 0)
+            throw std::invalid_argument("Initial sigma must be positive.");
+        
+        if ((k <= (1 + 1e-6)) && (k >= (1 - 1e-6)))
+            throw std::invalid_argument("k is too close to 1.");
+        
+        if (window_size < 1)
+            throw std::invalid_argument("Window size must be at least 1.");
+        
+        if (window_size % 2 == 0)
+            throw std::invalid_argument("Window size must be odd.");
     }
 
     Matrix BlobLoG::apply(const Matrix &image) const

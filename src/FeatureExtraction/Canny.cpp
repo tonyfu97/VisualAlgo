@@ -1,10 +1,21 @@
 #include "FeatureExtraction/Canny.hpp"
 #include "helpers/ProgressBar.hpp"
 
+#include <stdexcept>
+
 namespace VisualAlgo::FeatureExtraction
 {
     Canny::Canny(float sigma, float low_threshold, float high_threshold) : _sigma(sigma), low_threshold(low_threshold), high_threshold(high_threshold), gaussian_filter(_sigma), sobel_filter_x(), sobel_filter_y(), non_max_suppression()
     {
+        if (low_threshold > high_threshold)
+        {
+            throw std::invalid_argument("Low threshold must be less than or equal to high threshold");
+        }
+
+        if (sigma <= 0)
+        {
+            throw std::invalid_argument("Sigma must be positive");
+        }
     }
 
     Matrix Canny::apply(const Matrix &image)

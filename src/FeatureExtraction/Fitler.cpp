@@ -2,12 +2,15 @@
 #include "helpers/Matrix.hpp"
 
 #include <cmath>
+#include <stdexcept>
 
 namespace VisualAlgo::FeatureExtraction
 {
 
     GaussianFilter::GaussianFilter(float sigma)
     {
+        if (sigma <= 0)
+            throw std::invalid_argument("Sigma must be positive");
         this->sigma = sigma;
         this->kernel = computeGaussianKernel(sigma);
     }

@@ -4,12 +4,19 @@
 #include "helpers/Matrix.hpp"
 #include "helpers/ProgressBar.hpp"
 
+#include <stdexcept>
+
 namespace VisualAlgo::FeatureExtraction
 {
 
     Harris::Harris(float sigma, float k, float threshold)
         : sigma(sigma), k(k), threshold(threshold)
     {
+        if (sigma <= 0)
+            throw std::invalid_argument("Sigma must be positive");
+
+        if (k <= 0)
+            throw std::invalid_argument("K must be positive");
     }
 
     Matrix Harris::apply(const Matrix &image) const
