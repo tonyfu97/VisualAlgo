@@ -123,7 +123,15 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#blob-detection">Blob Detection</a>
+    <li class="toctree-l3"><a class="reference internal" href="#blob-detection-using-dog-and-log">Blob Detection using DoG and LoG</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods_2">Class Members and Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_5">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples_3">Visual Examples</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#sift">SIFT</a>
     </li>
@@ -468,7 +476,64 @@ image_harris.save(&quot;datasets/FeatureExtraction/cat_harris.ppm&quot;, true);
 <p>Detected Corners (sigma = 1.0, k = 0.04, threshold = 0.2):</p>
 <p><img alt="harris_cat" src="../../images/FeatureExtraction/lighthouse_harris.png" /></p>
 <hr />
-<h3 id="blob-detection">Blob Detection</h3>
+<h3 id="blob-detection-using-dog-and-log">Blob Detection using DoG and LoG</h3>
+<p>The <code>BlobDoG</code> and <code>BlobLoG</code> classes in the <code>VisualAlgo::FeatureExtraction</code> namespace implement blob detection algorithms using Difference of Gaussians (DoG) and Laplacian of Gaussians (LoG) respectively. In image processing, a "blob" refers to a group of pixels within an image that share specific characteristics, forming a distinct region of interest. Notably, detected blobs may not always resemble what we typically visualize as a blob, since their identification relies more on algorithmic criteria rather than human visual perception.</p>
+<p>The input image is processed with a Gaussian filter (for DoG) or a Laplacian of Gaussian filter (for LoG) at different scales, generating what we refer to as "scale-space" - a 3D representation. Subsequently, a <strong>3D</strong> window is used to locate the local maxima. (Yes, this comparison is not conducted across the entire scale but within a windowed range of scales.)</p>
+<h4 id="class-members-and-methods_2">Class Members and Methods</h4>
+<ul>
+<li>
+<p><code>BlobDoG(float initial_sigma, float k, float threshold, int window_size, int octaves)</code> and <code>BlobLoG(float initial_sigma, float k, float threshold, int window_size, int octaves)</code>: Constructors that initialize a <code>BlobDoG</code> or <code>BlobLoG</code> instance with the specified parameters. </p>
+<ul>
+<li>
+<p><code>initial_sigma</code>: the initial standard deviation for the Gaussian filter. It determines the size of the smallest scale (or blob) that can be detected. It should be a positive value.</p>
+</li>
+<li>
+<p><code>k</code>: the scale multiplication factor. It determines the factor by which the scale increases for each subsequent layer in an octave. It can be any real number other than 1. If <code>k</code> is greater than 1, the scales increase in size, and if <code>k</code> is less than 1, the scales decrease in size.</p>
+</li>
+<li>
+<p><code>threshold</code>: the minimum intensity difference to consider for a point to be a local maximum in the scale-space. It should be a positive value.</p>
+</li>
+<li>
+<p><code>window_size</code>: the size of the window used for local maxima detection in the scale-space. It needs to be an odd, positive integer and determines the size of the 3D neighborhood (x, y, and scale) within which the local maxima are searched. This helps in detecting blobs of varying sizes.</p>
+</li>
+<li>
+<p><code>octaves</code>: the number of octaves to be used in the scale-space representation. An octave in this context represents a series of scale-space layers where the scale doubles from beginning to end. It should be a positive integer.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>Matrix apply(const Matrix &amp;image)</code>: Applies the blob detection algorithm to an input image and returns a Matrix where the blobs are highlighted.</p>
+</li>
+<li>
+<p><code>std::vector&lt;std::tuple&lt;int, int, float&gt;&gt; detect(const Matrix &amp;image)</code>: Returns a vector of tuples indicating the detected blobs. Each tuple contains the row and column of the detected blob and the sigma value at which the blob was detected.</p>
+</li>
+</ul>
+<h4 id="example-usage_5">Example Usage</h4>
+<p>In this example, the <code>BlobDoG</code> and <code>BlobLoG</code> classes are used to apply the blob detection algorithms to an image.</p>
+<pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
+#include &quot;FeatureExtraction/Blob.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/FeatureExtraction/cat_resized.ppm&quot;);
+
+VisualAlgo::FeatureExtraction::BlobDoG blobDoG(1.0f, 1.6f, 0.03f, 3, 4);
+VisualAlgo::Matrix image_blobs_DoG = blobDoG.apply(image);
+
+image_blobs_DoG.save(&quot;datasets/FeatureExtraction/cat_blobs_DoG.ppm&quot;, true);
+
+VisualAlgo::FeatureExtraction::BlobLoG blobLoG(1.0f, 1.6f, 0.03f, 3, 4);
+VisualAlgo::Matrix image_blobs_LoG = blobLoG.apply(image);
+
+image_blobs_LoG.save(&quot;datasets/FeatureExtraction/cat_blobs_LoG.ppm&quot;, true);
+</code></pre>
+<h4 id="visual-examples_3">Visual Examples</h4>
+<p>Below are visual examples of the original image and the detected blobs using DoG and LoG.</p>
+<p>Original Image:</p>
+<p><img alt="original_mondrian" src="../../images/FeatureExtraction/mondrian_original.png" /></p>
+<p>Blobs using DoG (initial_sigma = 10.0, k = 0.7, threshold = 0.2, window_size = 5, octaves = 1):</p>
+<p><img alt="DoG_mondrian" src="../../images/FeatureExtraction/mondrian_blob_dog.png" /></p>
+<p>Blobs using LoG (initial_sigma = 10.0, k = 0.7, threshold = 0.2, window_size = 5, octaves = 1):</p>
+<p><img alt="LoG_mondrian" src="../../images/FeatureExtraction/mondrian_blob_log.png" /></p>
 <hr />
 <h3 id="sift">SIFT</h3>
 <hr />
