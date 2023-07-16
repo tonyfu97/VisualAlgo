@@ -3,6 +3,8 @@
 #include "helpers/Matrix.hpp"
 
 #include <cmath>
+#include <stdexcept>
+#include <string>
 
 // Function to calculate the proportion of pixels with absolute difference greater than tolerance
 static float proportionAbsDiffExceedTol(const VisualAlgo::Matrix& m1, const VisualAlgo::Matrix& m2, float tol=0.01f)
@@ -11,6 +13,9 @@ static float proportionAbsDiffExceedTol(const VisualAlgo::Matrix& m1, const Visu
     VisualAlgo::Matrix m2Norm = m2;   
     m1Norm.normalize();
     m2Norm.normalize();
+
+    if (m1Norm.rows != m2Norm.rows || m1Norm.cols != m2Norm.cols)
+        throw std::invalid_argument("Matrix dimensions: " + std::to_string(m1Norm.rows) + "x" + std::to_string(m1Norm.cols) + " and " + std::to_string(m2Norm.rows) + "x" + std::to_string(m2Norm.cols) + " do not match.");
 
     int count = 0;
     for (int i = 0; i < m1Norm.rows; i++)

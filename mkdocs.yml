@@ -23,7 +23,7 @@ nav:
     - Getting Started: pages/getting-started.md
     - Matrix: pages/matrix.md
     - Stimulus: pages/stimulus.md
-    - 1. Image Processing and Enhancement: pages/image-processing-and-enhancement.md
+    - 1. Image Pre-processing and Enhancement: pages/image-preprocessing-and-enhancement.md
     - 2. Feature Extraction: pages/feature-extraction.md
     - 3. Segmentation and Grouping: pages/segmentation-and-grouping.md
     - 4. Object Detection and Recognition: pages/object-detection-and-recognition.md

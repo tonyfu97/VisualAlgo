@@ -617,13 +617,13 @@ namespace VisualAlgo
                 {
                     for (int q = 0; q < kernel.cols; ++q)
                     {
-                        int x = stride * i + p - padding;
-                        int y = stride * j + q - padding;
+                        int y = stride * i + p - padding;
+                        int x = stride * j + q - padding;
 
                         // If within bounds of original image
-                        if (x >= 0 && y >= 0 && x < rows && y < cols)
+                        if (x >= 0 && y >= 0 && x < cols && y < rows)
                         {
-                            sum += get(x, y) * kernel.get(p, q);
+                            sum += get(y, x) * kernel.get(p, q);
                         }
                     }
                 }
@@ -638,12 +638,12 @@ namespace VisualAlgo
     {
         VisualAlgo::Matrix output(rows, cols);
 
-        int kernel_center_x = kernel.rows / 2;
-        int kernel_center_y = kernel.cols / 2;
+        int kernel_center_y = kernel.rows / 2;
+        int kernel_center_x = kernel.cols / 2;
 
         for (int i = 0; i < rows; ++i)
         {
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < cols; ++j)
             {
                 float sum = 0;
                 for (int p = 0; p < kernel.rows; ++p)
@@ -651,33 +651,34 @@ namespace VisualAlgo
                     for (int q = 0; q < kernel.cols; ++q)
                     {
                         // Compute coordinates in input image, including possible overhang
-                        int x = i + p - kernel_center_x;
-                        int y = j + q - kernel_center_y;
+                        int y = i + p - kernel_center_y;
+                        int x = j + q - kernel_center_x;
 
                         // Handle overhang with mirror padding
-                        if (x < 0)
-                        {
-                            x = -x;
-                        }
-                        if (x >= rows)
-                        {
-                            x = 2 * rows - x - 1;
-                        }
                         if (y < 0)
                         {
                             y = -y;
                         }
-                        if (y >= cols)
+                        if (y >= rows)
                         {
-                            y = 2 * cols - y - 1;
+                            y = 2 * rows - y - 1;
+                        }
+                        if (x < 0)
+                        {
+                            x = -x;
+                        }
+                        if (x >= cols)
+                        {
+                            x = 2 * cols - x - 1;
                         }
 
-                        sum += get(x, y) * kernel.get(p, q);
+                        sum += get(y, x) * kernel.get(p, q);
                     }
                 }
                 output.set(i, j, sum);
             }
         }
+
         return output;
     }
 
