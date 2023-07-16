@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Tony Fu" /><link rel="canonical" href="https://tonyfu97.github.io/VisualAlgo/pages/image-preprocessing-and-enhancement/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>1. Image Pre-processing and Enhancement - VisualAlgo</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1. Image Pre-processing and Enhancement";
+        var mkdocs_page_input_path = "pages/image-preprocessing-and-enhancement.md";
+        var mkdocs_page_url = "/VisualAlgo/pages/image-preprocessing-and-enhancement/";
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/yaml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/django.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-274394082"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-274394082');
+      </script>
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> VisualAlgo
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../matrix/">Matrix</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../stimulus/">Stimulus</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">1. Image Pre-processing and Enhancement</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#interpolation">Interpolation</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods">Class Members and Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples">Visual Examples</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#note-on-image-types">Note on Image Types:</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#note-on-simplifications-and-differences-from-other-libraries">Note on Simplifications and Differences from Other Libraries:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#transform">Transform</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#histogram-equalization">Histogram Equalization</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#neuroscience-models">Neuroscience Models</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../feature-extraction/">2. Feature Extraction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../segmentation-and-grouping/">3. Segmentation and Grouping</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../object-detection-and-recognition/">4. Object Detection and Recognition</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../motion-analysis-and-tracking/">5. Motion Analysis and Tracking</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../depth-perception-and-3d-reconstruction/">6. Depth Perception and 3D Reconstruction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../color-vision/">7. Color Vision</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../attention-and-search/">8. Attention and Search</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../learning-and-memory/">9. Learning and Memory</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">VisualAlgo</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>1. Image Pre-processing and Enhancement</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/tonyfu97/VisualAlgo/blob/master/docs/pages/image-preprocessing-and-enhancement.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="1-image-pre-processing-and-enhancement">1. Image Pre-processing and Enhancement</h1>
+<h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
+<h3 id="interpolation">Interpolation</h3>
+<p>The <code>Interpolation</code> class in the <code>VisualAlgo::ImagePreprocessingAndEnhancement</code> namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolation is a method of estimating values between two points in an image or a series of data points. The <code>Interpolation</code> class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.</p>
+<p><img alt="interpolation_illustration" src="../../images/ImagePreprocessingAndEnhancement/interpolation_illustration.jpg" /></p>
+<ol>
+<li>
+<p><strong>Nearest Neighbor</strong>: This is the simplest interpolation method where the value of an unknown pixel is assumed to be equal to the value of the nearest pixel in the input image.</p>
+</li>
+<li>
+<p><strong>Bilinear</strong>: This method takes the weighted average of the four nearest pixels to estimate the value of an unknown pixel. The weights are determined by the distance of the unknown pixel from these known pixels.</p>
+</li>
+<li>
+<p><strong>Bicubic</strong>: This sophisticated method estimates the value of an unknown pixel by taking the weighted average of the sixteen nearest pixels. The weights are determined by the distance of the unknown pixel from these known pixels and are calculated using a cubic function. </p>
+<p>Bicubic interpolation utilizes cubic polynomials to model the behavior of pixel intensities in the vicinity of the pixel of interest. Particularly, this method makes use of Catmull-Rom splines, which pass through two control points, <script type="math/tex">P_1</script> and <script type="math/tex">P_2</script>. These points surround the point of interest, while <script type="math/tex">P_0</script> and <script type="math/tex">P_3</script> are used to determine the slope. The Catmull-Rom spline is designed so that the interpolated pixel value is a weighted sum of the four pixels surrounding it. Here's the 1D version with <script type="math/tex">t</script> representing the point of interest:</p>
+<p>
+<script type="math/tex; mode=display">P(t) = \sum_{i=0}^{3} P_i Q_i(t)</script>
+</p>
+<p>where <script type="math/tex">P_i</script> are the control points, and <script type="math/tex">Q_i(t)</script> are the blending functions for the Catmull-Rom spline:</p>
+<p>
+<script type="math/tex; mode=display">Q_0(t) = -\frac{1}{2}t^3 + t^2 - \frac{1}{2}t \\
+Q_1(t) = \frac{3}{2}t^3 - 2.5t^2 + 1 \\
+Q_2(t) = -\frac{3}{2}t^3 + 2t^2 + \frac{1}{2}t \\
+Q_3(t) = \frac{1}{2}t^3 - \frac{1}{2}t^2 </script>
+</p>
+<p>Substituting <script type="math/tex">Q_i(t)</script> into the original equation and simplifying yields:</p>
+<p>
+<script type="math/tex; mode=display">P(t) = 0.5 \times [ (2 P_1) + (-P_0 + P_2) t + (2P_0 - 5 P_1 + 4 P_2 - P_3) t^2 + (-P_0 + 3 P_1 - 3 P_2 + P_3) t^3 ]</script>
+</p>
+<p>This equation corresponds to the <code>cubicInterpolation</code> function in the provided code.</p>
+</li>
+</ol>
+<h4 id="class-members-and-methods">Class Members and Methods</h4>
+<ul>
+<li>
+<p><code>enum class InterpolationType</code>: Enumeration that provides a way to select the type of interpolation method. This can be <code>NEAREST</code>, <code>BILINEAR</code>, or <code>BICUBIC</code>.</p>
+</li>
+<li>
+<p><code>to_string(InterpolationType type)</code>: A function that takes an <code>InterpolationType</code> and returns its string representation.</p>
+</li>
+<li>
+<p><code>nearestNeighbor(const Matrix &amp;image, float x, float y)</code>: A static method that performs nearest neighbor interpolation on the given image at the specified coordinates <code>(x, y)</code>.</p>
+</li>
+<li>
+<p><code>bilinear(const Matrix &amp;image, float x, float y)</code>: A static method that performs bilinear interpolation on the given image at the specified coordinates <code>(x, y)</code>.</p>
+</li>
+<li>
+<p><code>bicubic(const Matrix &amp;image, float x, float y)</code>: A static method that performs bicubic interpolation on the given image at the specified coordinates <code>(x, y)</code>.</p>
+</li>
+<li>
+<p><code>interpolate(const Matrix &amp;image, float x, float y, InterpolationType type)</code>: A static method that interpolates the given image at the specified coordinates <code>(x, y)</code> using the specified interpolation type.</p>
+</li>
+<li>
+<p><code>interpolate(const Matrix &amp;image, float scale, InterpolationType type)</code>: A static method that scales the given image by the specified scale factor using the specified interpolation type.</p>
+</li>
+<li>
+<p><code>interpolate(const Matrix &amp;image, int rows, int cols, InterpolationType type)</code>: A static method that resizes the given image to the specified number of rows and columns using the specified interpolation type.</p>
+</li>
+</ul>
+<h4 id="example-usage">Example Usage</h4>
+<p>In this example, the <code>Interpolation</code> class is used to scale an image using bicubic interpolation.</p>
+<pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
+#include &quot;ImagePreprocessingAndEnhancement/Interpolation.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/ImagePreprocessingAndEnhancement/cat_resized.ppm&quot;);
+
+VisualAlgo::Matrix image_scaled = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Interpolation::interpolate(image, 2.0f, 
+    VisualAlgo::ImagePreprocessingAndEnhancement::InterpolationType::BICUBIC);
+
+image_scaled.save(&quot;datasets/ImagePreprocessingAndEnhancement/cat_scaled.ppm&quot;, true);
+</code></pre>
+<h4 id="visual-examples">Visual Examples</h4>
+<p>Below are visual examples of the original image and the image after bicubic interpolation.</p>
+<p>Original Image:</p>
+<p><img alt="original_lighthouse" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_original.png" /></p>
+<p>Scaled Image (scale = 0.5, method = NEAREST):</p>
+<p><img alt="lighthouse_nearest_0.5" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_nearest_0.5.png" /></p>
+<p>Scaled Image (scale = 0.5, method = BILINEAR):</p>
+<p><img alt="lighthouse_bilinear_0.5" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_bilinear_0.5.png" /></p>
+<p>Scaled Image (scale = 0.5, method = BICUBIC):</p>
+<p><img alt="lighthouse_bicubic_0.5" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_bicubic_0.5.png" /></p>
+<h4 id="note-on-image-types">Note on Image Types:</h4>
+<p>These interpolation methods are designed to work with grayscale images. Color images are typically represented as multi-channel images (e.g., Red-Green-Blue), and these methods do not directly apply.</p>
+<h4 id="note-on-simplifications-and-differences-from-other-libraries">Note on Simplifications and Differences from Other Libraries:</h4>
+<p>While these interpolation methods implement the fundamental logic of nearest neighbor, bilinear, and bicubic interpolation, there are several simplifications in the implementation. These include:</p>
+<ol>
+<li>
+<p><strong>Edge Handling</strong>: In the case where an interpolation point falls near the edge or outside the given image, our implementation clamps the coordinates to the image boundary. This approach is straightforward but not always ideal. Other libraries may offer more advanced edge-handling strategies, such as padding, mirroring, or extrapolation.</p>
+</li>
+<li>
+<p><strong>Optimization</strong>: The bicubic interpolation method, in particular, can be further optimized. Our implementation performs the calculations in a straightforward manner, which could be computationally heavy for large images. Other libraries may use optimized routines or hardware acceleration to speed up these operations.</p>
+</li>
+</ol>
+<hr />
+<h3 id="transform">Transform</h3>
+<hr />
+<h3 id="histogram-equalization">Histogram Equalization</h3>
+<hr />
+<h2 id="neuroscience-models">Neuroscience Models</h2>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../stimulus/" class="btn btn-neutral float-left" title="Stimulus"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../feature-extraction/" class="btn btn-neutral float-right" title="2. Feature Extraction">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Tony Fu</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/tonyfu97/VisualAlgo/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../stimulus/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../feature-extraction/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
