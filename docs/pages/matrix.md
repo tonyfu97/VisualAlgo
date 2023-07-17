@@ -187,14 +187,42 @@ Matrix m2 = m1 > 3; // Returns a binary matrix with `1`s where the elements in m
 
 ## Matrix Operations
 
-* `Matrix transpose()`: Returns the transpose of the current matrix.
+* `Matrix transpose() const`: Returns the transpose of the current matrix.
 
 ```cpp
 VisualAlgo::Matrix m1(2, 3, 1.0);
 VisualAlgo::Matrix m2 = m1.transpose(); // m2 is now a 3x2 matrix
 ```
 
-* `float dot(const Matrix &other)`: Calculates the dot product of the current matrix with the provided matrix.
+* `Matrix Matrix::submatrix(int row_start, int row_end, int col_start, int col_end) const`: Returns a submatrix of the current matrix from row_start to row_end (exclusive) and col_start to col_end (exclusive).
+
+```cpp
+VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.submatrix(1, 3, 0, 2); // m2 is now a 2x2 matrix
+```
+
+* `float Matrix::det() const`: Calculates the determinant of the current matrix. Only applicable for square matrices.
+
+```cpp
+VisualAlgo::Matrix m1(3, 3, 1.0);
+float result = m1.det(); // result is the determinant of m1
+```
+
+* `Matrix Matrix::cofactor() const`: Returns the cofactor matrix of the current matrix. Only applicable for square matrices.
+
+```cpp
+VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.cofactor(); // m2 is the cofactor matrix of m1
+```
+
+* `Matrix Matrix::inverse() const`: Inverts the current matrix. Only applicable for square matrices that are invertible.
+
+```cpp
+VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.inverse();
+```
+
+* `float dot(const Matrix &other) const`: Calculates the dot product of the current matrix with the provided matrix.
 
 ```cpp
 VisualAlgo::Matrix m1(3, 3, 1.0);
@@ -202,7 +230,7 @@ VisualAlgo::Matrix m2(3, 3, 2.0);
 float result = m1.dot(m2); // result is now 18
 ```
 
-* `Matrix Matrix::matmul(const Matrix &other)`: Matrix multiplication.
+* `Matrix Matrix::matmul(const Matrix &other) const`: Matrix multiplication.
 
 ```cpp
 auto m1 = Matrix({{1, 2, 3}, {4, 5, 6}});

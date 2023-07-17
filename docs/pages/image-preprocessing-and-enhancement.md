@@ -12,9 +12,9 @@ The `Interpolation` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` 
 
 2. **Bilinear**: This method takes the weighted average of the four nearest pixels to estimate the value of an unknown pixel. The weights are determined by the distance of the unknown pixel from these known pixels.
 
-3. **Bicubic**: This sophisticated method estimates the value of an unknown pixel by taking the weighted average of the sixteen nearest pixels. The weights are determined by the distance of the unknown pixel from these known pixels and are calculated using a cubic function. 
+3. **Bicubic**: A slightly more sophisticated method. It estimates the value of an unknown pixel by taking the weighted average of the sixteen nearest pixels. The weights are determined by the distance of the unknown pixel from these known pixels and are calculated using a cubic function. 
 
-    Bicubic interpolation utilizes cubic polynomials to model the behavior of pixel intensities in the vicinity of the pixel of interest. Particularly, this method makes use of Catmull-Rom splines, which pass through two control points, \(P_1\) and \(P_2\). These points surround the point of interest, while \(P_0\) and \(P_3\) are used to determine the slope. The Catmull-Rom spline is designed so that the interpolated pixel value is a weighted sum of the four pixels surrounding it. Here's the 1D version with \(t\) representing the point of interest:
+    Bicubic interpolation uses cubic polynomials to estimate pixel intensities near the pixel of interest \(P(t)\). Particularly, this implementation uses the Catmull-Rom splines, which pass through two control points, \(P_1\) and \(P_2\). These points surround the point of interest, while \(P_0\) and \(P_3\) are used to determine the slope. The Catmull-Rom spline is designed so that the interpolated pixel value is a weighted sum of the four pixels surrounding it. Here's the 1D version with \(t\) representing the point of interest:
 
     $$P(t) = \sum_{i=0}^{3} P_i Q_i(t)$$
 
@@ -37,7 +37,7 @@ The `Interpolation` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` 
 
 - `to_string(InterpolationType type)`: A function that takes an `InterpolationType` and returns its string representation.
 
-- `nearestNeighbor(const Matrix &image, float x, float y)`: A static method that performs nearest neighbor interpolation on the given image at the specified coordinates `(x, y)`.
+- `nearest(const Matrix &image, float x, float y)`: A static method that performs nearest neighbor interpolation on the given image at the specified coordinates `(x, y)`.
 
 - `bilinear(const Matrix &image, float x, float y)`: A static method that performs bilinear interpolation on the given image at the specified coordinates `(x, y)`.
 

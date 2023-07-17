@@ -19,7 +19,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
     class Interpolation
     {
     public:
-        static float nearestNeighbor(const Matrix &image, float x, float y);
+        static float nearest(const Matrix &image, float x, float y);
         static float bilinear(const Matrix &image, float x, float y);
         static float bicubic(const Matrix &image, float x, float y);
 

@@ -60,8 +60,12 @@ namespace VisualAlgo
         Matrix operator<=(const float &other) const;
 
         // Matrix operations
-        Matrix transpose();
-        float dot(const Matrix &other);
+        Matrix transpose() const;
+        Matrix submatrix(int row_start, int row_end, int col_start, int col_end) const;
+        float det() const;
+        Matrix cofactor() const;
+        Matrix inverse() const;
+        float dot(const Matrix &other) const;
         Matrix matmul(const Matrix &other) const;
 
         // Accessors

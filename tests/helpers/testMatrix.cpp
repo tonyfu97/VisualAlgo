@@ -482,6 +482,181 @@ namespace VisualAlgo
         CHECK_EQUAL(12, dot);
     }
 
+    TEST(MatrixTEstSuite, MatrixSubmatrix)
+    {
+        Matrix m1 = Matrix({{1, 2, 3}, {4, 5, 6}});
+        Matrix m2 = m1.submatrix(0, 1, 0, 1);
+        CHECK_EQUAL(1, m2.rows);
+        CHECK_EQUAL(1, m2.cols);
+        CHECK_EQUAL(1, m2.data[0][0]);
+
+        m2 = m1.submatrix(0, 1, 1, 2);
+        CHECK_EQUAL(1, m2.rows);
+        CHECK_EQUAL(1, m2.cols);
+        CHECK_EQUAL(2, m2.data[0][0]);
+
+        m2 = m1.submatrix(0, 2, 0, 2);
+        CHECK_EQUAL(2, m2.rows);
+        CHECK_EQUAL(2, m2.cols);
+        CHECK_EQUAL(1, m2.data[0][0]);
+        CHECK_EQUAL(2, m2.data[0][1]);
+        CHECK_EQUAL(4, m2.data[1][0]);
+        CHECK_EQUAL(5, m2.data[1][1]);
+
+        m2 = m1.submatrix(0, 2, 1, 2);
+        CHECK_EQUAL(2, m2.rows);
+        CHECK_EQUAL(1, m2.cols);
+        CHECK_EQUAL(2, m2.data[0][0]);
+        CHECK_EQUAL(5, m2.data[1][0]);
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix m3 = m1.submatrix(0, 1, 0, -1);
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+
+        exceptionThrown = false;
+        try
+        {
+            Matrix m3 = m1.submatrix(0, 1, 0, 4);
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+    }
+
+    TEST(MatrixTestSuite, MatrixDet)
+    {
+        Matrix m1 = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+        CHECK_EQUAL(0, m1.det());
+
+        Matrix m2 = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 10}});
+        CHECK_EQUAL(-3, m2.det());
+
+        Matrix m3 = Matrix({{1}});
+        CHECK_EQUAL(1, m3.det());
+
+        Matrix m4 = Matrix({{1, 2}, {3, 4}});
+        CHECK_EQUAL(-2, m4.det());
+
+        Matrix m5 = Matrix({{1, 2, 3}, {1, 2, 3}, {1, 2, 3}});
+        CHECK_EQUAL(0, m5.det());
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix m6 = Matrix({{1, 2}, {3, 4}, {5, 6}});
+            m6.det();
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+    }
+
+    TEST(MatrixTestSuite, MatrixCofactor)
+    {
+        Matrix m1 = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+        Matrix m1c = m1.cofactor();
+        CHECK_EQUAL(3, m1c.rows);
+        CHECK_EQUAL(3, m1c.cols);
+        CHECK_EQUAL(-3, m1c.get(0, 0));
+        CHECK_EQUAL(6, m1c.get(0, 1));
+        CHECK_EQUAL(-3, m1c.get(0, 2));
+        CHECK_EQUAL(6, m1c.get(1, 0));
+        CHECK_EQUAL(-12, m1c.get(1, 1));
+        CHECK_EQUAL(6, m1c.get(1, 2));
+        CHECK_EQUAL(-3, m1c.get(2, 0));
+        CHECK_EQUAL(6, m1c.get(2, 1));
+        CHECK_EQUAL(-3, m1c.get(2, 2));
+
+        Matrix m2 = Matrix({{1}});
+        Matrix m2c = m2.cofactor();
+        CHECK_EQUAL(1, m2c.rows);
+        CHECK_EQUAL(1, m2c.cols);
+        CHECK_EQUAL(1, m2c.get(0, 0));
+
+        Matrix m3 = Matrix({{1, 2}, {3, 4}});
+        Matrix m3c = m3.cofactor();
+        CHECK_EQUAL(2, m3c.rows);
+        CHECK_EQUAL(2, m3c.cols);
+        CHECK_EQUAL(4, m3c.get(0, 0));
+        CHECK_EQUAL(-3, m3c.get(0, 1));
+        CHECK_EQUAL(-2, m3c.get(1, 0));
+        CHECK_EQUAL(1, m3c.get(1, 1));
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix m4 = Matrix({{1, 2}, {3, 4}, {5, 6}});
+            m4.cofactor();
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+    }
+
+    TEST(MatrixTestSuite, MatrixInverse)
+    {
+        Matrix m1 = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 10}});
+        Matrix m1i = m1.inverse();
+        CHECK_EQUAL(3, m1i.rows);
+        CHECK_EQUAL(3, m1i.cols);
+        CHECK_DOUBLES_EQUAL(-2.0f/3, m1i.get(0, 0), 0.0001);
+        CHECK_DOUBLES_EQUAL(-4.0f/3, m1i.get(0, 1), 0.0001);
+        CHECK_DOUBLES_EQUAL(1.0f, m1i.get(0, 2), 0.0001);
+        CHECK_DOUBLES_EQUAL(-2.0f/3, m1i.get(1, 0), 0.0001);
+        CHECK_DOUBLES_EQUAL(11.0f/3, m1i.get(1, 1), 0.0001);
+        CHECK_DOUBLES_EQUAL(-2.0f, m1i.get(1, 2), 0.0001);
+        CHECK_DOUBLES_EQUAL(1.0f, m1i.get(2, 0), 0.0001);
+
+        Matrix m2 = Matrix({{1}});
+        Matrix m2i = m2.inverse();
+        CHECK_EQUAL(1, m2i.rows);
+
+        Matrix m3 = Matrix({{1, 2}, {3, 4}});
+        Matrix m3i = m3.inverse();
+        CHECK_EQUAL(2, m3i.rows);
+        CHECK_EQUAL(2, m3i.cols);
+        CHECK_DOUBLES_EQUAL(-2.0f, m3i.get(0, 0), 0.0001);
+        CHECK_DOUBLES_EQUAL(1.0f, m3i.get(0, 1), 0.0001);
+        CHECK_DOUBLES_EQUAL(1.5f, m3i.get(1, 0), 0.0001);
+        CHECK_DOUBLES_EQUAL(-0.5f, m3i.get(1, 1), 0.0001);
+
+        bool exceptionThrown = false;
+        try
+        {
+            Matrix m4 = Matrix({{1, 2}, {3, 4}, {5, 6}});
+            m4.inverse();
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+        CHECK_EQUAL(true, exceptionThrown);
+
+        exceptionThrown = false;
+        try
+        {
+            Matrix m5 = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+            m5.inverse();
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exceptionThrown = true;
+        }
+    }
+
     TEST(MatrixTestSuite, MatrixMatmul)
     {
         auto m1 = Matrix({{1, 2, 3}, {4, 5, 6}});

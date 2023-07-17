@@ -16,9 +16,9 @@ $$
 
 - `SobelFilterX` and `SobelFilterY`: These are subclasses of `Filter` that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors `SobelFilterX()` and `SobelFilterY()` create the respective filters, and the `apply` method is overridden in each class to apply the corresponding Sobel filter on an image. The kernels are:
 
-$$Sobel_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}$$
+$$Sobel_x = \begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix}$$
   
-$$Sobel_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}$$
+$$Sobel_y = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}$$
 
 - `LoGFilter`: The Laplacian of Gaussian (LoG) filter, used for edge detection and blob detection tasks. The constructor `LoGFilter(float sigma)` creates a LoG filter with a specified sigma value, and overrides the `apply` method to perform LoG filtering on an image. The Laplacian of Gaussian is defined as the second derivative of the Gaussian, so applying the LoG operation to an image corresponds to smoothing the image with a Gaussian filter and then finding the second derivative of the result. The formula for the 2D LoG kernel is:
 

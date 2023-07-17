@@ -24,7 +24,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         }
     }
 
-    float Interpolation::nearestNeighbor(const Matrix &image, float x, float y)
+    float Interpolation::nearest(const Matrix &image, float x, float y)
     {
         int x_rounded = static_cast<int>(std::round(x));
         int y_rounded = static_cast<int>(std::round(y));
@@ -102,7 +102,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         switch (type)
         {
         case InterpolationType::NEAREST:
-            return nearestNeighbor(image, x, y);
+            return nearest(image, x, y);
         case InterpolationType::BILINEAR:
             return bilinear(image, x, y);
         case InterpolationType::BICUBIC:

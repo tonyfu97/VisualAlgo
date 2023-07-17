@@ -18,7 +18,7 @@ namespace VisualAlgo
 
     Matrix::Matrix(int rows, int cols)
     {
-        if (rows <= 0 || cols <= 0)
+        if (rows < 0 || cols < 0)
             throw std::invalid_argument("Matrix dimensions must be positive");
         this->rows = rows;
         this->cols = cols;
@@ -27,7 +27,7 @@ namespace VisualAlgo
 
     Matrix::Matrix(int rows, int cols, float value)
     {
-        if (rows <= 0 || cols <= 0)
+        if (rows < 0 || cols < 0)
             throw std::invalid_argument("Matrix dimensions must be positive");
         this->rows = rows;
         this->cols = cols;
@@ -312,7 +312,7 @@ namespace VisualAlgo
     }
 
     // Matrix operations
-    Matrix Matrix::transpose()
+    Matrix Matrix::transpose() const
     {
         Matrix result(this->cols, this->rows);
         for (int i = 0; i < this->cols; i++)
@@ -321,7 +321,91 @@ namespace VisualAlgo
         return result;
     }
 
-    float Matrix::dot(const Matrix &other)
+    Matrix Matrix::submatrix(int row_start, int row_end, int col_start, int col_end) const
+    {
+        if (row_start < 0 || row_end > this->rows || col_start < 0 || col_end > this->cols)
+            throw std::invalid_argument("Submatrix indices out of bounds");
+        if (row_start > row_end || col_start > col_end)
+            throw std::invalid_argument("Submatrix indices invalid");
+        if (row_start == row_end || col_start == col_end)
+            throw std::invalid_argument("Submatrix dimensions must be positive");
+        Matrix result(row_end - row_start, col_end - col_start);
+        for (int i = row_start; i < row_end; i++)
+            for (int j = col_start; j < col_end; j++)
+                result.set(i - row_start, j - col_start, this->get(i, j));
+        return result;
+    }
+
+    float Matrix::det() const
+    {
+        if (this->rows != this->cols)
+            throw std::invalid_argument("Matrix must be square");
+        if (this->rows == 1)
+            return this->get(0, 0);
+        float result = 0;
+        for (int i = 0; i < this->rows; i++)
+        {
+            Matrix sub_matrix(this->rows - 1, this->cols - 1);
+            for (int m = 0; m < this->rows; m++)
+            {
+                if (m == i)
+                    continue; // Skip the current row
+                for (int n = 0; n < this->cols; n++)
+                {
+                    if (n == 0)
+                        continue;                    // Skip the first column
+                    int sub_i = (m < i) ? m : m - 1; // Adjust indices for submatrix
+                    int sub_j = n - 1;
+                    sub_matrix.set(sub_i, sub_j, this->get(m, n));
+                }
+            }
+            result += pow(-1, i) * this->get(i, 0) * sub_matrix.det();
+        }
+        return result;
+    }
+
+    Matrix Matrix::cofactor() const
+    {
+        if (this->rows != this->cols)
+            throw std::invalid_argument("Matrix must be square");
+        if (this->rows == 1)
+            return Matrix(1, 1, 1);
+        Matrix result(this->rows, this->cols);
+        for (int i = 0; i < this->rows; i++)
+            for (int j = 0; j < this->cols; j++)
+            {
+                Matrix submatrix(this->rows - 1, this->cols - 1);
+                for (int m = 0; m < this->rows; m++)
+                {
+                    if (m == i)
+                        continue; // Skip the current row
+                    for (int n = 0; n < this->cols; n++)
+                    {
+                        if (n == j)
+                            continue;                    // Skip the current column
+                        int sub_i = (m < i) ? m : m - 1; // Adjust indices for submatrix
+                        int sub_j = (n < j) ? n : n - 1;
+                        submatrix.set(sub_i, sub_j, this->get(m, n));
+                    }
+                }
+                result.set(i, j, pow(-1, i + j) * submatrix.det());
+            }
+        return result;
+    }
+
+    Matrix Matrix::inverse() const
+    {
+        if (this->rows != this->cols)
+            throw std::invalid_argument("Matrix must be square");
+        Matrix cofactor_matrix = this->cofactor();
+        Matrix adjugate_matrix = cofactor_matrix.transpose();
+        float det = this->det();
+        if (det == 0)
+            throw std::invalid_argument("Matrix is not invertible");
+        return adjugate_matrix / det;
+    }
+
+    float Matrix::dot(const Matrix &other) const
     {
         Matrix::check_dim_equal(other);
         float result = 0;
