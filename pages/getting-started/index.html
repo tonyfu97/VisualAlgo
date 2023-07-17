@@ -57,6 +57,14 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting Started</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#instructions">Instructions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#note">Note</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -129,6 +137,39 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="getting-started">Getting Started</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You will need a compiler that supports C++17 to build and run this project. No external libraries are required at this moment.</p>
+<h2 id="instructions">Instructions</h2>
+<p>Follow these steps to get a copy of the project and build the library on your local machine:</p>
+<ol>
+<li>Clone the project to your local machine:</li>
+</ol>
+<pre><code>git clone git@github.com:tonyfu97/VisualAlgo.git
+</code></pre>
+<ol>
+<li>Navigate to the project directory:</li>
+</ol>
+<pre><code>cd VisualAlgo
+</code></pre>
+<ol>
+<li>Compile the project to generate the library:</li>
+</ol>
+<pre><code>make
+</code></pre>
+<p>The command will create a file named <code>libVisualAlgo.a</code> in the project directory. This is a static library that can be linked to your C++ projects. </p>
+<p>To use the <code>libVisualAlgo.a</code> library in your C++ code, include the necessary header files in your source code. When compiling your code, link against <code>libVisualAlgo.a</code>.</p>
+<p>Here is an example of how to do this:</p>
+<pre><code class="language-cpp">#include &quot;path_to_VisualAlgo/Interpolation.hpp&quot;
+#include &quot;path_to_VisualAlgo/Transform.hpp&quot;
+// other includes as needed
+</code></pre>
+<p>And an example compilation command might look like this:</p>
+<pre><code>g++ -std=c++17 your_code.cpp -L. -lVisualAlgo -o your_program
+</code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>The detailed documentation of each class and method is provided in the source code. Here is the documentation link for the <code>Matrix</code> class: <a href="../matrix/">Matrix documentation</a></p>
+<h2 id="note">Note</h2>
+<p>Please be aware that this library currently supports only grayscale images. All algorithms and methods have been unit tested against "ground-truth" images generated with Python's CV libraries such as Skimage. Despite testing, there might still be bugs. If you discover any bugs or have suggestions for improvements, feel free to raise an issue or submit a pull request.</p>
               
             </div>
           </div><footer>
