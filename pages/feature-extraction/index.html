@@ -225,10 +225,10 @@ g(x, y) = \frac{1}{2\pi\sigma^2} \exp\left(-\frac{x^2 + y^2}{2\sigma^2}\right)
 <li><code>SobelFilterX</code> and <code>SobelFilterY</code>: These are subclasses of <code>Filter</code> that implement the Sobel filter in the x and y directions respectively, used for edge detection and feature extraction tasks. The constructors <code>SobelFilterX()</code> and <code>SobelFilterY()</code> create the respective filters, and the <code>apply</code> method is overridden in each class to apply the corresponding Sobel filter on an image. The kernels are:</li>
 </ul>
 <p>
-<script type="math/tex; mode=display">Sobel_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}</script>
+<script type="math/tex; mode=display">Sobel_x = \begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix}</script>
 </p>
 <p>
-<script type="math/tex; mode=display">Sobel_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}</script>
+<script type="math/tex; mode=display">Sobel_y = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}</script>
 </p>
 <ul>
 <li><code>LoGFilter</code>: The Laplacian of Gaussian (LoG) filter, used for edge detection and blob detection tasks. The constructor <code>LoGFilter(float sigma)</code> creates a LoG filter with a specified sigma value, and overrides the <code>apply</code> method to perform LoG filtering on an image. The Laplacian of Gaussian is defined as the second derivative of the Gaussian, so applying the LoG operation to an image corresponds to smoothing the image with a Gaussian filter and then finding the second derivative of the result. The formula for the 2D LoG kernel is:</li>

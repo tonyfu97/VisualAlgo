@@ -302,20 +302,44 @@ Matrix m2 = m1 &gt; 3; // Returns a binary matrix with `1`s where the elements i
 <hr />
 <h2 id="matrix-operations">Matrix Operations</h2>
 <ul>
-<li><code>Matrix transpose()</code>: Returns the transpose of the current matrix.</li>
+<li><code>Matrix transpose() const</code>: Returns the transpose of the current matrix.</li>
 </ul>
 <pre><code class="language-cpp">VisualAlgo::Matrix m1(2, 3, 1.0);
 VisualAlgo::Matrix m2 = m1.transpose(); // m2 is now a 3x2 matrix
 </code></pre>
 <ul>
-<li><code>float dot(const Matrix &amp;other)</code>: Calculates the dot product of the current matrix with the provided matrix.</li>
+<li><code>Matrix Matrix::submatrix(int row_start, int row_end, int col_start, int col_end) const</code>: Returns a submatrix of the current matrix from row_start to row_end (exclusive) and col_start to col_end (exclusive).</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.submatrix(1, 3, 0, 2); // m2 is now a 2x2 matrix
+</code></pre>
+<ul>
+<li><code>float Matrix::det() const</code>: Calculates the determinant of the current matrix. Only applicable for square matrices.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 3, 1.0);
+float result = m1.det(); // result is the determinant of m1
+</code></pre>
+<ul>
+<li><code>Matrix Matrix::cofactor() const</code>: Returns the cofactor matrix of the current matrix. Only applicable for square matrices.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.cofactor(); // m2 is the cofactor matrix of m1
+</code></pre>
+<ul>
+<li><code>Matrix Matrix::inverse() const</code>: Inverts the current matrix. Only applicable for square matrices that are invertible.</li>
+</ul>
+<pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 3, 1.0);
+VisualAlgo::Matrix m2 = m1.inverse();
+</code></pre>
+<ul>
+<li><code>float dot(const Matrix &amp;other) const</code>: Calculates the dot product of the current matrix with the provided matrix.</li>
 </ul>
 <pre><code class="language-cpp">VisualAlgo::Matrix m1(3, 3, 1.0);
 VisualAlgo::Matrix m2(3, 3, 2.0);
 float result = m1.dot(m2); // result is now 18
 </code></pre>
 <ul>
-<li><code>Matrix Matrix::matmul(const Matrix &amp;other)</code>: Matrix multiplication.</li>
+<li><code>Matrix Matrix::matmul(const Matrix &amp;other) const</code>: Matrix multiplication.</li>
 </ul>
 <pre><code class="language-cpp">auto m1 = Matrix({{1, 2, 3}, {4, 5, 6}});
 auto m2 = Matrix({{10, 11}, {20, 21}, {30, 31}});
