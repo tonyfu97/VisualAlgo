@@ -2,9 +2,9 @@
 
 ## Computer Vision Algorithms
 
-### Interpolation
+### Interpolate
 
-The `Interpolation` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolation is a method of estimating values between two points in an image or a series of data points. The `Interpolation` class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.
+The `Interpolate` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolate is a method of estimating values between two points in an image or a series of data points. The `Interpolate` class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.
 
 ![interpolation_illustration](../images/ImagePreprocessingAndEnhancement/interpolation_illustration.jpg)
 
@@ -51,17 +51,17 @@ The `Interpolation` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` 
 
 #### Example Usage
 
-In this example, the `Interpolation` class is used to scale an image using bicubic interpolation.
+In this example, the `Interpolate` class is used to scale an image using bicubic interpolation.
 
 ```cpp
 #include "helpers/Matrix.hpp"
-#include "ImagePreprocessingAndEnhancement/Interpolation.hpp"
+#include "ImagePreprocessingAndEnhancement/Interpolate.hpp"
 
 VisualAlgo::Matrix image;
 image.load("datasets/ImagePreprocessingAndEnhancement/cat_resized.ppm");
 
 VisualAlgo::Matrix image_scaled = 
-    VisualAlgo::ImagePreprocessingAndEnhancement::Interpolation::interpolate(image, 2.0f, 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Interpolate::interpolate(image, 2.0f, 
     VisualAlgo::ImagePreprocessingAndEnhancement::InterpolationType::BICUBIC);
 
 image_scaled.save("datasets/ImagePreprocessingAndEnhancement/cat_scaled.ppm", true);

@@ -1,4 +1,4 @@
-#include "Interpolation.hpp"
+#include "Interpolate.hpp"
 #include "helpers/Matrix.hpp"
 
 #include <cmath>
@@ -24,7 +24,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         }
     }
 
-    float Interpolation::nearest(const Matrix &image, float x, float y)
+    float Interpolate::nearest(const Matrix &image, float x, float y)
     {
         int x_rounded = static_cast<int>(std::round(x));
         int y_rounded = static_cast<int>(std::round(y));
@@ -35,7 +35,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         return image.get(y_rounded, x_rounded);
     }
 
-    float Interpolation::bilinear(const Matrix &image, float x, float y)
+    float Interpolate::bilinear(const Matrix &image, float x, float y)
     {
         int x1 = static_cast<int>(std::floor(x));
         int y1 = static_cast<int>(std::floor(y));
@@ -69,13 +69,13 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
     }
 
     // One dimensional: ax^3 + bx^2 + cx + d
-    float Interpolation::cubicInterpolation(float p[4], float x)
+    float Interpolate::cubicInterpolation(float p[4], float x)
     {
         return p[1] + 0.5 * x * (p[2] - p[0] + 2.0 * x * (2.0 * p[0] - 5.0 * p[1] + 4.0 * p[2] - p[3] + x * (3.0 * (p[1] - p[2]) + p[3] - p[0])));
     }
 
     // Simplified implementation: no color, no handling of edge cases, not optimized.
-    float Interpolation::bicubic(const Matrix &image, float x, float y)
+    float Interpolate::bicubic(const Matrix &image, float x, float y)
     {
         int xInt = static_cast<int>(std::round(x));
         int yInt = static_cast<int>(std::round(y));
@@ -97,7 +97,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         return cubicInterpolation(interpolatedCol, yFrac);
     }
 
-    float Interpolation::interpolate(const Matrix &image, float x, float y, InterpolationType type)
+    float Interpolate::interpolate(const Matrix &image, float x, float y, InterpolationType type)
     {
         switch (type)
         {
@@ -112,7 +112,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         }
     }
 
-    Matrix Interpolation::interpolate(const Matrix &image, float scale, InterpolationType type)
+    Matrix Interpolate::interpolate(const Matrix &image, float scale, InterpolationType type)
     {
         int rows = static_cast<int>(std::round(image.rows * scale));
         int cols = static_cast<int>(std::round(image.cols * scale));
@@ -120,7 +120,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         return interpolate(image, rows, cols, type);
     }
 
-    Matrix Interpolation::interpolate(const Matrix &image, int rows, int cols, InterpolationType type)
+    Matrix Interpolate::interpolate(const Matrix &image, int rows, int cols, InterpolationType type)
     {
         Matrix result(rows, cols);
 

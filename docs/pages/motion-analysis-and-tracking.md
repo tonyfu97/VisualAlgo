@@ -3,7 +3,6 @@
 ## Computer Vision Algorithms
 * Optical Flow
 * Background Subtraction
-* Kalman Filter
 * CAMShift
 
 ## Neuroscience Models

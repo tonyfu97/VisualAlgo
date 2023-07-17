@@ -354,7 +354,7 @@ namespace VisualAlgo
                 {
                     if (n == 0)
                         continue;                    // Skip the first column
-                    int sub_i = (m < i) ? m : m - 1; // Adjust indices for submatrix
+                    int sub_i = (m < i) ? m : m - 1;
                     int sub_j = n - 1;
                     sub_matrix.set(sub_i, sub_j, this->get(m, n));
                 }
@@ -383,7 +383,7 @@ namespace VisualAlgo
                     {
                         if (n == j)
                             continue;                    // Skip the current column
-                        int sub_i = (m < i) ? m : m - 1; // Adjust indices for submatrix
+                        int sub_i = (m < i) ? m : m - 1;
                         int sub_j = (n < j) ? n : n - 1;
                         submatrix.set(sub_i, sub_j, this->get(m, n));
                     }

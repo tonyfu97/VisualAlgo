@@ -1,6 +1,6 @@
 #include "TestHarness.h"
 #include "helpers/Matrix.hpp"
-#include "ImagePreprocessingAndEnhancement/Interpolation.hpp"
+#include "ImagePreprocessingAndEnhancement/Interpolate.hpp"
 #include "test_utils.hpp"
 
 #include <iostream>
@@ -28,7 +28,7 @@ static bool test_interpolation(std::string img_name, float scale, VisualAlgo::Im
     image.normalize();
     image_interpolated_expected.normalize();
 
-    VisualAlgo::Matrix image_interpolated = VisualAlgo::ImagePreprocessingAndEnhancement::Interpolation::interpolate(image, scale, type);
+    VisualAlgo::Matrix image_interpolated = VisualAlgo::ImagePreprocessingAndEnhancement::Interpolate::interpolate(image, scale, type);
 
     image_interpolated.save("datasets/ImagePreprocessingAndEnhancement/" + img_name + "_interpolated_" + to_string(type) + "_" + to_string_with_precision(scale) + ".ppm", true);
 

@@ -2,10 +2,10 @@
 
 ## Computer Vision Algorithms
 * Viola-Jones
+* Haar Cascades
 * R-CNN
 * SSD
 * YOLO
-* Haar Cascades
 
 ## Neuroscience Models
 * HMAX Model

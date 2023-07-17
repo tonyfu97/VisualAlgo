@@ -30,7 +30,7 @@ To use the `libVisualAlgo.a` library in your C++ code, include the necessary hea
 Here is an example of how to do this:
 
 ```cpp
-#include "path_to_VisualAlgo/Interpolation.hpp"
+#include "path_to_VisualAlgo/Interpolate.hpp"
 #include "path_to_VisualAlgo/Transform.hpp"
 // other includes as needed
 ```

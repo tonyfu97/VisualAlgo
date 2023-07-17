@@ -1,7 +1,7 @@
 # 7. Color Vision
 
 ## Computer Vision Algorithms
-* Gamma Compression
+* Gamma Correction
 
 ## Neuroscience Models
 * Opponent Process Models

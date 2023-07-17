@@ -16,7 +16,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
 
     std::string to_string(InterpolationType type);
 
-    class Interpolation
+    class Interpolate
     {
     public:
         static float nearest(const Matrix &image, float x, float y);

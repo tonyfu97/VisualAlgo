@@ -1,7 +1,7 @@
 #pragma once
 
 #include "helpers/Matrix.hpp"
-#include "Interpolation.hpp"
+#include "Interpolate.hpp"
 
 namespace VisualAlgo::ImagePreprocessingAndEnhancement
 {
