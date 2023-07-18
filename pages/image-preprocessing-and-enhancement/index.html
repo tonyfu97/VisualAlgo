@@ -71,7 +71,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#interpolation">Interpolation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#interpolate">Interpolate</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods">Class Members and Methods</a>
     </li>
@@ -154,12 +154,12 @@
               
                 <h1 id="1-image-pre-processing-and-enhancement">1. Image Pre-processing and Enhancement</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
-<h3 id="interpolation">Interpolation</h3>
-<p>The <code>Interpolation</code> class in the <code>VisualAlgo::ImagePreprocessingAndEnhancement</code> namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolation is a method of estimating values between two points in an image or a series of data points. The <code>Interpolation</code> class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.</p>
+<h3 id="interpolate">Interpolate</h3>
+<p>The <code>Interpolate</code> class in the <code>VisualAlgo::ImagePreprocessingAndEnhancement</code> namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolate is a method of estimating values between two points in an image or a series of data points. The <code>Interpolate</code> class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.</p>
 <p><img alt="interpolation_illustration" src="../../images/ImagePreprocessingAndEnhancement/interpolation_illustration.jpg" /></p>
 <ol>
 <li>
-<p><strong>Nearest Neighbor</strong>: This is the simplest interpolation method where the value of an unknown pixel is assumed to be equal to the value of the nearest pixel in the input image.</p>
+<p><strong>Nearest Neighbor</strong>: This is the simplest interpolation method where the value of an unknown pixel is assumed to be equal to the value of the nearest pixel in the input image. More precisely, we consider the pixel in the input image that is to the left and/or above (according to the decimal part of the coordinates), in other words, the <strong>floor of the coordinate value</strong> is used to determine the nearest neighbor for interpolation.</p>
 </li>
 <li>
 <p><strong>Bilinear</strong>: This method takes the weighted average of the four nearest pixels to estimate the value of an unknown pixel. The weights are determined by the distance of the unknown pixel from these known pixels.</p>
@@ -202,7 +202,7 @@ Q_3(t) = \frac{1}{2}t^3 - \frac{1}{2}t^2 </script>
 <p><code>bicubic(const Matrix &amp;image, float x, float y)</code>: A static method that performs bicubic interpolation on the given image at the specified coordinates <code>(x, y)</code>.</p>
 </li>
 <li>
-<p><code>interpolate(const Matrix &amp;image, float x, float y, InterpolationType type)</code>: A static method that interpolates the given image at the specified coordinates <code>(x, y)</code> using the specified interpolation type.</p>
+<p><code>interpolate(const Matrix &amp;image, float x, float y, InterpolationType type, float default_value=0.0f)</code>: A static method that interpolates the given image at the specified coordinates <code>(x, y)</code> using the specified interpolation type. If <code>(x, y)</code> is outside of the image, then it will return default_value.</p>
 </li>
 <li>
 <p><code>interpolate(const Matrix &amp;image, float scale, InterpolationType type)</code>: A static method that scales the given image by the specified scale factor using the specified interpolation type.</p>
@@ -212,15 +212,15 @@ Q_3(t) = \frac{1}{2}t^3 - \frac{1}{2}t^2 </script>
 </li>
 </ul>
 <h4 id="example-usage">Example Usage</h4>
-<p>In this example, the <code>Interpolation</code> class is used to scale an image using bicubic interpolation.</p>
+<p>In this example, the <code>Interpolate</code> class is used to scale an image using bicubic interpolation.</p>
 <pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
-#include &quot;ImagePreprocessingAndEnhancement/Interpolation.hpp&quot;
+#include &quot;ImagePreprocessingAndEnhancement/Interpolate.hpp&quot;
 
 VisualAlgo::Matrix image;
 image.load(&quot;datasets/ImagePreprocessingAndEnhancement/cat_resized.ppm&quot;);
 
 VisualAlgo::Matrix image_scaled = 
-    VisualAlgo::ImagePreprocessingAndEnhancement::Interpolation::interpolate(image, 2.0f, 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Interpolate::interpolate(image, 2.0f, 
     VisualAlgo::ImagePreprocessingAndEnhancement::InterpolationType::BICUBIC);
 
 image_scaled.save(&quot;datasets/ImagePreprocessingAndEnhancement/cat_scaled.ppm&quot;, true);
