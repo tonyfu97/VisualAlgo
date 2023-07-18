@@ -8,7 +8,7 @@ The `Interpolate` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` na
 
 ![interpolation_illustration](../images/ImagePreprocessingAndEnhancement/interpolation_illustration.jpg)
 
-1. **Nearest Neighbor**: This is the simplest interpolation method where the value of an unknown pixel is assumed to be equal to the value of the nearest pixel in the input image.
+1. **Nearest Neighbor**: This is the simplest interpolation method where the value of an unknown pixel is assumed to be equal to the value of the nearest pixel in the input image. More precisely, we consider the pixel in the input image that is to the left and/or above (according to the decimal part of the coordinates), in other words, the **floor of the coordinate value** is used to determine the nearest neighbor for interpolation.
 
 2. **Bilinear**: This method takes the weighted average of the four nearest pixels to estimate the value of an unknown pixel. The weights are determined by the distance of the unknown pixel from these known pixels.
 
@@ -43,7 +43,7 @@ The `Interpolate` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` na
 
 - `bicubic(const Matrix &image, float x, float y)`: A static method that performs bicubic interpolation on the given image at the specified coordinates `(x, y)`.
 
-- `interpolate(const Matrix &image, float x, float y, InterpolationType type)`: A static method that interpolates the given image at the specified coordinates `(x, y)` using the specified interpolation type.
+- `interpolate(const Matrix &image, float x, float y, InterpolationType type, float default_value=0.0f)`: A static method that interpolates the given image at the specified coordinates `(x, y)` using the specified interpolation type. If `(x, y)` is outside of the image, then it will return default_value.
 
 - `interpolate(const Matrix &image, float scale, InterpolationType type)`: A static method that scales the given image by the specified scale factor using the specified interpolation type.
 

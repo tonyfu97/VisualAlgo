@@ -24,6 +24,7 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         static float bicubic(const Matrix &image, float x, float y);
 
         static float interpolate(const Matrix &image, float x, float y, InterpolationType type);
+        static float interpolate(const Matrix &image, float x, float y, InterpolationType type, float default_value);
         static Matrix interpolate(const Matrix &image, float scale, InterpolationType type);
         static Matrix interpolate(const Matrix &image, int rows, int cols, InterpolationType type);
 

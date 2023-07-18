@@ -26,8 +26,8 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
 
     float Interpolate::nearest(const Matrix &image, float x, float y)
     {
-        int x_rounded = static_cast<int>(std::round(x));
-        int y_rounded = static_cast<int>(std::round(y));
+        int x_rounded = static_cast<int>(std::floor(x));
+        int y_rounded = static_cast<int>(std::floor(y));
 
         x_rounded = std::clamp(x_rounded, 0, image.cols - 1);
         y_rounded = std::clamp(y_rounded, 0, image.rows - 1);
@@ -46,11 +46,6 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         y1 = std::clamp(y1, 0, image.rows - 1);
         x2 = std::clamp(x2, 0, image.cols - 1);
         y2 = std::clamp(y2, 0, image.rows - 1);
-
-        if (x1 == x2 && y1 == y2)
-        {
-            return image.get(y1, x1);
-        }
 
         float q11 = image.get(y1, x1);
         float q12 = image.get(y1, x2);
@@ -112,6 +107,15 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         }
     }
 
+    float Interpolate::interpolate(const Matrix &image, float x, float y, InterpolationType type, float default_value)
+    {
+        if (x < 0 || x >= image.cols || y < 0 || y >= image.rows)
+        {
+            return default_value;
+        }
+        return interpolate(image, x, y, type);
+    }
+
     Matrix Interpolate::interpolate(const Matrix &image, float scale, InterpolationType type)
     {
         int rows = static_cast<int>(std::round(image.rows * scale));
@@ -124,8 +128,18 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
     {
         Matrix result(rows, cols);
 
-        float x_ratio = static_cast<float>(image.cols - 1) / static_cast<float>(cols);
-        float y_ratio = static_cast<float>(image.rows - 1) / static_cast<float>(rows);
+        float x_ratio, y_ratio;
+
+        if (type == InterpolationType::NEAREST)
+        {
+            x_ratio = static_cast<float>(image.cols) / static_cast<float>(cols);
+            y_ratio = static_cast<float>(image.rows) / static_cast<float>(rows);
+        }
+        else
+        {
+            x_ratio = static_cast<float>(image.cols - 1) / static_cast<float>(cols);
+            y_ratio = static_cast<float>(image.rows - 1) / static_cast<float>(rows);
+        }
 
         for (int i = 0; i < rows; i++)
         {
