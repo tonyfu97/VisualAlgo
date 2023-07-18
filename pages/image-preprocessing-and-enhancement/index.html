@@ -71,7 +71,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#interpolate">Interpolate</a>
+    <li class="toctree-l3"><a class="reference internal" href="#interpolation">Interpolation</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods">Class Members and Methods</a>
     </li>
@@ -85,7 +85,7 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#image-transformation-methods-in-visualalgoimagepreprocessingandenhancementtransform">Image Transformation Methods in VisualAlgo::ImagePreprocessingAndEnhancement::Transform</a>
+    <li class="toctree-l3"><a class="reference internal" href="#transformation">Transformation</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#example-usage_1">Example Usage</a>
     </li>
@@ -160,7 +160,7 @@
               
                 <h1 id="1-image-pre-processing-and-enhancement">1. Image Pre-processing and Enhancement</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
-<h3 id="interpolate">Interpolate</h3>
+<h3 id="interpolation">Interpolation</h3>
 <p>The <code>Interpolate</code> class in the <code>VisualAlgo::ImagePreprocessingAndEnhancement</code> namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolate is a method of estimating values between two points in an image or a series of data points. The <code>Interpolate</code> class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.</p>
 <p><img alt="interpolation_illustration" src="../../images/ImagePreprocessingAndEnhancement/interpolation_illustration.jpg" /></p>
 <ol>
@@ -254,7 +254,7 @@ image_scaled.save(&quot;datasets/ImagePreprocessingAndEnhancement/cat_scaled.ppm
 </li>
 </ol>
 <hr />
-<h3 id="image-transformation-methods-in-visualalgoimagepreprocessingandenhancementtransform">Image Transformation Methods in <code>VisualAlgo::ImagePreprocessingAndEnhancement::Transform</code></h3>
+<h3 id="transformation">Transformation</h3>
 <p>The <code>Transform</code> class implements various image transformation operations, each using an associated 3x3 transformation matrix. These operations include translation, scaling, rotation, and shear. </p>
 <ol>
 <li>
@@ -282,7 +282,7 @@ sx & 0 & 0 \\
 </p>
 </li>
 <li>
-<p><strong>Rotation</strong>: <code>static Matrix rotate(const Matrix &amp;image, float angle, InterpolationType method = InterpolationType::NEAREST)</code> Rotates an image by a specified angle (in radians). The rotation matrix is:</p>
+<p><strong>Rotation</strong>: <code>static Matrix rotate(const Matrix &amp;image, float angle, InterpolationType method = InterpolationType::NEAREST)</code> Rotates an image by a specified angle (in radians) in the clockwise direction (because y-axis points down). The rotation matrix is:</p>
 <p>
 <script type="math/tex; mode=display">
 \begin{pmatrix}
@@ -393,7 +393,7 @@ image_perspective_transformed.save(&quot;datasets/ImagePreprocessingAndEnhanceme
 <p><img alt="lighthouse_shear" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_shear.png" /></p>
 </li>
 <li>
-<p>Perspective</p>
+<p>Perspective (and scaling)</p>
 <p><img alt="lighthouse_perspective" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_perspective.png" /></p>
 </li>
 </ol>
