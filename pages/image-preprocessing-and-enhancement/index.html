@@ -94,6 +94,14 @@
         </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#histogram-equalization">Histogram Equalization</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods_1">Class Members and Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_2">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples_2">Visual Examples</a>
+    </li>
+        </ul>
     </li>
         </ul>
     </li>
@@ -399,6 +407,30 @@ image_perspective_transformed.save(&quot;datasets/ImagePreprocessingAndEnhanceme
 </ol>
 <hr />
 <h3 id="histogram-equalization">Histogram Equalization</h3>
+<p>The <code>HistogramEqualization</code> class in the <code>VisualAlgo::ImagePreprocessingAndEnhancement</code> namespace provides a method for improving the contrast in images. Histogram equalization is a method in image processing of contrast adjustment using the image's histogram. This method works by spreading out the most frequent intensity values in an image, resulting in a histogram that better represents all the intensity values. </p>
+<h4 id="class-members-and-methods_1">Class Members and Methods</h4>
+<ul>
+<li><code>equalize(const Matrix &amp;img)</code>: A static method that takes an image as a <code>Matrix</code> and returns the image after applying histogram equalization.</li>
+</ul>
+<h4 id="example-usage_2">Example Usage</h4>
+<p>In this example, the <code>HistogramEqualization</code> class is used to improve the contrast of an image.</p>
+<pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
+#include &quot;ImagePreprocessingAndEnhancement/HistogramEqualization.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/ImagePreprocessingAndEnhancement/dark_image.ppm&quot;);
+
+VisualAlgo::Matrix image_equalized = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::HistogramEqualization::equalize(image);
+
+image_equalized.save(&quot;datasets/ImagePreprocessingAndEnhancement/dark_image_equalized.ppm&quot;, true);
+</code></pre>
+<h4 id="visual-examples_2">Visual Examples</h4>
+<p>Below are visual examples of the original image and the image after histogram equalization.</p>
+<p>Original Image (low contrast):</p>
+<p><img alt="lighthouse_weak_contrast" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_weak_contrast.png" /></p>
+<p>Image after Histogram Equalization:</p>
+<p><img alt="lighthouse_weak_contrast_equalized" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_weak_contrast_equalized.png" /></p>
 <hr />
 <h2 id="neuroscience-models">Neuroscience Models</h2>
 <hr />
