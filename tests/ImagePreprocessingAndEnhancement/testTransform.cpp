@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include <string>
+#include <cmath>
 
 namespace VisualAlgo::ImagePreprocessingAndEnhancement
 {
 
-    static void save_image(const std::string &name, const std::string &transform_type, OutputSizeMode sizeMode)
+    static void save_image(const std::string &name, const std::string &transform_type)
     {
         Matrix image, transformed_image;
         image.load("datasets/ImagePreprocessingAndEnhancement/" + name + "_resized.ppm");
@@ -18,65 +19,103 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         }
         else if (transform_type == "scale")
         {
-            transformed_image = Transform::scale(image, 2, 0.5, InterpolationType::NEAREST, sizeMode);
+            transformed_image = Transform::scale(image, 2, 0.5, InterpolationType::NEAREST);
         }
         else if (transform_type == "rotate")
         {
-            transformed_image = Transform::rotate(image, 0.5);
+            transformed_image = Transform::rotate(image, M_PI / 2);
         }
         else if (transform_type == "shear")
         {
-            transformed_image = Transform::shear(image, 1, 1);
+            transformed_image = Transform::shear(image, 0, 0.5);
+        }
+        else if (transform_type == "perspective")
+        {
+            Matrix scale_matrix = Transform::scale(0.5, 0.5);
+            // change to perspective transform
+            scale_matrix.set(2, 0, 0.01);
+            scale_matrix.set(2, 1, 0.01);
+            transformed_image = Transform::perspective(image, scale_matrix);
         }
         else
         {
             throw std::invalid_argument("Invalid transform type: " + transform_type);
         }
-        transformed_image.save("datasets/ImagePreprocessingAndEnhancement/" + name + "_" + transform_type + "_" + to_string(sizeMode) + ".ppm", true);
+        transformed_image.save("datasets/ImagePreprocessingAndEnhancement/" + name + "_" + transform_type + ".ppm", true);
     }
 
-    TEST(Transform, TranslationOriginal)
+    TEST(Transform, Translation)
     {
         Matrix image = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
         Matrix expected = Matrix({{0, 0, 0}, {0, 1, 2}, {0, 4, 5}});
         Matrix actual = Transform::translate(image, 1, 1);
         CHECK(actual.is_close(expected, 0.01));
 
-        save_image("lighthouse", "translate", OutputSizeMode::Original);
-    }
-
-    TEST(Transform, TranslationFit)
-    {
-        Matrix image = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
-        Matrix expected = Matrix({{0, 0, 0}, {0, 0, 0}, {0, 1, 2}});
-        Matrix actual = Transform::translate(image, 1, 2, InterpolationType::NEAREST, OutputSizeMode::Fit);
+        image = Matrix({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+        expected = Matrix({{0, 0, 0}, {0, 0, 0}, {0, 1, 2}});
+        actual = Transform::translate(image, 1, 2, InterpolationType::NEAREST);
         CHECK(actual.is_close(expected, 0.01));
 
         expected = Matrix({{0, 0, 0}, {1, 2, 3}, {4, 5, 6}});
-        actual = Transform::translate(image, 0, 1, InterpolationType::NEAREST, OutputSizeMode::Fit);
+        actual = Transform::translate(image, 0, 1, InterpolationType::NEAREST);
         CHECK(actual.is_close(expected, 0.01));
 
         expected = Matrix({{5, 6, 0}, {8, 9, 0}, {0, 0, 0}});
-        actual = Transform::translate(image, -1, -1, InterpolationType::NEAREST, OutputSizeMode::Fit);
+        actual = Transform::translate(image, -1, -1, InterpolationType::NEAREST);
         CHECK(actual.is_close(expected, 0.01));
 
-        save_image("lighthouse", "translate", OutputSizeMode::Fit);
+        save_image("lighthouse", "translate");
     }
 
-    TEST(Transform, ScalingExpand)
+    TEST(Transform, Scaling)
     {
-        Matrix image = Matrix({{1, 2}, {4, 5}});
+        Matrix image = Matrix({{1, 2},
+                               {3, 4},
+                               {5, 6},
+                               {7, 8}});
         Matrix expected = Matrix({{1, 2},
-                                  {1, 2},
-                                  {1, 2},
-                                  {4, 5},
-                                  {4, 5},
-                                  {4, 5}});
-        Matrix actual = Transform::scale(image, 1, 3, InterpolationType::NEAREST, OutputSizeMode::Expand);
-
+                               {3, 4},
+                               {3, 4},
+                               {5, 6}});  // shifted down by 1 because of the way the interpolation works (floor)
+        Matrix actual = Transform::scale(image, 1, 2, InterpolationType::NEAREST);
         CHECK(actual.is_close(expected, 0.01));
 
-        save_image("lighthouse", "scale", OutputSizeMode::Fit);
+        save_image("lighthouse", "scale");
+    }
+
+    TEST(Transform, Rotation)
+    {
+        Matrix image = Matrix({{1, 2, 3},
+                               {4, 5, 6},
+                               {7, 8, 9}});
+        Matrix expected = Matrix({{7, 4, 1},
+                                  {8, 5, 1},
+                                  {9, 3, 3}}); // shifted down by 1 because of the way the interpolation works (floor)
+        Matrix actual = Transform::rotate(image, M_PI / 2);
+        CHECK(actual.is_close(expected, 0.01));
+
+        save_image("lighthouse", "rotate");
+    }
+
+    TEST(Transform, Shear)
+    {
+        Matrix image = Matrix({{1, 2, 3},
+                               {4, 5, 6},
+                               {7, 8, 9}});
+        Matrix expected = Matrix({{4, 2, 0},
+                                  {7, 5, 3},
+                                  {0, 8, 6}});
+        Matrix actual = Transform::shear(image, 0, 1);
+        CHECK(actual.is_close(expected, 0.01));
+
+        save_image("lighthouse", "shear");
+    }
+
+    TEST(Transform, Perspective)
+    {
+        
+
+        save_image("lighthouse", "perspective");
     }
 
 }

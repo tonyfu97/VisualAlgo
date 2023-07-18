@@ -101,7 +101,142 @@ While these interpolation methods implement the fundamental logic of nearest nei
 
 ---
 
-### Transform
+### Image Transformation Methods in `VisualAlgo::ImagePreprocessingAndEnhancement::Transform`
+
+The `Transform` class implements various image transformation operations, each using an associated 3x3 transformation matrix. These operations include translation, scaling, rotation, and shear. 
+
+1. **Translation**: `static Matrix translate(const Matrix &image, int dx, int dy, InterpolationType method = InterpolationType::NEAREST)` Moves an image by `dx` units in the x-direction and `dy` units in the y-direction. The translation matrix is:
+
+    \[
+    \begin{pmatrix}
+    1 & 0 & dx \\
+    0 & 1 & dy \\
+    0 & 0 & 1
+    \end{pmatrix}
+    \]
+
+2. **Scaling**: `static Matrix scale(const Matrix &image, float sx, float sy, InterpolationType method = InterpolationType::NEAREST)` Resizes an image by a factor of `sx` in the x-direction and `sy` in the y-direction. The scaling matrix is:
+
+    \[
+    \begin{pmatrix}
+    sx & 0 & 0 \\
+    0 & sy & 0 \\
+    0 & 0 & 1
+    \end{pmatrix}
+    \]
+
+3. **Rotation**: `static Matrix rotate(const Matrix &image, float angle, InterpolationType method = InterpolationType::NEAREST)` Rotates an image by a specified angle (in radians). The rotation matrix is:
+
+    \[
+    \begin{pmatrix}
+    cos(\theta) & -sin(\theta) & 0 \\
+    sin(\theta) & cos(\theta) & 0 \\
+    0 & 0 & 1
+    \end{pmatrix}
+    \]
+
+4. **Shear**: `static Matrix shear(const Matrix &image, float kx, float ky, InterpolationType method = InterpolationType::NEAREST)` Applies a shear transformation with the specified shear factors `kx` and `ky` in the x and y directions respectively. The shear matrix is:
+
+    \[
+    \begin{pmatrix}
+    1 & kx & 0 \\
+    ky & 1 & 0 \\
+    0 & 0 & 1
+    \end{pmatrix}
+    \]
+
+    The shearing factors `kx` and `ky` cannot both be equal to 1. This condition would result in a singular transformation matrix, and the image would collapse into a line.
+
+5. **Affine**: `static Matrix affine(const Matrix &image, const Matrix &transform_matrix, InterpolationType method = InterpolationType::NEAREST)` The above transformations call this method to apply the appropriate transformations. The affine transformation matrix is:
+
+    \[
+    \begin{pmatrix}
+    a & b & tx \\
+    c & d & ty \\
+    0 & 0 & 1
+    \end{pmatrix}
+    \]
+
+    Where `a`, `b`, `c`, and `d` represent scaling, rotation, and shear transformations, and `tx` and `ty` represent translations in the x and y directions, respectively.
+
+6. **Perspective**: `static Matrix perspective(const Matrix &image, const Matrix &transform_matrix, InterpolationType method = InterpolationType::NEAREST)` Perspective transformation is more general than the `affine` transformation due to the presence of non-zero values in the third column of the transformation matrix for perspective transformations. These values (denoted as `h` and `i`) result in a transformation equivalent to shearing along the x and y-axes.
+
+    \[
+    \begin{pmatrix}
+    a & b & tx \\
+    c & d & ty \\
+    h & i & 1
+    \end{pmatrix}
+    \]
+
+#### Example Usage
+
+In this example, we use the `Transform` class to apply various transformations on an image, such as translation, scaling, rotation, shearing, and perspective transformation.
+
+```cpp
+#include "TestHarness.h"
+#include "ImagePreprocessingAndEnhancement/Transform.hpp"
+#include "helpers/Matrix.hpp"
+
+#include <string>
+#include <cmath>
+
+VisualAlgo::Matrix image;
+image.load("datasets/ImagePreprocessingAndEnhancement/lighthouse_resized.ppm");
+
+// Translate the image
+VisualAlgo::Matrix image_translated = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::translate(image, 100, 50);
+image_translated.save("datasets/ImagePreprocessingAndEnhancement/lighthouse_translated.ppm", true);
+
+// Scale the image
+VisualAlgo::Matrix image_scaled = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::scale(image, 2, 0.5, 
+    VisualAlgo::ImagePreprocessingAndEnhancement::InterpolationType::NEAREST);
+image_scaled.save("datasets/ImagePreprocessingAndEnhancement/lighthouse_scaled.ppm", true);
+
+// Rotate the image
+VisualAlgo::Matrix image_rotated = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::rotate(image, M_PI / 2);
+image_rotated.save("datasets/ImagePreprocessingAndEnhancement/lighthouse_rotated.ppm", true);
+
+// Shear the image
+VisualAlgo::Matrix image_sheared = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::shear(image, 0, 0.5);
+image_sheared.save("datasets/ImagePreprocessingAndEnhancement/lighthouse_sheared.ppm", true);
+
+// Apply perspective transformation on the image
+VisualAlgo::Matrix perspective_matrix = VisualAlgo::ImagePreprocessingAndEnhancement::Transform::scale(0.5, 0.5);
+perspective_matrix.set(2, 0, 0.01);
+perspective_matrix.set(2, 1, 0.01);
+VisualAlgo::Matrix image_perspective_transformed = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::perspective(image, perspective_matrix);
+image_perspective_transformed.save("datasets/ImagePreprocessingAndEnhancement/lighthouse_perspective.ppm", true);
+```
+
+#### Visual Examples
+
+Here are the results from the above code:
+
+1. Translation
+
+    ![lighthouse_translate](../images/ImagePreprocessingAndEnhancement/lighthouse_translate.png)
+
+2. Scaling
+
+    ![lighthouse_scale](../images/ImagePreprocessingAndEnhancement/lighthouse_scale.png)
+
+3. Rotation
+
+    ![lighthouse_rotate](../images/ImagePreprocessingAndEnhancement/lighthouse_rotate.png)
+
+4. Shearing
+
+    ![lighthouse_shear](../images/ImagePreprocessingAndEnhancement/lighthouse_shear.png)
+
+5. Perspective
+
+    ![lighthouse_perspective](../images/ImagePreprocessingAndEnhancement/lighthouse_perspective.png)
 
 ---
 
