@@ -109,6 +109,17 @@ namespace VisualAlgo::ImagePreprocessingAndEnhancement
         CHECK(actual.is_close(expected, 0.01));
 
         save_image("lighthouse", "shear");
+
+        bool exception_thrown = false;
+        try
+        {
+            Transform::shear(image, 1, 1);
+        }
+        catch (const std::invalid_argument &e)
+        {
+            exception_thrown = true;
+        }
+        CHECK(exception_thrown);
     }
 
     TEST(Transform, Perspective)

@@ -2,7 +2,7 @@
 
 ## Computer Vision Algorithms
 
-### Interpolate
+### Interpolation
 
 The `Interpolate` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` namespace provides different interpolation methods for scaling and enhancing image resolution. Interpolate is a method of estimating values between two points in an image or a series of data points. The `Interpolate` class provides three common types of interpolation: nearest neighbor, bilinear, and bicubic.
 
@@ -101,7 +101,7 @@ While these interpolation methods implement the fundamental logic of nearest nei
 
 ---
 
-### Image Transformation Methods in `VisualAlgo::ImagePreprocessingAndEnhancement::Transform`
+### Transformation
 
 The `Transform` class implements various image transformation operations, each using an associated 3x3 transformation matrix. These operations include translation, scaling, rotation, and shear. 
 
@@ -125,7 +125,7 @@ The `Transform` class implements various image transformation operations, each u
     \end{pmatrix}
     \]
 
-3. **Rotation**: `static Matrix rotate(const Matrix &image, float angle, InterpolationType method = InterpolationType::NEAREST)` Rotates an image by a specified angle (in radians). The rotation matrix is:
+3. **Rotation**: `static Matrix rotate(const Matrix &image, float angle, InterpolationType method = InterpolationType::NEAREST)` Rotates an image by a specified angle (in radians) in the clockwise direction (because y-axis points down). The rotation matrix is:
 
     \[
     \begin{pmatrix}
@@ -234,13 +234,49 @@ Here are the results from the above code:
 
     ![lighthouse_shear](../images/ImagePreprocessingAndEnhancement/lighthouse_shear.png)
 
-5. Perspective
+5. Perspective (and scaling)
 
     ![lighthouse_perspective](../images/ImagePreprocessingAndEnhancement/lighthouse_perspective.png)
 
 ---
 
 ### Histogram Equalization
+
+The `HistogramEqualization` class in the `VisualAlgo::ImagePreprocessingAndEnhancement` namespace provides a method for improving the contrast in images. Histogram equalization is a method in image processing of contrast adjustment using the image's histogram. This method works by spreading out the most frequent intensity values in an image, resulting in a histogram that better represents all the intensity values. 
+
+#### Class Members and Methods
+
+- `equalize(const Matrix &img)`: A static method that takes an image as a `Matrix` and returns the image after applying histogram equalization.
+
+#### Example Usage
+
+In this example, the `HistogramEqualization` class is used to improve the contrast of an image.
+
+```cpp
+#include "helpers/Matrix.hpp"
+#include "ImagePreprocessingAndEnhancement/HistogramEqualization.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/ImagePreprocessingAndEnhancement/dark_image.ppm");
+
+VisualAlgo::Matrix image_equalized = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::HistogramEqualization::equalize(image);
+
+image_equalized.save("datasets/ImagePreprocessingAndEnhancement/dark_image_equalized.ppm", true);
+```
+
+#### Visual Examples
+
+Below are visual examples of the original image and the image after histogram equalization.
+
+Original Image (low contrast):
+
+![lighthouse_weak_contrast](../images/ImagePreprocessingAndEnhancement/lighthouse_weak_contrast.png)
+
+Image after Histogram Equalization:
+
+![lighthouse_weak_contrast_equalized](../images/ImagePreprocessingAndEnhancement/lighthouse_weak_contrast_equalized.png)
+
 
 ---
 
