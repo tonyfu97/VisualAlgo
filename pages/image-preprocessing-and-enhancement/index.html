@@ -85,7 +85,13 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#transform">Transform</a>
+    <li class="toctree-l3"><a class="reference internal" href="#image-transformation-methods-in-visualalgoimagepreprocessingandenhancementtransform">Image Transformation Methods in VisualAlgo::ImagePreprocessingAndEnhancement::Transform</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage_1">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples_1">Visual Examples</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#histogram-equalization">Histogram Equalization</a>
     </li>
@@ -248,7 +254,149 @@ image_scaled.save(&quot;datasets/ImagePreprocessingAndEnhancement/cat_scaled.ppm
 </li>
 </ol>
 <hr />
-<h3 id="transform">Transform</h3>
+<h3 id="image-transformation-methods-in-visualalgoimagepreprocessingandenhancementtransform">Image Transformation Methods in <code>VisualAlgo::ImagePreprocessingAndEnhancement::Transform</code></h3>
+<p>The <code>Transform</code> class implements various image transformation operations, each using an associated 3x3 transformation matrix. These operations include translation, scaling, rotation, and shear. </p>
+<ol>
+<li>
+<p><strong>Translation</strong>: <code>static Matrix translate(const Matrix &amp;image, int dx, int dy, InterpolationType method = InterpolationType::NEAREST)</code> Moves an image by <code>dx</code> units in the x-direction and <code>dy</code> units in the y-direction. The translation matrix is:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+1 & 0 & dx \\
+0 & 1 & dy \\
+0 & 0 & 1
+\end{pmatrix}
+</script>
+</p>
+</li>
+<li>
+<p><strong>Scaling</strong>: <code>static Matrix scale(const Matrix &amp;image, float sx, float sy, InterpolationType method = InterpolationType::NEAREST)</code> Resizes an image by a factor of <code>sx</code> in the x-direction and <code>sy</code> in the y-direction. The scaling matrix is:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+sx & 0 & 0 \\
+0 & sy & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+</script>
+</p>
+</li>
+<li>
+<p><strong>Rotation</strong>: <code>static Matrix rotate(const Matrix &amp;image, float angle, InterpolationType method = InterpolationType::NEAREST)</code> Rotates an image by a specified angle (in radians). The rotation matrix is:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+cos(\theta) & -sin(\theta) & 0 \\
+sin(\theta) & cos(\theta) & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+</script>
+</p>
+</li>
+<li>
+<p><strong>Shear</strong>: <code>static Matrix shear(const Matrix &amp;image, float kx, float ky, InterpolationType method = InterpolationType::NEAREST)</code> Applies a shear transformation with the specified shear factors <code>kx</code> and <code>ky</code> in the x and y directions respectively. The shear matrix is:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+1 & kx & 0 \\
+ky & 1 & 0 \\
+0 & 0 & 1
+\end{pmatrix}
+</script>
+</p>
+<p>The shearing factors <code>kx</code> and <code>ky</code> cannot both be equal to 1. This condition would result in a singular transformation matrix, and the image would collapse into a line.</p>
+</li>
+<li>
+<p><strong>Affine</strong>: <code>static Matrix affine(const Matrix &amp;image, const Matrix &amp;transform_matrix, InterpolationType method = InterpolationType::NEAREST)</code> The above transformations call this method to apply the appropriate transformations. The affine transformation matrix is:</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+a & b & tx \\
+c & d & ty \\
+0 & 0 & 1
+\end{pmatrix}
+</script>
+</p>
+<p>Where <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code> represent scaling, rotation, and shear transformations, and <code>tx</code> and <code>ty</code> represent translations in the x and y directions, respectively.</p>
+</li>
+<li>
+<p><strong>Perspective</strong>: <code>static Matrix perspective(const Matrix &amp;image, const Matrix &amp;transform_matrix, InterpolationType method = InterpolationType::NEAREST)</code> Perspective transformation is more general than the <code>affine</code> transformation due to the presence of non-zero values in the third column of the transformation matrix for perspective transformations. These values (denoted as <code>h</code> and <code>i</code>) result in a transformation equivalent to shearing along the x and y-axes.</p>
+<p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+a & b & tx \\
+c & d & ty \\
+h & i & 1
+\end{pmatrix}
+</script>
+</p>
+</li>
+</ol>
+<h4 id="example-usage_1">Example Usage</h4>
+<p>In this example, we use the <code>Transform</code> class to apply various transformations on an image, such as translation, scaling, rotation, shearing, and perspective transformation.</p>
+<pre><code class="language-cpp">#include &quot;TestHarness.h&quot;
+#include &quot;ImagePreprocessingAndEnhancement/Transform.hpp&quot;
+#include &quot;helpers/Matrix.hpp&quot;
+
+#include &lt;string&gt;
+#include &lt;cmath&gt;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_resized.ppm&quot;);
+
+// Translate the image
+VisualAlgo::Matrix image_translated = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::translate(image, 100, 50);
+image_translated.save(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_translated.ppm&quot;, true);
+
+// Scale the image
+VisualAlgo::Matrix image_scaled = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::scale(image, 2, 0.5, 
+    VisualAlgo::ImagePreprocessingAndEnhancement::InterpolationType::NEAREST);
+image_scaled.save(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_scaled.ppm&quot;, true);
+
+// Rotate the image
+VisualAlgo::Matrix image_rotated = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::rotate(image, M_PI / 2);
+image_rotated.save(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_rotated.ppm&quot;, true);
+
+// Shear the image
+VisualAlgo::Matrix image_sheared = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::shear(image, 0, 0.5);
+image_sheared.save(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_sheared.ppm&quot;, true);
+
+// Apply perspective transformation on the image
+VisualAlgo::Matrix perspective_matrix = VisualAlgo::ImagePreprocessingAndEnhancement::Transform::scale(0.5, 0.5);
+perspective_matrix.set(2, 0, 0.01);
+perspective_matrix.set(2, 1, 0.01);
+VisualAlgo::Matrix image_perspective_transformed = 
+    VisualAlgo::ImagePreprocessingAndEnhancement::Transform::perspective(image, perspective_matrix);
+image_perspective_transformed.save(&quot;datasets/ImagePreprocessingAndEnhancement/lighthouse_perspective.ppm&quot;, true);
+</code></pre>
+<h4 id="visual-examples_1">Visual Examples</h4>
+<p>Here are the results from the above code:</p>
+<ol>
+<li>
+<p>Translation</p>
+<p><img alt="lighthouse_translate" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_translate.png" /></p>
+</li>
+<li>
+<p>Scaling</p>
+<p><img alt="lighthouse_scale" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_scale.png" /></p>
+</li>
+<li>
+<p>Rotation</p>
+<p><img alt="lighthouse_rotate" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_rotate.png" /></p>
+</li>
+<li>
+<p>Shearing</p>
+<p><img alt="lighthouse_shear" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_shear.png" /></p>
+</li>
+<li>
+<p>Perspective</p>
+<p><img alt="lighthouse_perspective" src="../../images/ImagePreprocessingAndEnhancement/lighthouse_perspective.png" /></p>
+</li>
+</ol>
 <hr />
 <h3 id="histogram-equalization">Histogram Equalization</h3>
 <hr />
