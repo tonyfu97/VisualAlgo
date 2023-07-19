@@ -19,6 +19,7 @@ cd VisualAlgo
 ```
 
 3. Compile the project to generate the library:
+
 ```
 make
 ```

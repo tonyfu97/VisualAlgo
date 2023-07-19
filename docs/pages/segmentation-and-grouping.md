@@ -1,12 +1,83 @@
 # 3. Segmentation and Grouping
 
 ## Computer Vision Algorithms
+
+### Thresholding
+
+### Thresholding
+
+The `Thresholding` class in the `VisualAlgo::SegmentationAndGrouping` namespace is the image thresholding algorithm. Image thresholding is a simple method of segmenting an image into different regions. It separates an image into foreground and background, by turning all pixels below some threshold to zero and all pixels above that threshold to one (or 255 in an 8-bit grayscale image).
+
+#### Class Members and Methods
+
+- `apply(const Matrix &img, float threshold)`: A static method that applies binary thresholding to the input image based on the given threshold value. All pixel intensity values below the threshold are set to 0 (representing the background), and all pixel intensity values equal to or above the threshold are set to 1 (representing the foreground).
+
+#### Example Usage
+
+In this example, the `Thresholding` class is used to apply binary thresholding to a coins image.
+
+```cpp
+#include "helpers/Matrix.hpp"
+#include "SegmentationAndGrouping/Thresholding.hpp"
+
+VisualAlgo::Matrix image;
+image.load("datasets/SegmentationAndGrouping/coins.png");
+
+VisualAlgo::Matrix threshold_image = VisualAlgo::SegmentationAndGrouping::Thresholding::apply(image, 0.5f);
+
+threshold_image.save("datasets/SegmentationAndGrouping/coins_thresholding.png", true);
+```
+
+#### Visual Examples
+
+Here are some pictures to show the steps of the process.
+
+Original Image:
+
+![coins_original](../images/SegmentationAndGrouping/coins.png)
+
+Image After Thresholding:
+
+![coins_threshold](../images/SegmentationAndGrouping/coins_thresholding.png)
+
+In the image above, after we used thresholding, you can see it looks grainy. This is because of the small bits of noise in the original picture. To clean this up without blurring the edges of the coins too much, we can use a median filter first, then apply thresholding.
+
+Image After Median Filter and Thresholding:
+
+![coins_median_threshold](../images/SegmentationAndGrouping/coins_median_thresholding.png)
+
+After applying thresholding to the coin image, we might see small bits of noise again. We can clean this up by applying another median filter.
+
+Image After Median Filter, Thresholding, and Another Median Filter:
+
+![coins_median_threshold_median](../images/SegmentationAndGrouping/coins_median_thresholding_median.png)
+
+---
+
 ### Region Growing
+
+---
+
 ### Watershed
+
+---
+
 ### K-means Clustering
+
+---
+
 ### Mean Shift
+
+---
+
 ### GrabCut
+
+---
+
 ### U-Net
+
+---
+
 ### Classical Region Proposal Methods
 
 ---

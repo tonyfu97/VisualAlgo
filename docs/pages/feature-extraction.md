@@ -26,6 +26,8 @@ $$
 g(x, y) = \frac{(x^2 + y^2 - 2\sigma^2)}{2\pi\sigma^4} \exp\left(-\frac{x^2 + y^2}{2\sigma^2}\right)
 $$
 
+- `MedianFilter`: Median filtering is a nonlinear method used to remove noise from images. It is widely used as it preserves edges while removing noise.
+
 #### Example Usage
 
 In this example, the `GaussianFilter`, `SobelFilterX`, and `SobelFilterY` classes are used to apply corresponding filters to an image. The filtered images are then saved for later analysis or visualization.
@@ -41,15 +43,18 @@ image.normalize();
 VisualAlgo::FeatureExtraction::GaussianFilter gaussianFilter(0.8f);
 VisualAlgo::FeatureExtraction::SobelFilterX sobelXFilter;
 VisualAlgo::FeatureExtraction::SobelFilterY sobelYFilter;
+VisualAlgo::FeatureExtraction::MedianFilter medianFilter(3);
 
 VisualAlgo::Matrix image_gaussian, image_sobel_x, image_sobel_y;
 image_gaussian = gaussianFilter.apply(image);
 image_sobel_x = sobelXFilter.apply(image);
 image_sobel_y = sobelYFilter.apply(image);
+image_median = medianFilter.apply(image);
 
 image_gaussian.save("datasets/FeatureExtraction/cat_gaussian.ppm", true);
 image_sobel_x.save("datasets/FeatureExtraction/cat_sobel_x.ppm", true);
 image_sobel_y.save("datasets/FeatureExtraction/cat_sobel_y.ppm", true);
+image_median.save("datasets/FeatureExtraction/cat_median.ppm", true);
 ```
 
 ---

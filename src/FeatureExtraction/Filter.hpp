@@ -60,5 +60,16 @@ namespace VisualAlgo::FeatureExtraction
         Matrix computeLoGKernel(float sigma) const;
     };
 
+    class MedianFilter : public Filter
+    {
+    public:
+        MedianFilter(int size);
+        virtual Matrix apply(const Matrix &image) const override;
+
+    private:
+        int size;
+        float compute_median(const Matrix &image, int row, int col, int size) const;
+    };
+
     // TODO: add more filters as needed
 }
