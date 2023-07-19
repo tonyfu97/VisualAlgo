@@ -79,6 +79,18 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#computer-vision-algorithms">Computer Vision Algorithms</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#thresholding">Thresholding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#thresholding_1">Thresholding</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#class-members-and-methods">Class Members and Methods</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#visual-examples">Visual Examples</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#region-growing">Region Growing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#watershed">Watershed</a>
@@ -162,12 +174,50 @@
               
                 <h1 id="3-segmentation-and-grouping">3. Segmentation and Grouping</h1>
 <h2 id="computer-vision-algorithms">Computer Vision Algorithms</h2>
+<h3 id="thresholding">Thresholding</h3>
+<h3 id="thresholding_1">Thresholding</h3>
+<p>The <code>Thresholding</code> class in the <code>VisualAlgo::SegmentationAndGrouping</code> namespace is the image thresholding algorithm. Image thresholding is a simple method of segmenting an image into different regions. It separates an image into foreground and background, by turning all pixels below some threshold to zero and all pixels above that threshold to one (or 255 in an 8-bit grayscale image).</p>
+<h4 id="class-members-and-methods">Class Members and Methods</h4>
+<ul>
+<li><code>apply(const Matrix &amp;img, float threshold)</code>: A static method that applies binary thresholding to the input image based on the given threshold value. All pixel intensity values below the threshold are set to 0 (representing the background), and all pixel intensity values equal to or above the threshold are set to 1 (representing the foreground).</li>
+</ul>
+<h4 id="example-usage">Example Usage</h4>
+<p>In this example, the <code>Thresholding</code> class is used to apply binary thresholding to a coins image.</p>
+<pre><code class="language-cpp">#include &quot;helpers/Matrix.hpp&quot;
+#include &quot;SegmentationAndGrouping/Thresholding.hpp&quot;
+
+VisualAlgo::Matrix image;
+image.load(&quot;datasets/SegmentationAndGrouping/coins.png&quot;);
+
+VisualAlgo::Matrix threshold_image = VisualAlgo::SegmentationAndGrouping::Thresholding::apply(image, 0.5f);
+
+threshold_image.save(&quot;datasets/SegmentationAndGrouping/coins_thresholding.png&quot;, true);
+</code></pre>
+<h4 id="visual-examples">Visual Examples</h4>
+<p>Here are some pictures to show the steps of the process.</p>
+<p>Original Image:</p>
+<p><img alt="coins_original" src="../../images/SegmentationAndGrouping/coins.png" /></p>
+<p>Image After Thresholding:</p>
+<p><img alt="coins_threshold" src="../../images/SegmentationAndGrouping/coins_thresholding.png" /></p>
+<p>In the image above, after we used thresholding, you can see it looks grainy. This is because of the small bits of noise in the original picture. To clean this up without blurring the edges of the coins too much, we can use a median filter first, then apply thresholding.</p>
+<p>Image After Median Filter and Thresholding:</p>
+<p><img alt="coins_median_threshold" src="../../images/SegmentationAndGrouping/coins_median_thresholding.png" /></p>
+<p>After applying thresholding to the coin image, we might see small bits of noise again. We can clean this up by applying another median filter.</p>
+<p>Image After Median Filter, Thresholding, and Another Median Filter:</p>
+<p><img alt="coins_median_threshold_median" src="../../images/SegmentationAndGrouping/coins_median_thresholding_median.png" /></p>
+<hr />
 <h3 id="region-growing">Region Growing</h3>
+<hr />
 <h3 id="watershed">Watershed</h3>
+<hr />
 <h3 id="k-means-clustering">K-means Clustering</h3>
+<hr />
 <h3 id="mean-shift">Mean Shift</h3>
+<hr />
 <h3 id="grabcut">GrabCut</h3>
+<hr />
 <h3 id="u-net">U-Net</h3>
+<hr />
 <h3 id="classical-region-proposal-methods">Classical Region Proposal Methods</h3>
 <hr />
 <h2 id="neuroscience-models">Neuroscience Models</h2>
