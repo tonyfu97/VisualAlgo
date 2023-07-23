@@ -3,7 +3,6 @@
 #include "SegmentationAndGrouping/Thresholding.hpp"
 #include "FeatureExtraction/Filter.hpp"
 
-
 namespace VisualAlgo::SegmentationAndGrouping
 {
     TEST(ThresholdingTestSuite, Coins)

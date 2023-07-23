@@ -4,6 +4,8 @@ VisualAlgo is a collection of algorithms and models intersecting the domains of 
 
 Please see the [Documentation](https://tonyfu97.github.io/VisualAlgo/) for more details.
 
+![cover](docs/images/cover.png)
+
 ## Disclaimer
 
 This repository is created purely for educational purposes. It contains implementations of algorithms that might be copyrighted or protected by other legal means. The goal is to showcase these implementations as a personal project and to facilitate learning.

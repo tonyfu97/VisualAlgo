@@ -4,8 +4,6 @@
 
 ### Thresholding
 
-### Thresholding
-
 The `Thresholding` class in the `VisualAlgo::SegmentationAndGrouping` namespace is the image thresholding algorithm. Image thresholding is a simple method of segmenting an image into different regions. It separates an image into foreground and background, by turning all pixels below some threshold to zero and all pixels above that threshold to one (or 255 in an 8-bit grayscale image).
 
 #### Class Members and Methods
